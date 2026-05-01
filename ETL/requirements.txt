@@ -1,4 +1,0 @@
-fastf1
-pandas
-sqlalchemy
-psycopg[binary]

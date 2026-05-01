@@ -1,0 +1,1761 @@
+ResultId,SessionId,DriverId,TeamId,Position,ClassifiedPosition,GridPosition,Q1_ms,Q2_ms,Q3_ms,Time_ms,Status,Points,Laps
+1,1,max_verstappen,red_bull,1.0,,,90499,90318,88997,,,,
+2,1,hamilton,mercedes,2.0,,,90617,90085,89385,,,,
+3,1,bottas,mercedes,3.0,,,91200,90186,89586,,,,
+4,1,leclerc,ferrari,4.0,,,90691,90010,89678,,,,
+5,1,gasly,alphatauri,5.0,,,90848,90513,89809,,,,
+6,1,ricciardo,mclaren,6.0,,,90795,90222,89927,,,,
+7,1,norris,mclaren,7.0,,,90902,90099,89974,,,,
+8,1,sainz,ferrari,8.0,,,91653,90009,90215,,,,
+9,1,alonso,alpine,9.0,,,90863,90595,90249,,,,
+10,1,stroll,aston_martin,10.0,,,91261,90624,90601,,,,
+11,1,perez,red_bull,11.0,,,91165,90659,,,,,
+12,1,giovinazzi,alfa,12.0,,,90998,90708,,,,,
+13,1,tsunoda,alphatauri,13.0,,,90607,91203,,,,,
+14,1,raikkonen,alfa,14.0,,,91547,91238,,,,,
+15,1,russell,williams,15.0,,,91316,93430,,,,,
+16,1,ocon,alpine,16.0,,,91724,,,,,,
+17,1,latifi,williams,17.0,,,91936,,,,,,
+18,1,vettel,aston_martin,18.0,,,92056,,,,,,
+19,1,mick_schumacher,haas,19.0,,,92449,,,,,,
+20,1,mazepin,haas,20.0,,,93273,,,,,,
+21,2,hamilton,mercedes,1.0,1,2.0,,,,5523897,Finished,25.0,56.0
+22,2,max_verstappen,red_bull,2.0,2,1.0,,,,745,Finished,18.0,56.0
+23,2,bottas,mercedes,3.0,3,3.0,,,,37383,Finished,16.0,56.0
+24,2,norris,mclaren,4.0,4,7.0,,,,46466,Finished,12.0,56.0
+25,2,perez,red_bull,5.0,5,0.0,,,,52047,Finished,10.0,56.0
+26,2,leclerc,ferrari,6.0,6,4.0,,,,59090,Finished,8.0,56.0
+27,2,ricciardo,mclaren,7.0,7,6.0,,,,66004,Finished,6.0,56.0
+28,2,sainz,ferrari,8.0,8,8.0,,,,67100,Finished,4.0,56.0
+29,2,tsunoda,alphatauri,9.0,9,13.0,,,,85692,Finished,2.0,56.0
+30,2,stroll,aston_martin,10.0,10,10.0,,,,86713,Finished,1.0,56.0
+31,2,raikkonen,alfa,11.0,11,14.0,,,,88864,Finished,0.0,56.0
+32,2,giovinazzi,alfa,12.0,12,12.0,,,,,+1 Lap,0.0,55.0
+33,2,ocon,alpine,13.0,13,16.0,,,,,+1 Lap,0.0,55.0
+34,2,russell,williams,14.0,14,15.0,,,,,+1 Lap,0.0,55.0
+35,2,vettel,aston_martin,15.0,15,20.0,,,,,+1 Lap,0.0,55.0
+36,2,mick_schumacher,haas,16.0,16,18.0,,,,,+1 Lap,0.0,55.0
+37,2,gasly,alphatauri,17.0,17,5.0,,,,,Retired,0.0,52.0
+38,2,latifi,williams,18.0,18,17.0,,,,,Retired,0.0,51.0
+39,2,alonso,alpine,19.0,R,9.0,,,,,Brakes,0.0,32.0
+40,2,mazepin,haas,20.0,R,19.0,,,,,Accident,0.0,0.0
+41,3,hamilton,mercedes,1.0,,,74823,74817,74411,,,,
+42,3,perez,red_bull,2.0,,,75395,74716,74446,,,,
+43,3,max_verstappen,red_bull,3.0,,,75109,74884,74498,,,,
+44,3,leclerc,ferrari,4.0,,,75413,74808,74740,,,,
+45,3,gasly,alphatauri,5.0,,,75548,74927,74790,,,,
+46,3,ricciardo,mclaren,6.0,,,75669,75033,74826,,,,
+47,3,norris,mclaren,7.0,,,75009,74718,74875,,,,
+48,3,bottas,mercedes,8.0,,,74672,74905,74898,,,,
+49,3,ocon,alpine,9.0,,,75385,75117,75210,,,,
+50,3,stroll,aston_martin,10.0,,,75522,75138,,,,,
+51,3,sainz,ferrari,11.0,,,75406,75199,,,,,
+52,3,russell,williams,12.0,,,75826,75261,,,,,
+53,3,vettel,aston_martin,13.0,,,75459,75394,,,,,
+54,3,latifi,williams,14.0,,,75653,75593,,,,,
+55,3,alonso,alpine,15.0,,,75832,75593,,,,,
+56,3,raikkonen,alfa,16.0,,,75974,,,,,,
+57,3,giovinazzi,alfa,17.0,,,76122,,,,,,
+58,3,mick_schumacher,haas,18.0,,,76279,,,,,,
+59,3,mazepin,haas,19.0,,,76797,,,,,,
+60,3,tsunoda,alphatauri,20.0,,,,,,,,,
+61,4,max_verstappen,red_bull,1.0,1,3.0,,,,7354598,Finished,25.0,63.0
+62,4,hamilton,mercedes,2.0,2,1.0,,,,22000,Finished,19.0,63.0
+63,4,norris,mclaren,3.0,3,7.0,,,,23702,Finished,15.0,63.0
+64,4,leclerc,ferrari,4.0,4,4.0,,,,25579,Finished,12.0,63.0
+65,4,sainz,ferrari,5.0,5,11.0,,,,27036,Finished,10.0,63.0
+66,4,ricciardo,mclaren,6.0,6,6.0,,,,51220,Finished,8.0,63.0
+67,4,gasly,alphatauri,7.0,7,5.0,,,,52818,Finished,6.0,63.0
+68,4,stroll,aston_martin,8.0,8,10.0,,,,56909,Finished,4.0,63.0
+69,4,ocon,alpine,9.0,9,9.0,,,,65704,Finished,2.0,63.0
+70,4,alonso,alpine,10.0,10,15.0,,,,66561,Finished,1.0,63.0
+71,4,perez,red_bull,11.0,11,2.0,,,,67151,Finished,0.0,63.0
+72,4,tsunoda,alphatauri,12.0,12,20.0,,,,73184,Finished,0.0,63.0
+73,4,raikkonen,alfa,13.0,13,16.0,,,,94773,Finished,0.0,63.0
+74,4,giovinazzi,alfa,14.0,14,17.0,,,,,+1 Lap,0.0,62.0
+75,4,vettel,aston_martin,15.0,15,0.0,,,,,Gearbox,0.0,61.0
+76,4,mick_schumacher,haas,16.0,16,18.0,,,,,+2 Laps,0.0,61.0
+77,4,mazepin,haas,17.0,17,19.0,,,,,+2 Laps,0.0,61.0
+78,4,bottas,mercedes,18.0,R,8.0,,,,,Collision,0.0,30.0
+79,4,russell,williams,19.0,R,12.0,,,,,Collision,0.0,30.0
+80,4,latifi,williams,20.0,R,14.0,,,,,Collision,0.0,0.0
+81,5,bottas,mercedes,1.0,,,78722,78458,78348,,,,
+82,5,hamilton,mercedes,2.0,,,78857,77968,78355,,,,
+83,5,max_verstappen,red_bull,3.0,,,79485,78650,78746,,,,
+84,5,perez,red_bull,4.0,,,79337,78845,78890,,,,
+85,5,sainz,ferrari,5.0,,,79309,78813,79039,,,,
+86,5,ocon,alpine,6.0,,,79092,78586,79042,,,,
+87,5,norris,mclaren,7.0,,,78794,78481,79116,,,,
+88,5,leclerc,ferrari,8.0,,,79373,78769,79306,,,,
+89,5,gasly,alphatauri,9.0,,,79464,79052,79475,,,,
+90,5,vettel,aston_martin,10.0,,,79403,78970,79659,,,,
+91,5,russell,williams,11.0,,,79797,79109,,,,,
+92,5,giovinazzi,alfa,12.0,,,79410,79216,,,,,
+93,5,alonso,alpine,13.0,,,79728,79456,,,,,
+94,5,tsunoda,alphatauri,14.0,,,79684,79463,,,,,
+95,5,raikkonen,alfa,15.0,,,79748,79812,,,,,
+96,5,ricciardo,mclaren,16.0,,,79839,,,,,,
+97,5,stroll,aston_martin,17.0,,,79913,,,,,,
+98,5,latifi,williams,18.0,,,80285,,,,,,
+99,5,mick_schumacher,haas,19.0,,,80452,,,,,,
+100,5,mazepin,haas,20.0,,,80912,,,,,,
+101,6,hamilton,mercedes,1.0,1,2.0,,,,5671421,Finished,25.0,66.0
+102,6,max_verstappen,red_bull,2.0,2,3.0,,,,29148,Finished,18.0,66.0
+103,6,bottas,mercedes,3.0,3,1.0,,,,33530,Finished,16.0,66.0
+104,6,perez,red_bull,4.0,4,4.0,,,,39735,Finished,12.0,66.0
+105,6,norris,mclaren,5.0,5,7.0,,,,51369,Finished,10.0,66.0
+106,6,leclerc,ferrari,6.0,6,8.0,,,,55781,Finished,8.0,66.0
+107,6,ocon,alpine,7.0,7,6.0,,,,63749,Finished,6.0,66.0
+108,6,alonso,alpine,8.0,8,13.0,,,,1808,Finished,4.0,66.0
+109,6,ricciardo,mclaren,9.0,9,16.0,,,,75369,Finished,2.0,66.0
+110,6,gasly,alphatauri,10.0,10,9.0,,,,76463,Finished,1.0,66.0
+111,6,sainz,ferrari,11.0,11,5.0,,,,78955,Finished,0.0,66.0
+112,6,giovinazzi,alfa,12.0,12,12.0,,,,,+1 Lap,0.0,65.0
+113,6,vettel,aston_martin,13.0,13,10.0,,,,,+1 Lap,0.0,65.0
+114,6,stroll,aston_martin,14.0,14,17.0,,,,,+1 Lap,0.0,65.0
+115,6,tsunoda,alphatauri,15.0,15,14.0,,,,,+1 Lap,0.0,65.0
+116,6,russell,williams,16.0,16,11.0,,,,,+1 Lap,0.0,65.0
+117,6,mick_schumacher,haas,17.0,17,19.0,,,,,+2 Laps,0.0,64.0
+118,6,latifi,williams,18.0,18,18.0,,,,,+2 Laps,0.0,64.0
+119,6,mazepin,haas,19.0,19,20.0,,,,,+2 Laps,0.0,64.0
+120,6,raikkonen,alfa,20.0,R,15.0,,,,,Collision damage,0.0,1.0
+121,7,hamilton,mercedes,1.0,,,78245,77166,76741,,,,
+122,7,max_verstappen,red_bull,2.0,,,78090,76922,76777,,,,
+123,7,bottas,mercedes,3.0,,,78005,77142,76873,,,,
+124,7,leclerc,ferrari,4.0,,,78041,77717,77510,,,,
+125,7,ocon,alpine,5.0,,,78281,77743,77580,,,,
+126,7,sainz,ferrari,6.0,,,78205,77656,77620,,,,
+127,7,ricciardo,mclaren,7.0,,,78264,77719,77622,,,,
+128,7,perez,red_bull,8.0,,,78203,77669,77701,,,,
+129,7,norris,mclaren,9.0,,,77821,77696,78010,,,,
+130,7,alonso,alpine,10.0,,,78281,77966,78147,,,,
+131,7,stroll,aston_martin,11.0,,,78241,77974,,,,,
+132,7,gasly,alphatauri,12.0,,,78190,77982,,,,,
+133,7,vettel,aston_martin,13.0,,,78289,78079,,,,,
+134,7,giovinazzi,alfa,14.0,,,78549,78356,,,,,
+135,7,russell,williams,15.0,,,78445,79154,,,,,
+136,7,tsunoda,alphatauri,16.0,,,78556,,,,,,
+137,7,raikkonen,alfa,17.0,,,78917,,,,,,
+138,7,mick_schumacher,haas,18.0,,,79117,,,,,,
+139,7,latifi,williams,19.0,,,79219,,,,,,
+140,7,mazepin,haas,20.0,,,79807,,,,,,
+141,8,hamilton,mercedes,1.0,1,1.0,,,,5587680,Finished,25.0,66.0
+142,8,max_verstappen,red_bull,2.0,2,2.0,,,,15841,Finished,19.0,66.0
+143,8,bottas,mercedes,3.0,3,3.0,,,,26610,Finished,15.0,66.0
+144,8,leclerc,ferrari,4.0,4,4.0,,,,54616,Finished,12.0,66.0
+145,8,perez,red_bull,5.0,5,8.0,,,,63671,Finished,10.0,66.0
+146,8,ricciardo,mclaren,6.0,6,7.0,,,,73768,Finished,8.0,66.0
+147,8,sainz,ferrari,7.0,7,6.0,,,,74670,Finished,6.0,66.0
+148,8,norris,mclaren,8.0,8,9.0,,,,,+1 Lap,4.0,65.0
+149,8,ocon,alpine,9.0,9,5.0,,,,,+1 Lap,2.0,65.0
+150,8,gasly,alphatauri,10.0,10,12.0,,,,,+1 Lap,1.0,65.0
+151,8,stroll,aston_martin,11.0,11,11.0,,,,,+1 Lap,0.0,65.0
+152,8,raikkonen,alfa,12.0,12,17.0,,,,,+1 Lap,0.0,65.0
+153,8,vettel,aston_martin,13.0,13,13.0,,,,,+1 Lap,0.0,65.0
+154,8,russell,williams,14.0,14,15.0,,,,,+1 Lap,0.0,65.0
+155,8,giovinazzi,alfa,15.0,15,14.0,,,,,+1 Lap,0.0,65.0
+156,8,latifi,williams,16.0,16,19.0,,,,,+1 Lap,0.0,65.0
+157,8,alonso,alpine,17.0,17,10.0,,,,,+1 Lap,0.0,65.0
+158,8,mick_schumacher,haas,18.0,18,18.0,,,,,+2 Laps,0.0,64.0
+159,8,mazepin,haas,19.0,19,20.0,,,,,+2 Laps,0.0,64.0
+160,8,tsunoda,alphatauri,20.0,R,16.0,,,,,Electrical,0.0,6.0
+161,9,leclerc,ferrari,1.0,,,71113,70597,70346,,,,
+162,9,max_verstappen,red_bull,2.0,,,71124,70650,70576,,,,
+163,9,bottas,mercedes,3.0,,,70938,70695,70601,,,,
+164,9,sainz,ferrari,4.0,,,71324,70806,70611,,,,
+165,9,norris,mclaren,5.0,,,71321,71031,70620,,,,
+166,9,gasly,alphatauri,6.0,,,71560,71179,70900,,,,
+167,9,hamilton,mercedes,7.0,,,71622,71116,71095,,,,
+168,9,vettel,aston_martin,8.0,,,72078,71309,71419,,,,
+169,9,perez,red_bull,9.0,,,71644,71019,71573,,,,
+170,9,giovinazzi,alfa,10.0,,,71658,71409,71779,,,,
+171,9,ocon,alpine,11.0,,,71740,71486,,,,,
+172,9,ricciardo,mclaren,12.0,,,71747,71598,,,,,
+173,9,stroll,aston_martin,13.0,,,71979,71600,,,,,
+174,9,raikkonen,alfa,14.0,,,71899,71642,,,,,
+175,9,russell,williams,15.0,,,72016,71830,,,,,
+176,9,tsunoda,alphatauri,16.0,,,72096,,,,,,
+177,9,alonso,alpine,17.0,,,72205,,,,,,
+178,9,latifi,williams,18.0,,,72366,,,,,,
+179,9,mazepin,haas,19.0,,,72958,,,,,,
+180,9,nan,nan,,,,,,,,,,
+181,10,max_verstappen,red_bull,1.0,1,2.0,,,,5936820,Finished,25.0,78.0
+182,10,sainz,ferrari,2.0,2,4.0,,,,8968,Finished,18.0,78.0
+183,10,norris,mclaren,3.0,3,5.0,,,,19427,Finished,15.0,78.0
+184,10,perez,red_bull,4.0,4,9.0,,,,20490,Finished,12.0,78.0
+185,10,vettel,aston_martin,5.0,5,8.0,,,,52591,Finished,10.0,78.0
+186,10,gasly,alphatauri,6.0,6,6.0,,,,53896,Finished,8.0,78.0
+187,10,hamilton,mercedes,7.0,7,7.0,,,,68231,Finished,7.0,78.0
+188,10,stroll,aston_martin,8.0,8,13.0,,,,,+1 Lap,4.0,77.0
+189,10,ocon,alpine,9.0,9,11.0,,,,,+1 Lap,2.0,77.0
+190,10,giovinazzi,alfa,10.0,10,10.0,,,,,+1 Lap,1.0,77.0
+191,10,raikkonen,alfa,11.0,11,14.0,,,,,+1 Lap,0.0,77.0
+192,10,ricciardo,mclaren,12.0,12,12.0,,,,,+1 Lap,0.0,77.0
+193,10,alonso,alpine,13.0,13,17.0,,,,,+1 Lap,0.0,77.0
+194,10,russell,williams,14.0,14,15.0,,,,,+1 Lap,0.0,77.0
+195,10,latifi,williams,15.0,15,18.0,,,,,+1 Lap,0.0,77.0
+196,10,tsunoda,alphatauri,16.0,16,16.0,,,,,+1 Lap,0.0,77.0
+197,10,mazepin,haas,17.0,17,19.0,,,,,+3 Laps,0.0,75.0
+198,10,mick_schumacher,haas,18.0,18,20.0,,,,,+3 Laps,0.0,75.0
+199,10,bottas,mercedes,19.0,R,3.0,,,,,Wheel nut,0.0,29.0
+200,10,leclerc,ferrari,20.0,W,1.0,,,,,Driveshaft,0.0,0.0
+201,11,leclerc,ferrari,1.0,,,102241,101659,101218,,,,
+202,11,hamilton,mercedes,2.0,,,101545,101634,101450,,,,
+203,11,max_verstappen,red_bull,3.0,,,101760,101625,101563,,,,
+204,11,gasly,alphatauri,4.0,,,102288,101932,101565,,,,
+205,11,sainz,ferrari,5.0,,,102121,101740,101576,,,,
+206,11,norris,mclaren,6.0,,,102167,101813,101747,,,,
+207,11,perez,red_bull,7.0,,,101968,101630,101917,,,,
+208,11,tsunoda,alphatauri,8.0,,,102521,101654,102211,,,,
+209,11,alonso,alpine,9.0,,,102934,102195,102327,,,,
+210,11,bottas,mercedes,10.0,,,102701,102106,102659,,,,
+211,11,vettel,aston_martin,11.0,,,102460,102224,,,,,
+212,11,ocon,alpine,12.0,,,102426,102273,,,,,
+213,11,ricciardo,mclaren,13.0,,,102304,102558,,,,,
+214,11,raikkonen,alfa,14.0,,,102923,102587,,,,,
+215,11,russell,williams,15.0,,,102728,102758,,,,,
+216,11,latifi,williams,16.0,,,103128,,,,,,
+217,11,mick_schumacher,haas,17.0,,,104158,,,,,,
+218,11,mazepin,haas,18.0,,,104238,,,,,,
+219,11,stroll,aston_martin,19.0,,,,,,,,,
+220,11,giovinazzi,alfa,20.0,,,,,,,,,
+221,12,perez,red_bull,1.0,1,6.0,,,,8016410,Finished,25.0,51.0
+222,12,vettel,aston_martin,2.0,2,11.0,,,,1385,Finished,18.0,51.0
+223,12,gasly,alphatauri,3.0,3,4.0,,,,2762,Finished,15.0,51.0
+224,12,leclerc,ferrari,4.0,4,1.0,,,,3828,Finished,12.0,51.0
+225,12,norris,mclaren,5.0,5,9.0,,,,4754,Finished,10.0,51.0
+226,12,alonso,alpine,6.0,6,8.0,,,,6382,Finished,8.0,51.0
+227,12,tsunoda,alphatauri,7.0,7,7.0,,,,6624,Finished,6.0,51.0
+228,12,sainz,ferrari,8.0,8,5.0,,,,7709,Finished,4.0,51.0
+229,12,ricciardo,mclaren,9.0,9,13.0,,,,8874,Finished,2.0,51.0
+230,12,raikkonen,alfa,10.0,10,14.0,,,,9576,Finished,1.0,51.0
+231,12,giovinazzi,alfa,11.0,11,20.0,,,,10254,Finished,0.0,51.0
+232,12,bottas,mercedes,12.0,12,10.0,,,,11264,Finished,0.0,51.0
+233,12,mick_schumacher,haas,13.0,13,17.0,,,,14241,Finished,0.0,51.0
+234,12,mazepin,haas,14.0,14,18.0,,,,14315,Finished,0.0,51.0
+235,12,hamilton,mercedes,15.0,15,2.0,,,,17668,Finished,0.0,51.0
+236,12,latifi,williams,16.0,16,16.0,,,,43379,Finished,0.0,51.0
+237,12,russell,williams,17.0,R,15.0,,,,,Gearbox,0.0,48.0
+238,12,max_verstappen,red_bull,18.0,R,3.0,,,,,Accident,0.0,45.0
+239,12,stroll,aston_martin,19.0,R,19.0,,,,,Accident,0.0,29.0
+240,12,ocon,alpine,20.0,R,12.0,,,,,Turbo,0.0,3.0
+241,13,max_verstappen,red_bull,1.0,,,91001,91080,89990,,,,
+242,13,hamilton,mercedes,2.0,,,91237,90788,90248,,,,
+243,13,bottas,mercedes,3.0,,,91669,90735,90376,,,,
+244,13,perez,red_bull,4.0,,,91560,90971,90445,,,,
+245,13,sainz,ferrari,5.0,,,92079,91146,90840,,,,
+246,13,gasly,alphatauri,6.0,,,91898,91353,90868,,,,
+247,13,leclerc,ferrari,7.0,,,92209,91567,90987,,,,
+248,13,norris,mclaren,8.0,,,91733,91542,91252,,,,
+249,13,alonso,alpine,9.0,,,92158,91549,91340,,,,
+250,13,ricciardo,mclaren,10.0,,,92181,91615,91382,,,,
+251,13,ocon,alpine,11.0,,,92139,91736,,,,,
+252,13,vettel,aston_martin,12.0,,,92132,91767,,,,,
+253,13,giovinazzi,alfa,13.0,,,92722,91813,,,,,
+254,13,russell,williams,14.0,,,93060,92065,,,,,
+255,13,mick_schumacher,haas,15.0,,,92942,,,,,,
+256,13,latifi,williams,16.0,,,93062,,,,,,
+257,13,raikkonen,alfa,17.0,,,93354,,,,,,
+258,13,mazepin,haas,18.0,,,93554,,,,,,
+259,13,stroll,aston_martin,19.0,,,,,,,,,
+260,13,tsunoda,alphatauri,20.0,,,,,,,,,
+261,14,max_verstappen,red_bull,1.0,1,1.0,,,,5245770,Finished,26.0,53.0
+262,14,hamilton,mercedes,2.0,2,2.0,,,,2904,Finished,18.0,53.0
+263,14,perez,red_bull,3.0,3,4.0,,,,8811,Finished,15.0,53.0
+264,14,bottas,mercedes,4.0,4,3.0,,,,14618,Finished,12.0,53.0
+265,14,norris,mclaren,5.0,5,8.0,,,,64032,Finished,10.0,53.0
+266,14,ricciardo,mclaren,6.0,6,10.0,,,,75857,Finished,8.0,53.0
+267,14,gasly,alphatauri,7.0,7,6.0,,,,76596,Finished,6.0,53.0
+268,14,alonso,alpine,8.0,8,9.0,,,,77695,Finished,4.0,53.0
+269,14,vettel,aston_martin,9.0,9,12.0,,,,79666,Finished,2.0,53.0
+270,14,stroll,aston_martin,10.0,10,19.0,,,,91946,Finished,1.0,53.0
+271,14,sainz,ferrari,11.0,11,5.0,,,,99337,Finished,0.0,53.0
+272,14,russell,williams,12.0,12,14.0,,,,,+1 Lap,0.0,52.0
+273,14,tsunoda,alphatauri,13.0,13,0.0,,,,,+1 Lap,0.0,52.0
+274,14,ocon,alpine,14.0,14,11.0,,,,,+1 Lap,0.0,52.0
+275,14,giovinazzi,alfa,15.0,15,13.0,,,,,+1 Lap,0.0,52.0
+276,14,leclerc,ferrari,16.0,16,7.0,,,,,+1 Lap,0.0,52.0
+277,14,raikkonen,alfa,17.0,17,17.0,,,,,+1 Lap,0.0,52.0
+278,14,latifi,williams,18.0,18,16.0,,,,,+1 Lap,0.0,52.0
+279,14,mick_schumacher,haas,19.0,19,15.0,,,,,+1 Lap,0.0,52.0
+280,14,mazepin,haas,20.0,20,18.0,,,,,+1 Lap,0.0,52.0
+281,15,max_verstappen,red_bull,1.0,,,64489,64433,63841,,,,
+282,15,bottas,mercedes,2.0,,,64537,64443,64035,,,,
+283,15,hamilton,mercedes,3.0,,,64672,64512,64067,,,,
+284,15,norris,mclaren,4.0,,,64584,64298,64120,,,,
+285,15,perez,red_bull,5.0,,,64638,64197,64168,,,,
+286,15,gasly,alphatauri,6.0,,,64765,64429,64236,,,,
+287,15,leclerc,ferrari,7.0,,,64745,64646,64472,,,,
+288,15,tsunoda,alphatauri,8.0,,,64608,64631,64514,,,,
+289,15,alonso,alpine,9.0,,,64971,64582,64574,,,,
+290,15,stroll,aston_martin,10.0,,,64821,64663,64708,,,,
+291,15,russell,williams,11.0,,,65033,64671,,,,,
+292,15,sainz,ferrari,12.0,,,64859,64800,,,,,
+293,15,ricciardo,mclaren,13.0,,,65142,64808,,,,,
+294,15,vettel,aston_martin,14.0,,,65051,64875,,,,,
+295,15,giovinazzi,alfa,15.0,,,65092,64913,,,,,
+296,15,latifi,williams,16.0,,,65175,,,,,,
+297,15,ocon,alpine,17.0,,,65217,,,,,,
+298,15,raikkonen,alfa,18.0,,,65429,,,,,,
+299,15,mick_schumacher,haas,19.0,,,66041,,,,,,
+300,15,mazepin,haas,20.0,,,66192,,,,,,
+301,16,max_verstappen,red_bull,1.0,1,1.0,,,,4938925,Finished,25.0,71.0
+302,16,hamilton,mercedes,2.0,2,2.0,,,,35743,Finished,19.0,71.0
+303,16,bottas,mercedes,3.0,3,5.0,,,,46907,Finished,15.0,71.0
+304,16,perez,red_bull,4.0,4,4.0,,,,47434,Finished,12.0,71.0
+305,16,norris,mclaren,5.0,5,3.0,,,,,+1 Lap,10.0,70.0
+306,16,sainz,ferrari,6.0,6,12.0,,,,,+1 Lap,8.0,70.0
+307,16,leclerc,ferrari,7.0,7,7.0,,,,,+1 Lap,6.0,70.0
+308,16,stroll,aston_martin,8.0,8,9.0,,,,,+1 Lap,4.0,70.0
+309,16,alonso,alpine,9.0,9,8.0,,,,,+1 Lap,2.0,70.0
+310,16,tsunoda,alphatauri,10.0,10,11.0,,,,,+1 Lap,1.0,70.0
+311,16,raikkonen,alfa,11.0,11,18.0,,,,,+1 Lap,0.0,70.0
+312,16,vettel,aston_martin,12.0,12,14.0,,,,,+1 Lap,0.0,70.0
+313,16,ricciardo,mclaren,13.0,13,13.0,,,,,+1 Lap,0.0,70.0
+314,16,ocon,alpine,14.0,14,17.0,,,,,+1 Lap,0.0,70.0
+315,16,giovinazzi,alfa,15.0,15,15.0,,,,,+1 Lap,0.0,70.0
+316,16,mick_schumacher,haas,16.0,16,19.0,,,,,+2 Laps,0.0,69.0
+317,16,latifi,williams,17.0,17,16.0,,,,,+3 Laps,0.0,68.0
+318,16,mazepin,haas,18.0,18,20.0,,,,,+3 Laps,0.0,68.0
+319,16,russell,williams,19.0,R,10.0,,,,,Engine,0.0,36.0
+320,16,gasly,alphatauri,20.0,R,6.0,,,,,Collision,0.0,1.0
+321,17,max_verstappen,red_bull,1.0,,,64249,63927,63720,,,,
+322,17,norris,mclaren,2.0,,,64345,64415,63768,,,,
+323,17,perez,red_bull,3.0,,,64833,64483,63990,,,,
+324,17,hamilton,mercedes,4.0,,,64506,64258,64014,,,,
+325,17,bottas,mercedes,5.0,,,64563,64376,64049,,,,
+326,17,gasly,alphatauri,6.0,,,64841,64412,64107,,,,
+327,17,tsunoda,alphatauri,7.0,,,64967,64518,64273,,,,
+328,17,vettel,aston_martin,8.0,,,64846,64493,64570,,,,
+329,17,russell,williams,9.0,,,64907,64553,64591,,,,
+330,17,stroll,aston_martin,10.0,,,64927,64547,64618,,,,
+331,17,sainz,ferrari,11.0,,,64596,64559,,,,,
+332,17,leclerc,ferrari,12.0,,,64906,64600,,,,,
+333,17,ricciardo,mclaren,13.0,,,64977,64719,,,,,
+334,17,alonso,alpine,14.0,,,64472,64856,,,,,
+335,17,giovinazzi,alfa,15.0,,,64782,65083,,,,,
+336,17,raikkonen,alfa,16.0,,,65009,,,,,,
+337,17,ocon,alpine,17.0,,,65051,,,,,,
+338,17,latifi,williams,18.0,,,65195,,,,,,
+339,17,mick_schumacher,haas,19.0,,,65427,,,,,,
+340,17,mazepin,haas,20.0,,,65951,,,,,,
+341,18,max_verstappen,red_bull,1.0,1,1.0,,,,5034543,Finished,26.0,71.0
+342,18,bottas,mercedes,2.0,2,5.0,,,,17973,Finished,18.0,71.0
+343,18,norris,mclaren,3.0,3,2.0,,,,20019,Finished,15.0,71.0
+344,18,hamilton,mercedes,4.0,4,4.0,,,,46452,Finished,12.0,71.0
+345,18,sainz,ferrari,5.0,5,10.0,,,,57144,Finished,10.0,71.0
+346,18,perez,red_bull,6.0,6,3.0,,,,57915,Finished,8.0,71.0
+347,18,ricciardo,mclaren,7.0,7,13.0,,,,60395,Finished,6.0,71.0
+348,18,leclerc,ferrari,8.0,8,12.0,,,,61195,Finished,4.0,71.0
+349,18,gasly,alphatauri,9.0,9,6.0,,,,61844,Finished,2.0,71.0
+350,18,alonso,alpine,10.0,10,14.0,,,,,+1 Lap,1.0,70.0
+351,18,russell,williams,11.0,11,8.0,,,,,+1 Lap,0.0,70.0
+352,18,tsunoda,alphatauri,12.0,12,7.0,,,,,+1 Lap,0.0,70.0
+353,18,stroll,aston_martin,13.0,13,9.0,,,,,+1 Lap,0.0,70.0
+354,18,giovinazzi,alfa,14.0,14,15.0,,,,,+1 Lap,0.0,70.0
+355,18,raikkonen,alfa,15.0,15,16.0,,,,,+1 Lap,0.0,70.0
+356,18,latifi,williams,16.0,16,18.0,,,,,+1 Lap,0.0,70.0
+357,18,vettel,aston_martin,17.0,17,11.0,,,,,Collision,0.0,69.0
+358,18,mick_schumacher,haas,18.0,18,19.0,,,,,+2 Laps,0.0,69.0
+359,18,mazepin,haas,19.0,19,20.0,,,,,+2 Laps,0.0,69.0
+360,18,ocon,alpine,20.0,R,17.0,,,,,Collision,0.0,0.0
+361,19,hamilton,mercedes,1.0,,,86786,86023,86134,,,,
+362,19,max_verstappen,red_bull,2.0,,,86751,86315,86209,,,,
+363,19,bottas,mercedes,3.0,,,87487,86764,86328,,,,
+364,19,leclerc,ferrari,4.0,,,87051,86919,86828,,,,
+365,19,perez,red_bull,5.0,,,87121,87073,86844,,,,
+366,19,norris,mclaren,6.0,,,87444,87220,86897,,,,
+367,19,ricciardo,mclaren,7.0,,,87323,87125,86899,,,,
+368,19,russell,williams,8.0,,,87671,87080,86971,,,,
+369,19,sainz,ferrari,9.0,,,87337,86848,87007,,,,
+370,19,vettel,aston_martin,10.0,,,87493,87103,87179,,,,
+371,19,alonso,alpine,11.0,,,87580,87245,,,,,
+372,19,gasly,alphatauri,12.0,,,87600,87273,,,,,
+373,19,ocon,alpine,13.0,,,87415,87340,,,,,
+374,19,giovinazzi,alfa,14.0,,,87595,87617,,,,,
+375,19,stroll,aston_martin,15.0,,,88017,87665,,,,,
+376,19,tsunoda,alphatauri,16.0,,,88043,,,,,,
+377,19,raikkonen,alfa,17.0,,,88062,,,,,,
+378,19,latifi,williams,18.0,,,88254,,,,,,
+379,19,mick_schumacher,haas,19.0,,,88738,,,,,,
+380,19,mazepin,haas,20.0,,,89051,,,,,,
+381,20,hamilton,mercedes,1.0,1,2.0,,,,7103284,Finished,25.0,52.0
+382,20,leclerc,ferrari,2.0,2,4.0,,,,3871,Finished,18.0,52.0
+383,20,bottas,mercedes,3.0,3,3.0,,,,11125,Finished,15.0,52.0
+384,20,norris,mclaren,4.0,4,5.0,,,,28573,Finished,12.0,52.0
+385,20,ricciardo,mclaren,5.0,5,6.0,,,,42624,Finished,10.0,52.0
+386,20,sainz,ferrari,6.0,6,10.0,,,,43454,Finished,8.0,52.0
+387,20,alonso,alpine,7.0,7,7.0,,,,72093,Finished,6.0,52.0
+388,20,stroll,aston_martin,8.0,8,14.0,,,,74289,Finished,4.0,52.0
+389,20,ocon,alpine,9.0,9,9.0,,,,76162,Finished,2.0,52.0
+390,20,tsunoda,alphatauri,10.0,10,16.0,,,,82065,Finished,1.0,52.0
+391,20,gasly,alphatauri,11.0,11,11.0,,,,85327,Finished,0.0,52.0
+392,20,russell,williams,12.0,12,12.0,,,,,+1 Lap,0.0,51.0
+393,20,giovinazzi,alfa,13.0,13,15.0,,,,,+1 Lap,0.0,51.0
+394,20,latifi,williams,14.0,14,17.0,,,,,+1 Lap,0.0,51.0
+395,20,raikkonen,alfa,15.0,15,13.0,,,,,+1 Lap,0.0,51.0
+396,20,perez,red_bull,16.0,16,0.0,,,,,+1 Lap,0.0,51.0
+397,20,mazepin,haas,17.0,17,19.0,,,,,+1 Lap,0.0,51.0
+398,20,mick_schumacher,haas,18.0,18,18.0,,,,,+1 Lap,0.0,51.0
+399,20,vettel,aston_martin,19.0,R,8.0,,,,,Retired,0.0,40.0
+400,20,max_verstappen,red_bull,20.0,R,1.0,,,,,Collision,0.0,0.0
+401,21,hamilton,mercedes,1.0,,,76424,76553,75419,,,,
+402,21,bottas,mercedes,2.0,,,76569,76702,75734,,,,
+403,21,max_verstappen,red_bull,3.0,,,76214,75650,75840,,,,
+404,21,perez,red_bull,4.0,,,77233,76443,76421,,,,
+405,21,gasly,alphatauri,5.0,,,76874,76394,76483,,,,
+406,21,norris,mclaren,6.0,,,77081,76385,76489,,,,
+407,21,leclerc,ferrari,7.0,,,77084,76574,76496,,,,
+408,21,ocon,alpine,8.0,,,77367,76766,76653,,,,
+409,21,alonso,alpine,9.0,,,77123,76541,76715,,,,
+410,21,vettel,aston_martin,10.0,,,77105,76794,76750,,,,
+411,21,ricciardo,mclaren,11.0,,,77664,76871,,,,,
+412,21,stroll,aston_martin,12.0,,,77038,76893,,,,,
+413,21,raikkonen,alfa,13.0,,,77553,77564,,,,,
+414,21,giovinazzi,alfa,14.0,,,77776,77583,,,,,
+415,21,sainz,ferrari,15.0,,,76649,,,,,,
+416,21,tsunoda,alphatauri,16.0,,,77919,,,,,,
+417,21,russell,williams,17.0,,,77944,,,,,,
+418,21,latifi,williams,18.0,,,78036,,,,,,
+419,21,mazepin,haas,19.0,,,78922,,,,,,
+420,21,mick_schumacher,haas,20.0,,,,,,,,,
+421,22,ocon,alpine,1.0,1,8.0,,,,7483199,Finished,25.0,70.0
+422,22,hamilton,mercedes,2.0,2,1.0,,,,2736,Finished,18.0,70.0
+423,22,sainz,ferrari,3.0,3,15.0,,,,15018,Finished,15.0,70.0
+424,22,alonso,alpine,4.0,4,9.0,,,,15651,Finished,12.0,70.0
+425,22,gasly,alphatauri,5.0,5,5.0,,,,63614,Finished,11.0,70.0
+426,22,tsunoda,alphatauri,6.0,6,16.0,,,,75803,Finished,8.0,70.0
+427,22,latifi,williams,7.0,7,18.0,,,,77910,Finished,6.0,70.0
+428,22,russell,williams,8.0,8,17.0,,,,79094,Finished,4.0,70.0
+429,22,max_verstappen,red_bull,9.0,9,3.0,,,,80244,Finished,2.0,70.0
+430,22,raikkonen,alfa,10.0,10,13.0,,,,,+1 Lap,1.0,69.0
+431,22,ricciardo,mclaren,11.0,11,11.0,,,,,+1 Lap,0.0,69.0
+432,22,mick_schumacher,haas,12.0,12,20.0,,,,,+1 Lap,0.0,69.0
+433,22,giovinazzi,alfa,13.0,13,0.0,,,,,+1 Lap,0.0,69.0
+434,22,mazepin,haas,14.0,R,19.0,,,,,Collision,0.0,3.0
+435,22,norris,mclaren,15.0,R,6.0,,,,,Collision,0.0,2.0
+436,22,bottas,mercedes,16.0,R,2.0,,,,,Collision,0.0,0.0
+437,22,perez,red_bull,17.0,R,4.0,,,,,Collision,0.0,0.0
+438,22,leclerc,ferrari,18.0,R,7.0,,,,,Collision,0.0,0.0
+439,22,stroll,aston_martin,19.0,R,12.0,,,,,Collision,0.0,0.0
+440,22,vettel,aston_martin,20.0,D,10.0,,,,,Disqualified,0.0,70.0
+441,23,max_verstappen,red_bull,1.0,,,118717,116559,119765,,,,
+442,23,russell,williams,2.0,,,119864,116950,120086,,,,
+443,23,hamilton,mercedes,3.0,,,119218,116229,120099,,,,
+444,23,ricciardo,mclaren,4.0,,,121583,117127,120864,,,,
+445,23,vettel,aston_martin,5.0,,,120175,116814,120935,,,,
+446,23,gasly,alphatauri,6.0,,,120387,116440,121164,,,,
+447,23,perez,red_bull,7.0,,,119334,116886,122112,,,,
+448,23,bottas,mercedes,8.0,,,119870,116295,122502,,,,
+449,23,ocon,alpine,9.0,,,121824,117354,123513,,,,
+450,23,norris,mclaren,10.0,,,118301,116025,,,,,
+451,23,leclerc,ferrari,11.0,,,120728,117721,,,,,
+452,23,latifi,williams,12.0,,,120966,118056,,,,,
+453,23,sainz,ferrari,13.0,,,121184,118137,,,,,
+454,23,alonso,alpine,14.0,,,121653,118205,,,,,
+455,23,stroll,aston_martin,15.0,,,121597,118231,,,,,
+456,23,giovinazzi,alfa,16.0,,,122306,,,,,,
+457,23,tsunoda,alphatauri,17.0,,,122413,,,,,,
+458,23,mick_schumacher,haas,18.0,,,123973,,,,,,
+459,23,raikkonen,alfa,19.0,,,124452,,,,,,
+460,23,mazepin,haas,20.0,,,124939,,,,,,
+461,24,max_verstappen,red_bull,1.0,1,1.0,,,,207071,Finished,12.5,1.0
+462,24,russell,williams,2.0,2,2.0,,,,1995,Finished,9.0,1.0
+463,24,hamilton,mercedes,3.0,3,3.0,,,,2601,Finished,7.5,1.0
+464,24,ricciardo,mclaren,4.0,4,4.0,,,,4496,Finished,6.0,1.0
+465,24,vettel,aston_martin,5.0,5,5.0,,,,7479,Finished,5.0,1.0
+466,24,gasly,alphatauri,6.0,6,6.0,,,,10177,Finished,4.0,1.0
+467,24,ocon,alpine,7.0,7,8.0,,,,11579,Finished,3.0,1.0
+468,24,leclerc,ferrari,8.0,8,9.0,,,,12608,Finished,2.0,1.0
+469,24,latifi,williams,9.0,9,10.0,,,,15485,Finished,1.0,1.0
+470,24,sainz,ferrari,10.0,10,11.0,,,,16166,Finished,0.5,1.0
+471,24,alonso,alpine,11.0,11,12.0,,,,20590,Finished,0.0,1.0
+472,24,bottas,mercedes,12.0,12,13.0,,,,22414,Finished,0.0,1.0
+473,24,giovinazzi,alfa,13.0,13,14.0,,,,24163,Finished,0.0,1.0
+474,24,norris,mclaren,14.0,14,15.0,,,,27110,Finished,0.0,1.0
+475,24,tsunoda,alphatauri,15.0,15,16.0,,,,28329,Finished,0.0,1.0
+476,24,mick_schumacher,haas,16.0,16,17.0,,,,29507,Finished,0.0,1.0
+477,24,mazepin,haas,17.0,17,18.0,,,,31993,Finished,0.0,1.0
+478,24,raikkonen,alfa,18.0,18,0.0,,,,36054,Finished,0.0,1.0
+479,24,perez,red_bull,19.0,19,0.0,,,,38205,Finished,0.0,1.0
+480,24,stroll,aston_martin,20.0,20,19.0,,,,44108,Finished,0.0,1.0
+481,25,max_verstappen,red_bull,1.0,,,70036,69071,68885,,,,
+482,25,hamilton,mercedes,2.0,,,70114,69726,68923,,,,
+483,25,bottas,mercedes,3.0,,,70219,69769,69222,,,,
+484,25,gasly,alphatauri,4.0,,,70274,69541,69478,,,,
+485,25,leclerc,ferrari,5.0,,,69829,69437,69527,,,,
+486,25,sainz,ferrari,6.0,,,70022,69870,69537,,,,
+487,25,giovinazzi,alfa,7.0,,,70050,70033,69590,,,,
+488,25,ocon,alpine,8.0,,,70179,69919,69933,,,,
+489,25,alonso,alpine,9.0,,,70435,70020,69956,,,,
+490,25,ricciardo,mclaren,10.0,,,70255,69865,70166,,,,
+491,25,russell,williams,11.0,,,70382,70332,,,,,
+492,25,stroll,aston_martin,12.0,,,70438,70367,,,,,
+493,25,norris,mclaren,13.0,,,70489,70406,,,,,
+494,25,latifi,williams,14.0,,,70093,71161,,,,,
+495,25,tsunoda,alphatauri,15.0,,,70462,71314,,,,,
+496,25,perez,red_bull,16.0,,,70530,,,,,,
+497,25,vettel,aston_martin,17.0,,,70731,,,,,,
+498,25,kubica,alfa,18.0,,,71301,,,,,,
+499,25,mick_schumacher,haas,19.0,,,71387,,,,,,
+500,25,mazepin,haas,20.0,,,71875,,,,,,
+501,26,max_verstappen,red_bull,1.0,1,1.0,,,,5405395,Finished,25.0,72.0
+502,26,hamilton,mercedes,2.0,2,2.0,,,,20932,Finished,19.0,72.0
+503,26,bottas,mercedes,3.0,3,3.0,,,,56460,Finished,15.0,72.0
+504,26,gasly,alphatauri,4.0,4,4.0,,,,,+1 Lap,12.0,71.0
+505,26,leclerc,ferrari,5.0,5,5.0,,,,,+1 Lap,10.0,71.0
+506,26,alonso,alpine,6.0,6,9.0,,,,,+1 Lap,8.0,71.0
+507,26,sainz,ferrari,7.0,7,6.0,,,,,+1 Lap,6.0,71.0
+508,26,perez,red_bull,8.0,8,0.0,,,,,+1 Lap,4.0,71.0
+509,26,ocon,alpine,9.0,9,8.0,,,,,+1 Lap,2.0,71.0
+510,26,norris,mclaren,10.0,10,13.0,,,,,+1 Lap,1.0,71.0
+511,26,ricciardo,mclaren,11.0,11,10.0,,,,,+1 Lap,0.0,71.0
+512,26,stroll,aston_martin,12.0,12,12.0,,,,,+2 Laps,0.0,70.0
+513,26,vettel,aston_martin,13.0,13,15.0,,,,,+2 Laps,0.0,70.0
+514,26,giovinazzi,alfa,14.0,14,7.0,,,,,+2 Laps,0.0,70.0
+515,26,kubica,alfa,15.0,15,16.0,,,,,+2 Laps,0.0,70.0
+516,26,latifi,williams,16.0,16,0.0,,,,,+2 Laps,0.0,70.0
+517,26,russell,williams,17.0,17,11.0,,,,,Gearbox,0.0,69.0
+518,26,mick_schumacher,haas,18.0,18,17.0,,,,,+3 Laps,0.0,69.0
+519,26,tsunoda,alphatauri,19.0,R,14.0,,,,,Power Unit,0.0,48.0
+520,26,mazepin,haas,20.0,R,18.0,,,,,Hydraulics,0.0,41.0
+521,27,bottas,mercedes,1.0,,,80685,80032,79555,,,,
+522,27,hamilton,mercedes,2.0,,,80543,79936,79651,,,,
+523,27,max_verstappen,red_bull,3.0,,,81035,80229,79966,,,,
+524,27,norris,mclaren,4.0,,,80916,80059,79989,,,,
+525,27,ricciardo,mclaren,5.0,,,81292,80435,79995,,,,
+526,27,gasly,alphatauri,6.0,,,81440,80556,80260,,,,
+527,27,sainz,ferrari,7.0,,,81118,80750,80462,,,,
+528,27,leclerc,ferrari,8.0,,,81219,80767,80510,,,,
+529,27,perez,red_bull,9.0,,,81308,80882,80611,,,,
+530,27,giovinazzi,alfa,10.0,,,81197,80726,80808,,,,
+531,27,vettel,aston_martin,11.0,,,81394,80913,,,,,
+532,27,stroll,aston_martin,12.0,,,81415,81020,,,,,
+533,27,alonso,alpine,13.0,,,81487,81069,,,,,
+534,27,ocon,alpine,14.0,,,81500,81103,,,,,
+535,27,russell,williams,15.0,,,81890,81392,,,,,
+536,27,latifi,williams,16.0,,,81925,,,,,,
+537,27,tsunoda,alphatauri,17.0,,,81973,,,,,,
+538,27,mick_schumacher,haas,18.0,,,82248,,,,,,
+539,27,kubica,alfa,19.0,,,82530,,,,,,
+540,27,mazepin,haas,20.0,,,82716,,,,,,
+541,28,ricciardo,mclaren,1.0,1,2.0,,,,4914365,Finished,26.0,53.0
+542,28,norris,mclaren,2.0,2,3.0,,,,1747,Finished,18.0,53.0
+543,28,bottas,mercedes,3.0,3,19.0,,,,4921,Finished,15.0,53.0
+544,28,leclerc,ferrari,4.0,4,5.0,,,,7309,Finished,12.0,53.0
+545,28,perez,red_bull,5.0,5,8.0,,,,8723,Finished,10.0,53.0
+546,28,sainz,ferrari,6.0,6,6.0,,,,10535,Finished,8.0,53.0
+547,28,stroll,aston_martin,7.0,7,9.0,,,,15804,Finished,6.0,53.0
+548,28,alonso,alpine,8.0,8,10.0,,,,17201,Finished,4.0,53.0
+549,28,russell,williams,9.0,9,14.0,,,,19742,Finished,2.0,53.0
+550,28,ocon,alpine,10.0,10,12.0,,,,20868,Finished,1.0,53.0
+551,28,latifi,williams,11.0,11,13.0,,,,23743,Finished,0.0,53.0
+552,28,vettel,aston_martin,12.0,12,11.0,,,,24621,Finished,0.0,53.0
+553,28,giovinazzi,alfa,13.0,13,7.0,,,,27216,Finished,0.0,53.0
+554,28,kubica,alfa,14.0,14,17.0,,,,29769,Finished,0.0,53.0
+555,28,mick_schumacher,haas,15.0,15,18.0,,,,51088,Finished,0.0,53.0
+556,28,mazepin,haas,16.0,R,16.0,,,,,Power Unit,0.0,41.0
+557,28,hamilton,mercedes,17.0,R,4.0,,,,,Collision,0.0,25.0
+558,28,max_verstappen,red_bull,18.0,R,1.0,,,,,Collision,0.0,25.0
+559,28,gasly,alphatauri,19.0,R,0.0,,,,,Suspension,0.0,3.0
+560,28,tsunoda,alphatauri,20.0,W,0.0,,,,,Brakes,0.0,0.0
+561,29,norris,mclaren,1.0,,,107238,105827,101993,,,,
+562,29,sainz,ferrari,2.0,,,107924,106521,102510,,,,
+563,29,russell,williams,3.0,,,108303,106435,102983,,,,
+564,29,hamilton,mercedes,4.0,,,105992,105129,104050,,,,
+565,29,ricciardo,mclaren,5.0,,,108345,106361,104156,,,,
+566,29,alonso,alpine,6.0,,,107877,105514,104204,,,,
+567,29,bottas,mercedes,7.0,,,106396,105306,104710,,,,
+568,29,stroll,aston_martin,8.0,,,108322,106360,104956,,,,
+569,29,perez,red_bull,9.0,,,106455,105834,105337,,,,
+570,29,ocon,alpine,10.0,,,108099,106070,105865,,,,
+571,29,vettel,aston_martin,11.0,,,107205,106573,,,,,
+572,29,gasly,alphatauri,12.0,,,107828,106641,,,,,
+573,29,tsunoda,alphatauri,13.0,,,108854,106751,,,,,
+574,29,latifi,williams,14.0,,,108252,,,,,,
+575,29,leclerc,ferrari,15.0,,,108470,,,,,,
+576,29,raikkonen,alfa,16.0,,,109586,,,,,,
+577,29,mick_schumacher,haas,17.0,,,109830,,,,,,
+578,29,giovinazzi,alfa,18.0,,,111023,,,,,,
+579,29,mazepin,haas,19.0,,,113764,,,,,,
+580,29,max_verstappen,red_bull,20.0,,,,,,,,,
+581,30,hamilton,mercedes,1.0,1,4.0,,,,5441001,Finished,25.0,53.0
+582,30,max_verstappen,red_bull,2.0,2,20.0,,,,53271,Finished,18.0,53.0
+583,30,sainz,ferrari,3.0,3,2.0,,,,62475,Finished,15.0,53.0
+584,30,ricciardo,mclaren,4.0,4,5.0,,,,65607,Finished,12.0,53.0
+585,30,bottas,mercedes,5.0,5,16.0,,,,67533,Finished,10.0,53.0
+586,30,alonso,alpine,6.0,6,6.0,,,,81321,Finished,8.0,53.0
+587,30,norris,mclaren,7.0,7,1.0,,,,87224,Finished,7.0,53.0
+588,30,raikkonen,alfa,8.0,8,13.0,,,,88955,Finished,4.0,53.0
+589,30,perez,red_bull,9.0,9,8.0,,,,90076,Finished,2.0,53.0
+590,30,russell,williams,10.0,10,3.0,,,,100551,Finished,1.0,53.0
+591,30,stroll,aston_martin,11.0,11,7.0,,,,106198,Finished,0.0,53.0
+592,30,vettel,aston_martin,12.0,12,10.0,,,,,+1 Lap,0.0,52.0
+593,30,gasly,alphatauri,13.0,13,11.0,,,,,+1 Lap,0.0,52.0
+594,30,ocon,alpine,14.0,14,9.0,,,,,+1 Lap,0.0,52.0
+595,30,leclerc,ferrari,15.0,15,19.0,,,,,+1 Lap,0.0,52.0
+596,30,giovinazzi,alfa,16.0,16,17.0,,,,,+1 Lap,0.0,52.0
+597,30,tsunoda,alphatauri,17.0,17,12.0,,,,,+1 Lap,0.0,52.0
+598,30,mazepin,haas,18.0,18,15.0,,,,,+2 Laps,0.0,51.0
+599,30,latifi,williams,19.0,19,18.0,,,,,Accident,0.0,47.0
+600,30,mick_schumacher,haas,20.0,R,14.0,,,,,Oil leak,0.0,32.0
+601,31,hamilton,mercedes,1.0,,,84585,83082,82868,,,,
+602,31,bottas,mercedes,2.0,,,85047,83579,82998,,,,
+603,31,max_verstappen,red_bull,3.0,,,84592,83732,83196,,,,
+604,31,leclerc,ferrari,4.0,,,84869,84015,83265,,,,
+605,31,gasly,alphatauri,5.0,,,84704,83817,83326,,,,
+606,31,alonso,alpine,6.0,,,85174,83914,83477,,,,
+607,31,perez,red_bull,7.0,,,84963,83961,83706,,,,
+608,31,norris,mclaren,8.0,,,85138,84642,83954,,,,
+609,31,stroll,aston_martin,9.0,,,85511,84601,84305,,,,
+610,31,tsunoda,alphatauri,10.0,,,85409,84054,84368,,,,
+611,31,vettel,aston_martin,11.0,,,85787,84795,,,,,
+612,31,ocon,alpine,12.0,,,85422,84842,,,,,
+613,31,russell,williams,13.0,,,85417,85007,,,,,
+614,31,mick_schumacher,haas,14.0,,,85555,85200,,,,,
+615,31,sainz,ferrari,15.0,,,85177,,,,,,
+616,31,ricciardo,mclaren,16.0,,,85881,,,,,,
+617,31,latifi,williams,17.0,,,86086,,,,,,
+618,31,giovinazzi,alfa,18.0,,,86430,,,,,,
+619,31,raikkonen,alfa,19.0,,,87525,,,,,,
+620,31,mazepin,haas,20.0,,,88449,,,,,,
+621,32,bottas,mercedes,1.0,1,1.0,,,,5464103,Finished,26.0,58.0
+622,32,max_verstappen,red_bull,2.0,2,2.0,,,,14584,Finished,18.0,58.0
+623,32,perez,red_bull,3.0,3,6.0,,,,33471,Finished,15.0,58.0
+624,32,leclerc,ferrari,4.0,4,3.0,,,,37814,Finished,12.0,58.0
+625,32,hamilton,mercedes,5.0,5,11.0,,,,41812,Finished,10.0,58.0
+626,32,gasly,alphatauri,6.0,6,4.0,,,,44292,Finished,8.0,58.0
+627,32,norris,mclaren,7.0,7,7.0,,,,47213,Finished,6.0,58.0
+628,32,sainz,ferrari,8.0,8,19.0,,,,51526,Finished,4.0,58.0
+629,32,stroll,aston_martin,9.0,9,8.0,,,,82018,Finished,2.0,58.0
+630,32,ocon,alpine,10.0,10,12.0,,,,,+1 Lap,1.0,57.0
+631,32,giovinazzi,alfa,11.0,11,16.0,,,,,+1 Lap,0.0,57.0
+632,32,raikkonen,alfa,12.0,12,17.0,,,,,+1 Lap,0.0,57.0
+633,32,ricciardo,mclaren,13.0,13,20.0,,,,,+1 Lap,0.0,57.0
+634,32,tsunoda,alphatauri,14.0,14,9.0,,,,,+1 Lap,0.0,57.0
+635,32,russell,williams,15.0,15,13.0,,,,,+1 Lap,0.0,57.0
+636,32,alonso,alpine,16.0,16,5.0,,,,,+1 Lap,0.0,57.0
+637,32,latifi,williams,17.0,17,15.0,,,,,+1 Lap,0.0,57.0
+638,32,vettel,aston_martin,18.0,18,10.0,,,,,+1 Lap,0.0,57.0
+639,32,mick_schumacher,haas,19.0,19,14.0,,,,,+2 Laps,0.0,56.0
+640,32,mazepin,haas,20.0,20,18.0,,,,,+2 Laps,0.0,56.0
+641,33,max_verstappen,red_bull,1.0,,,94352,93464,92910,,,,
+642,33,hamilton,mercedes,2.0,,,94579,93797,93119,,,,
+643,33,perez,red_bull,3.0,,,94369,94178,93134,,,,
+644,33,bottas,mercedes,4.0,,,94590,93959,93475,,,,
+645,33,leclerc,ferrari,5.0,,,94153,93928,93606,,,,
+646,33,sainz,ferrari,6.0,,,94558,94126,93792,,,,
+647,33,ricciardo,mclaren,7.0,,,94407,94643,93808,,,,
+648,33,norris,mclaren,8.0,,,94551,93880,93887,,,,
+649,33,gasly,alphatauri,9.0,,,94567,94583,94118,,,,
+650,33,tsunoda,alphatauri,10.0,,,95360,95137,94918,,,,
+651,33,ocon,alpine,11.0,,,95747,95377,,,,,
+652,33,vettel,aston_martin,12.0,,,95281,95500,,,,,
+653,33,giovinazzi,alfa,13.0,,,95920,95794,,,,,
+654,33,alonso,alpine,14.0,,,95756,104549,,,,,
+655,33,russell,williams,15.0,,,95746,,,,,,
+656,33,stroll,aston_martin,16.0,,,95983,,,,,,
+657,33,latifi,williams,17.0,,,95995,,,,,,
+658,33,raikkonen,alfa,18.0,,,96311,,,,,,
+659,33,mick_schumacher,haas,19.0,,,96499,,,,,,
+660,33,mazepin,haas,20.0,,,96796,,,,,,
+661,34,max_verstappen,red_bull,1.0,1,1.0,,,,5676552,Finished,25.0,56.0
+662,34,hamilton,mercedes,2.0,2,2.0,,,,1333,Finished,19.0,56.0
+663,34,perez,red_bull,3.0,3,3.0,,,,42223,Finished,15.0,56.0
+664,34,leclerc,ferrari,4.0,4,4.0,,,,52246,Finished,12.0,56.0
+665,34,ricciardo,mclaren,5.0,5,6.0,,,,76854,Finished,10.0,56.0
+666,34,bottas,mercedes,6.0,6,9.0,,,,80128,Finished,8.0,56.0
+667,34,sainz,ferrari,7.0,7,5.0,,,,83545,Finished,6.0,56.0
+668,34,norris,mclaren,8.0,8,7.0,,,,84395,Finished,4.0,56.0
+669,34,tsunoda,alphatauri,9.0,9,10.0,,,,,+1 Lap,2.0,55.0
+670,34,vettel,aston_martin,10.0,10,18.0,,,,,+1 Lap,1.0,55.0
+671,34,giovinazzi,alfa,11.0,11,12.0,,,,,+1 Lap,0.0,55.0
+672,34,stroll,aston_martin,12.0,12,13.0,,,,,+1 Lap,0.0,55.0
+673,34,raikkonen,alfa,13.0,13,15.0,,,,,+1 Lap,0.0,55.0
+674,34,russell,williams,14.0,14,20.0,,,,,+1 Lap,0.0,55.0
+675,34,latifi,williams,15.0,15,14.0,,,,,+1 Lap,0.0,55.0
+676,34,mick_schumacher,haas,16.0,16,16.0,,,,,+2 Laps,0.0,54.0
+677,34,mazepin,haas,17.0,17,17.0,,,,,+2 Laps,0.0,54.0
+678,34,alonso,alpine,18.0,R,19.0,,,,,Rear wing,0.0,49.0
+679,34,ocon,alpine,19.0,R,11.0,,,,,Mechanical,0.0,40.0
+680,34,gasly,alphatauri,20.0,R,8.0,,,,,Suspension,0.0,14.0
+681,35,bottas,mercedes,1.0,,,76727,76864,75875,,,,
+682,35,hamilton,mercedes,2.0,,,77207,76474,76020,,,,
+683,35,max_verstappen,red_bull,3.0,,,76788,76483,76225,,,,
+684,35,perez,red_bull,4.0,,,77003,77055,76342,,,,
+685,35,gasly,alphatauri,5.0,,,76908,76955,76456,,,,
+686,35,sainz,ferrari,6.0,,,77517,77248,76761,,,,
+687,35,ricciardo,mclaren,7.0,,,77719,77092,76763,,,,
+688,35,leclerc,ferrari,8.0,,,76748,77034,76837,,,,
+689,35,tsunoda,alphatauri,9.0,,,77330,76701,77158,,,,
+690,35,norris,mclaren,10.0,,,77569,77473,96830,,,,
+691,35,vettel,aston_martin,11.0,,,77502,77746,,,,,
+692,35,raikkonen,alfa,12.0,,,77606,77958,,,,,
+693,35,russell,williams,13.0,,,77958,78172,,,,,
+694,35,giovinazzi,alfa,14.0,,,77897,78290,,,,,
+695,35,ocon,alpine,15.0,,,78126,78405,,,,,
+696,35,alonso,alpine,16.0,,,78452,,,,,,
+697,35,latifi,williams,17.0,,,78756,,,,,,
+698,35,mick_schumacher,haas,18.0,,,78858,,,,,,
+699,35,mazepin,haas,19.0,,,79303,,,,,,
+700,35,stroll,aston_martin,20.0,,,80873,,,,,,
+701,36,max_verstappen,red_bull,1.0,1,3.0,,,,5919086,Finished,25.0,71.0
+702,36,hamilton,mercedes,2.0,2,2.0,,,,16555,Finished,18.0,71.0
+703,36,perez,red_bull,3.0,3,4.0,,,,17752,Finished,15.0,71.0
+704,36,gasly,alphatauri,4.0,4,5.0,,,,63845,Finished,12.0,71.0
+705,36,leclerc,ferrari,5.0,5,8.0,,,,81037,Finished,10.0,71.0
+706,36,sainz,ferrari,6.0,6,6.0,,,,,+1 Lap,8.0,70.0
+707,36,vettel,aston_martin,7.0,7,9.0,,,,,+1 Lap,6.0,70.0
+708,36,raikkonen,alfa,8.0,8,10.0,,,,,+1 Lap,4.0,70.0
+709,36,alonso,alpine,9.0,9,12.0,,,,,+1 Lap,2.0,70.0
+710,36,norris,mclaren,10.0,10,18.0,,,,,+1 Lap,1.0,70.0
+711,36,giovinazzi,alfa,11.0,11,11.0,,,,,+1 Lap,0.0,70.0
+712,36,ricciardo,mclaren,12.0,12,7.0,,,,,+1 Lap,0.0,70.0
+713,36,ocon,alpine,13.0,13,19.0,,,,,+1 Lap,0.0,70.0
+714,36,stroll,aston_martin,14.0,14,20.0,,,,,+2 Laps,0.0,69.0
+715,36,bottas,mercedes,15.0,15,1.0,,,,,+2 Laps,0.0,69.0
+716,36,russell,williams,16.0,16,16.0,,,,,+2 Laps,0.0,69.0
+717,36,latifi,williams,17.0,17,13.0,,,,,+2 Laps,0.0,69.0
+718,36,mazepin,haas,18.0,18,15.0,,,,,+3 Laps,0.0,68.0
+719,36,mick_schumacher,haas,19.0,R,14.0,,,,,Collision,0.0,0.0
+720,36,tsunoda,alphatauri,20.0,R,17.0,,,,,Collision,0.0,0.0
+721,37,hamilton,mercedes,1.0,,,68733,68068,67934,,,,
+722,37,max_verstappen,red_bull,2.0,,,69329,68499,68372,,,,
+723,37,bottas,mercedes,3.0,,,69040,68426,68469,,,,
+724,37,perez,red_bull,4.0,,,69172,68973,68483,,,,
+725,37,gasly,alphatauri,5.0,,,69347,68903,68777,,,,
+726,37,sainz,ferrari,6.0,,,69046,69031,68826,,,,
+727,37,leclerc,ferrari,7.0,,,69155,68859,68960,,,,
+728,37,norris,mclaren,8.0,,,69365,69030,68980,,,,
+729,37,ricciardo,mclaren,9.0,,,69374,69093,69039,,,,
+730,37,alonso,alpine,10.0,,,69391,69137,69113,,,,
+731,37,ocon,alpine,11.0,,,69430,69189,,,,,
+732,37,vettel,aston_martin,12.0,,,69451,69399,,,,,
+733,37,tsunoda,alphatauri,13.0,,,69350,69483,,,,,
+734,37,raikkonen,alfa,14.0,,,69598,69503,,,,,
+735,37,giovinazzi,alfa,15.0,,,69342,70227,,,,,
+736,37,stroll,aston_martin,16.0,,,69663,,,,,,
+737,37,latifi,williams,17.0,,,69897,,,,,,
+738,37,russell,williams,18.0,,,69953,,,,,,
+739,37,mick_schumacher,haas,19.0,,,70329,,,,,,
+740,37,mazepin,haas,20.0,,,70589,,,,,,
+741,38,hamilton,mercedes,1.0,1,10.0,,,,5542851,Finished,25.0,71.0
+742,38,max_verstappen,red_bull,2.0,2,2.0,,,,10496,Finished,18.0,71.0
+743,38,bottas,mercedes,3.0,3,1.0,,,,13576,Finished,15.0,71.0
+744,38,perez,red_bull,4.0,4,4.0,,,,39940,Finished,13.0,71.0
+745,38,leclerc,ferrari,5.0,5,6.0,,,,49517,Finished,10.0,71.0
+746,38,sainz,ferrari,6.0,6,3.0,,,,51820,Finished,8.0,71.0
+747,38,gasly,alphatauri,7.0,7,7.0,,,,,+1 Lap,6.0,70.0
+748,38,ocon,alpine,8.0,8,8.0,,,,,+1 Lap,4.0,70.0
+749,38,alonso,alpine,9.0,9,12.0,,,,,+1 Lap,2.0,70.0
+750,38,norris,mclaren,10.0,10,5.0,,,,,+1 Lap,1.0,70.0
+751,38,vettel,aston_martin,11.0,11,9.0,,,,,+1 Lap,0.0,70.0
+752,38,raikkonen,alfa,12.0,12,0.0,,,,,+1 Lap,0.0,70.0
+753,38,russell,williams,13.0,13,17.0,,,,,+1 Lap,0.0,70.0
+754,38,giovinazzi,alfa,14.0,14,13.0,,,,,+1 Lap,0.0,70.0
+755,38,tsunoda,alphatauri,15.0,15,15.0,,,,,+1 Lap,0.0,70.0
+756,38,latifi,williams,16.0,16,16.0,,,,,+1 Lap,0.0,70.0
+757,38,mazepin,haas,17.0,17,19.0,,,,,+2 Laps,0.0,69.0
+758,38,mick_schumacher,haas,18.0,18,18.0,,,,,+2 Laps,0.0,69.0
+759,38,ricciardo,mclaren,19.0,R,11.0,,,,,Power loss,0.0,49.0
+760,38,stroll,aston_martin,20.0,R,14.0,,,,,Collision damage,0.0,47.0
+761,39,hamilton,mercedes,1.0,,,81901,81682,80827,,,,
+762,39,max_verstappen,red_bull,2.0,,,81996,81984,81282,,,,
+763,39,bottas,mercedes,3.0,,,82016,81991,81478,,,,
+764,39,gasly,alphatauri,4.0,,,82535,81728,81640,,,,
+765,39,alonso,alpine,5.0,,,82422,81894,81670,,,,
+766,39,norris,mclaren,6.0,,,82839,82216,81731,,,,
+767,39,sainz,ferrari,7.0,,,82304,82241,81840,,,,
+768,39,tsunoda,alphatauri,8.0,,,82458,82058,81881,,,,
+769,39,ocon,alpine,9.0,,,82565,82012,82028,,,,
+770,39,vettel,aston_martin,10.0,,,82549,82146,82785,,,,
+771,39,perez,red_bull,11.0,,,82398,82346,,,,,
+772,39,stroll,aston_martin,12.0,,,82551,82460,,,,,
+773,39,leclerc,ferrari,13.0,,,82742,82463,,,,,
+774,39,ricciardo,mclaren,14.0,,,82688,82597,,,,,
+775,39,russell,williams,15.0,,,82863,82756,,,,,
+776,39,raikkonen,alfa,16.0,,,83156,,,,,,
+777,39,latifi,williams,17.0,,,83213,,,,,,
+778,39,giovinazzi,alfa,18.0,,,83262,,,,,,
+779,39,mick_schumacher,haas,19.0,,,83407,,,,,,
+780,39,mazepin,haas,20.0,,,85859,,,,,,
+781,40,hamilton,mercedes,1.0,1,1.0,,,,5068471,Finished,25.0,57.0
+782,40,max_verstappen,red_bull,2.0,2,7.0,,,,25743,Finished,19.0,57.0
+783,40,alonso,alpine,3.0,3,3.0,,,,59457,Finished,15.0,57.0
+784,40,perez,red_bull,4.0,4,11.0,,,,62306,Finished,12.0,57.0
+785,40,ocon,alpine,5.0,5,9.0,,,,80570,Finished,10.0,57.0
+786,40,stroll,aston_martin,6.0,6,12.0,,,,81274,Finished,8.0,57.0
+787,40,sainz,ferrari,7.0,7,5.0,,,,81911,Finished,6.0,57.0
+788,40,leclerc,ferrari,8.0,8,13.0,,,,83126,Finished,4.0,57.0
+789,40,norris,mclaren,9.0,9,4.0,,,,,+1 Lap,2.0,56.0
+790,40,vettel,aston_martin,10.0,10,10.0,,,,,+1 Lap,1.0,56.0
+791,40,gasly,alphatauri,11.0,11,2.0,,,,,+1 Lap,0.0,56.0
+792,40,ricciardo,mclaren,12.0,12,14.0,,,,,+1 Lap,0.0,56.0
+793,40,tsunoda,alphatauri,13.0,13,8.0,,,,,+1 Lap,0.0,56.0
+794,40,raikkonen,alfa,14.0,14,16.0,,,,,+1 Lap,0.0,56.0
+795,40,giovinazzi,alfa,15.0,15,18.0,,,,,+1 Lap,0.0,56.0
+796,40,mick_schumacher,haas,16.0,16,19.0,,,,,+1 Lap,0.0,56.0
+797,40,russell,williams,17.0,17,15.0,,,,,+2 Laps,0.0,55.0
+798,40,mazepin,haas,18.0,18,20.0,,,,,+2 Laps,0.0,55.0
+799,40,latifi,williams,19.0,R,17.0,,,,,Puncture,0.0,50.0
+800,40,bottas,mercedes,20.0,R,6.0,,,,,Damage,0.0,48.0
+801,41,hamilton,mercedes,1.0,,,88466,87712,87511,,,,
+802,41,bottas,mercedes,2.0,,,88057,88054,87622,,,,
+803,41,max_verstappen,red_bull,3.0,,,88285,87953,87653,,,,
+804,41,leclerc,ferrari,4.0,,,88310,88459,88054,,,,
+805,41,perez,red_bull,5.0,,,88021,87946,88123,,,,
+806,41,gasly,alphatauri,6.0,,,88401,88314,88125,,,,
+807,41,norris,mclaren,7.0,,,88338,88344,88180,,,,
+808,41,tsunoda,alphatauri,8.0,,,88503,88222,88442,,,,
+809,41,ocon,alpine,9.0,,,88752,88574,88647,,,,
+810,41,giovinazzi,alfa,10.0,,,88899,88616,88754,,,,
+811,41,ricciardo,mclaren,11.0,,,88216,88668,,,,,
+812,41,raikkonen,alfa,12.0,,,88856,88885,,,,,
+813,41,alonso,alpine,13.0,,,88944,88920,,,,,
+814,41,russell,williams,14.0,,,88926,89054,,,,,
+815,41,sainz,ferrari,15.0,,,88237,113652,,,,,
+816,41,latifi,williams,16.0,,,89177,,,,,,
+817,41,vettel,aston_martin,17.0,,,89198,,,,,,
+818,41,stroll,aston_martin,18.0,,,89368,,,,,,
+819,41,mick_schumacher,haas,19.0,,,89464,,,,,,
+820,41,mazepin,haas,20.0,,,90473,,,,,,
+821,42,hamilton,mercedes,1.0,1,1.0,,,,7575118,Finished,26.0,50.0
+822,42,max_verstappen,red_bull,2.0,2,3.0,,,,11825,Finished,18.0,50.0
+823,42,bottas,mercedes,3.0,3,2.0,,,,27531,Finished,15.0,50.0
+824,42,ocon,alpine,4.0,4,9.0,,,,27633,Finished,12.0,50.0
+825,42,ricciardo,mclaren,5.0,5,11.0,,,,40121,Finished,10.0,50.0
+826,42,gasly,alphatauri,6.0,6,6.0,,,,41613,Finished,8.0,50.0
+827,42,leclerc,ferrari,7.0,7,4.0,,,,44475,Finished,6.0,50.0
+828,42,sainz,ferrari,8.0,8,15.0,,,,46606,Finished,4.0,50.0
+829,42,giovinazzi,alfa,9.0,9,10.0,,,,58505,Finished,2.0,50.0
+830,42,norris,mclaren,10.0,10,7.0,,,,61358,Finished,1.0,50.0
+831,42,stroll,aston_martin,11.0,11,18.0,,,,77212,Finished,0.0,50.0
+832,42,latifi,williams,12.0,12,16.0,,,,83249,Finished,0.0,50.0
+833,42,alonso,alpine,13.0,13,13.0,,,,,+1 Lap,0.0,49.0
+834,42,tsunoda,alphatauri,14.0,14,8.0,,,,,+1 Lap,0.0,49.0
+835,42,raikkonen,alfa,15.0,15,12.0,,,,,+1 Lap,0.0,49.0
+836,42,vettel,aston_martin,16.0,R,17.0,,,,,Collision damage,0.0,44.0
+837,42,perez,red_bull,17.0,R,5.0,,,,,Collision,0.0,14.0
+838,42,mazepin,haas,18.0,R,20.0,,,,,Collision,0.0,14.0
+839,42,russell,williams,19.0,R,14.0,,,,,Collision,0.0,14.0
+840,42,mick_schumacher,haas,20.0,R,19.0,,,,,Accident,0.0,8.0
+841,43,max_verstappen,red_bull,1.0,,,83322,82800,82109,,,,
+842,43,hamilton,mercedes,2.0,,,82845,83145,82480,,,,
+843,43,norris,mclaren,3.0,,,83553,83256,82931,,,,
+844,43,perez,red_bull,4.0,,,83350,83135,82947,,,,
+845,43,sainz,ferrari,5.0,,,83624,83174,82992,,,,
+846,43,bottas,mercedes,6.0,,,83117,83246,83036,,,,
+847,43,leclerc,ferrari,7.0,,,83467,83202,83122,,,,
+848,43,tsunoda,alphatauri,8.0,,,83428,83404,83220,,,,
+849,43,ocon,alpine,9.0,,,83764,83420,83389,,,,
+850,43,ricciardo,mclaren,10.0,,,83829,83448,83409,,,,
+851,43,alonso,alpine,11.0,,,83846,83460,,,,,
+852,43,gasly,alphatauri,12.0,,,83489,84043,,,,,
+853,43,stroll,aston_martin,13.0,,,84061,84066,,,,,
+854,43,giovinazzi,alfa,14.0,,,84118,84251,,,,,
+855,43,vettel,aston_martin,15.0,,,84225,84305,,,,,
+856,43,latifi,williams,16.0,,,84338,,,,,,
+857,43,russell,williams,17.0,,,84423,,,,,,
+858,43,raikkonen,alfa,18.0,,,84779,,,,,,
+859,43,mick_schumacher,haas,19.0,,,84906,,,,,,
+860,43,mazepin,haas,20.0,,,85685,,,,,,
+861,44,max_verstappen,red_bull,1.0,1,1.0,,,,5417345,Finished,26.0,58.0
+862,44,hamilton,mercedes,2.0,2,2.0,,,,2256,Finished,18.0,58.0
+863,44,sainz,ferrari,3.0,3,5.0,,,,5173,Finished,15.0,58.0
+864,44,tsunoda,alphatauri,4.0,4,8.0,,,,5692,Finished,12.0,58.0
+865,44,gasly,alphatauri,5.0,5,12.0,,,,6531,Finished,10.0,58.0
+866,44,bottas,mercedes,6.0,6,6.0,,,,7463,Finished,8.0,58.0
+867,44,norris,mclaren,7.0,7,3.0,,,,59200,Finished,6.0,58.0
+868,44,alonso,alpine,8.0,8,11.0,,,,61708,Finished,4.0,58.0
+869,44,ocon,alpine,9.0,9,9.0,,,,64026,Finished,2.0,58.0
+870,44,leclerc,ferrari,10.0,10,7.0,,,,66057,Finished,1.0,58.0
+871,44,vettel,aston_martin,11.0,11,15.0,,,,67527,Finished,0.0,58.0
+872,44,ricciardo,mclaren,12.0,12,10.0,,,,,+1 Lap,0.0,57.0
+873,44,stroll,aston_martin,13.0,13,13.0,,,,,+1 Lap,0.0,57.0
+874,44,mick_schumacher,haas,14.0,14,19.0,,,,,+1 Lap,0.0,57.0
+875,44,perez,red_bull,15.0,15,4.0,,,,,Engine,0.0,55.0
+876,44,latifi,williams,16.0,R,16.0,,,,,Accident,0.0,50.0
+877,44,giovinazzi,alfa,17.0,R,14.0,,,,,Gearbox,0.0,33.0
+878,44,russell,williams,18.0,R,17.0,,,,,Gearbox,0.0,26.0
+879,44,raikkonen,alfa,19.0,R,18.0,,,,,Brakes,0.0,25.0
+880,44,mazepin,haas,,W,,,,,,Illness,0.0,0.0
+881,45,leclerc,ferrari,1.0,,,91471,90932,90558,,,,
+882,45,max_verstappen,red_bull,2.0,,,91785,90757,90681,,,,
+883,45,sainz,ferrari,3.0,,,91567,90787,90687,,,,
+884,45,perez,red_bull,4.0,,,92311,91008,90921,,,,
+885,45,hamilton,mercedes,5.0,,,92285,91048,91238,,,,
+886,45,bottas,alfa,6.0,,,91919,91717,91560,,,,
+887,45,kevin_magnussen,haas,7.0,,,91955,91461,91808,,,,
+888,45,alonso,alpine,8.0,,,92346,91621,92195,,,,
+889,45,russell,mercedes,9.0,,,92269,91252,92216,,,,
+890,45,gasly,alphatauri,10.0,,,92096,91635,92338,,,,
+891,45,ocon,alpine,11.0,,,92041,91782,,,,,
+892,45,mick_schumacher,haas,12.0,,,92380,91998,,,,,
+893,45,norris,mclaren,13.0,,,92239,92008,,,,,
+894,45,albon,williams,14.0,,,92726,92664,,,,,
+895,45,zhou,alfa,15.0,,,92493,93543,,,,,
+896,45,tsunoda,alphatauri,16.0,,,92750,,,,,,
+897,45,hulkenberg,aston_martin,17.0,,,92777,,,,,,
+898,45,ricciardo,mclaren,18.0,,,92945,,,,,,
+899,45,stroll,aston_martin,19.0,,,93032,,,,,,
+900,45,latifi,williams,20.0,,,93634,,,,,,
+901,46,leclerc,ferrari,1.0,1,1.0,,,,5853584,Finished,26.0,57.0
+902,46,sainz,ferrari,2.0,2,3.0,,,,5598,Finished,18.0,57.0
+903,46,hamilton,mercedes,3.0,3,5.0,,,,9675,Finished,15.0,57.0
+904,46,russell,mercedes,4.0,4,9.0,,,,11211,Finished,12.0,57.0
+905,46,kevin_magnussen,haas,5.0,5,7.0,,,,14754,Finished,10.0,57.0
+906,46,bottas,alfa,6.0,6,6.0,,,,16119,Finished,8.0,57.0
+907,46,ocon,alpine,7.0,7,11.0,,,,19423,Finished,6.0,57.0
+908,46,tsunoda,alphatauri,8.0,8,16.0,,,,20386,Finished,4.0,57.0
+909,46,alonso,alpine,9.0,9,8.0,,,,22390,Finished,2.0,57.0
+910,46,zhou,alfa,10.0,10,15.0,,,,23064,Finished,1.0,57.0
+911,46,mick_schumacher,haas,11.0,11,12.0,,,,32574,Finished,0.0,57.0
+912,46,stroll,aston_martin,12.0,12,19.0,,,,45873,Finished,0.0,57.0
+913,46,albon,williams,13.0,13,14.0,,,,53932,Finished,0.0,57.0
+914,46,ricciardo,mclaren,14.0,14,18.0,,,,54975,Finished,0.0,57.0
+915,46,norris,mclaren,15.0,15,13.0,,,,56335,Finished,0.0,57.0
+916,46,latifi,williams,16.0,16,20.0,,,,61795,Finished,0.0,57.0
+917,46,hulkenberg,aston_martin,17.0,17,17.0,,,,63829,Finished,0.0,57.0
+918,46,perez,red_bull,18.0,18,4.0,,,,,Fuel pressure,0.0,56.0
+919,46,max_verstappen,red_bull,19.0,19,2.0,,,,,Fuel pressure,0.0,54.0
+920,46,gasly,alphatauri,20.0,R,10.0,,,,,Power Unit,0.0,44.0
+921,47,perez,red_bull,1.0,,,89705,88924,88200,,,,
+922,47,leclerc,ferrari,2.0,,,89039,88780,88225,,,,
+923,47,sainz,ferrari,3.0,,,88855,88686,88402,,,,
+924,47,max_verstappen,red_bull,4.0,,,88928,88945,88461,,,,
+925,47,ocon,alpine,5.0,,,90093,89584,89068,,,,
+926,47,russell,mercedes,6.0,,,89680,89618,89104,,,,
+927,47,alonso,alpine,7.0,,,89978,89295,89147,,,,
+928,47,bottas,alfa,8.0,,,89683,89404,89183,,,,
+929,47,gasly,alphatauri,9.0,,,89891,89418,89254,,,,
+930,47,kevin_magnussen,haas,10.0,,,89831,89546,89588,,,,
+931,47,norris,mclaren,11.0,,,89957,89651,,,,,
+932,47,ricciardo,mclaren,12.0,,,90009,89773,,,,,
+933,47,zhou,alfa,13.0,,,89978,89819,,,,,
+934,47,mick_schumacher,haas,14.0,,,90167,89920,,,,,
+935,47,stroll,aston_martin,15.0,,,90256,91009,,,,,
+936,47,hamilton,mercedes,16.0,,,90343,,,,,,
+937,47,albon,williams,17.0,,,90492,,,,,,
+938,47,hulkenberg,aston_martin,18.0,,,90543,,,,,,
+939,47,latifi,williams,19.0,,,91817,,,,,,
+940,47,tsunoda,alphatauri,20.0,,,,,,,,,
+941,48,max_verstappen,red_bull,1.0,1,4.0,,,,5059293,Finished,25.0,50.0
+942,48,leclerc,ferrari,2.0,2,2.0,,,,549,Finished,19.0,50.0
+943,48,sainz,ferrari,3.0,3,3.0,,,,8097,Finished,15.0,50.0
+944,48,perez,red_bull,4.0,4,1.0,,,,10800,Finished,12.0,50.0
+945,48,russell,mercedes,5.0,5,6.0,,,,32732,Finished,10.0,50.0
+946,48,ocon,alpine,6.0,6,5.0,,,,56017,Finished,8.0,50.0
+947,48,norris,mclaren,7.0,7,11.0,,,,56124,Finished,6.0,50.0
+948,48,gasly,alphatauri,8.0,8,9.0,,,,62946,Finished,4.0,50.0
+949,48,kevin_magnussen,haas,9.0,9,10.0,,,,64308,Finished,2.0,50.0
+950,48,hamilton,mercedes,10.0,10,15.0,,,,73948,Finished,1.0,50.0
+951,48,zhou,alfa,11.0,11,12.0,,,,82215,Finished,0.0,50.0
+952,48,hulkenberg,aston_martin,12.0,12,17.0,,,,91742,Finished,0.0,50.0
+953,48,stroll,aston_martin,13.0,13,13.0,,,,,+1 Lap,0.0,49.0
+954,48,albon,williams,14.0,14,16.0,,,,,Collision damage,0.0,47.0
+955,48,bottas,alfa,15.0,R,8.0,,,,,Cooling system,0.0,36.0
+956,48,alonso,alpine,16.0,R,7.0,,,,,Water pump,0.0,35.0
+957,48,ricciardo,mclaren,17.0,R,14.0,,,,,Gearbox,0.0,35.0
+958,48,latifi,williams,18.0,R,18.0,,,,,Accident,0.0,14.0
+959,48,tsunoda,alphatauri,19.0,R,19.0,,,,,Power Unit,0.0,0.0
+960,48,mick_schumacher,haas,,W,,,,,,Withdrew,0.0,0.0
+961,49,leclerc,ferrari,1.0,,,78881,78606,77868,,,,
+962,49,max_verstappen,red_bull,2.0,,,78580,78611,78154,,,,
+963,49,perez,red_bull,3.0,,,78834,78340,78240,,,,
+964,49,norris,mclaren,4.0,,,79280,79066,78703,,,,
+965,49,hamilton,mercedes,5.0,,,79401,79106,78825,,,,
+966,49,russell,mercedes,6.0,,,79405,79076,78933,,,,
+967,49,ricciardo,mclaren,7.0,,,79665,79130,79032,,,,
+968,49,ocon,alpine,8.0,,,79605,79136,79061,,,,
+969,49,sainz,ferrari,9.0,,,78983,78469,79408,,,,
+970,49,alonso,alpine,10.0,,,79192,78815,,,,,
+971,49,gasly,alphatauri,11.0,,,79580,79226,,,,,
+972,49,bottas,alfa,12.0,,,79251,79410,,,,,
+973,49,tsunoda,alphatauri,13.0,,,79742,79424,,,,,
+974,49,zhou,alfa,14.0,,,79910,80155,,,,,
+975,49,mick_schumacher,haas,15.0,,,80104,80465,,,,,
+976,49,albon,williams,16.0,,,80135,,,,,,
+977,49,kevin_magnussen,haas,17.0,,,80254,,,,,,
+978,49,vettel,aston_martin,18.0,,,81149,,,,,,
+979,49,latifi,williams,19.0,,,81372,,,,,,
+980,49,stroll,aston_martin,20.0,,,,,,,,,
+981,50,leclerc,ferrari,1.0,1,1.0,,,,5266548,Finished,26.0,58.0
+982,50,perez,red_bull,2.0,2,3.0,,,,20524,Finished,18.0,58.0
+983,50,russell,mercedes,3.0,3,6.0,,,,25593,Finished,15.0,58.0
+984,50,hamilton,mercedes,4.0,4,5.0,,,,28543,Finished,12.0,58.0
+985,50,norris,mclaren,5.0,5,4.0,,,,53303,Finished,10.0,58.0
+986,50,ricciardo,mclaren,6.0,6,7.0,,,,53737,Finished,8.0,58.0
+987,50,ocon,alpine,7.0,7,8.0,,,,61683,Finished,6.0,58.0
+988,50,bottas,alfa,8.0,8,12.0,,,,68439,Finished,4.0,58.0
+989,50,gasly,alphatauri,9.0,9,11.0,,,,76221,Finished,2.0,58.0
+990,50,albon,williams,10.0,10,20.0,,,,79382,Finished,1.0,58.0
+991,50,zhou,alfa,11.0,11,14.0,,,,81695,Finished,0.0,58.0
+992,50,stroll,aston_martin,12.0,12,19.0,,,,88598,Finished,0.0,58.0
+993,50,mick_schumacher,haas,13.0,13,15.0,,,,,+1 Lap,0.0,57.0
+994,50,kevin_magnussen,haas,14.0,14,16.0,,,,,+1 Lap,0.0,57.0
+995,50,tsunoda,alphatauri,15.0,15,13.0,,,,,+1 Lap,0.0,57.0
+996,50,latifi,williams,16.0,16,18.0,,,,,+1 Lap,0.0,57.0
+997,50,alonso,alpine,17.0,17,10.0,,,,,+1 Lap,0.0,57.0
+998,50,max_verstappen,red_bull,18.0,R,2.0,,,,,Fuel leak,0.0,38.0
+999,50,vettel,aston_martin,19.0,R,17.0,,,,,Accident,0.0,22.0
+1000,50,sainz,ferrari,20.0,R,9.0,,,,,Spun off,0.0,1.0
+1001,51,max_verstappen,red_bull,1.0,,,79295,78793,87999,,,,
+1002,51,leclerc,ferrari,2.0,,,78796,79584,88778,,,,
+1003,51,norris,mclaren,3.0,,,80168,79294,89131,,,,
+1004,51,kevin_magnussen,haas,4.0,,,80147,79902,89164,,,,
+1005,51,alonso,alpine,5.0,,,80198,79595,89202,,,,
+1006,51,ricciardo,mclaren,6.0,,,79980,80031,89742,,,,
+1007,51,perez,red_bull,7.0,,,79773,79296,89808,,,,
+1008,51,bottas,alfa,8.0,,,80419,80192,90439,,,,
+1009,51,vettel,aston_martin,9.0,,,80364,79957,91062,,,,
+1010,51,sainz,ferrari,10.0,,,79305,78990,,,,,
+1011,51,russell,mercedes,11.0,,,80383,80757,,,,,
+1012,51,mick_schumacher,haas,12.0,,,80422,80916,,,,,
+1013,51,hamilton,mercedes,13.0,,,80470,81138,,,,,
+1014,51,zhou,alfa,14.0,,,79730,81434,,,,,
+1015,51,stroll,aston_martin,15.0,,,80342,88119,,,,,
+1016,51,tsunoda,alphatauri,16.0,,,80474,,,,,,
+1017,51,gasly,alphatauri,17.0,,,80732,,,,,,
+1018,51,latifi,williams,18.0,,,81971,,,,,,
+1019,51,ocon,alpine,19.0,,,82338,,,,,,
+1020,51,albon,williams,20.0,,,,,,,,,
+1021,52,max_verstappen,red_bull,1.0,1,1.0,,,,5527986,Finished,26.0,63.0
+1022,52,perez,red_bull,2.0,2,3.0,,,,16527,Finished,18.0,63.0
+1023,52,norris,mclaren,3.0,3,5.0,,,,34834,Finished,15.0,63.0
+1024,52,russell,mercedes,4.0,4,11.0,,,,42506,Finished,12.0,63.0
+1025,52,bottas,alfa,5.0,5,7.0,,,,43181,Finished,10.0,63.0
+1026,52,leclerc,ferrari,6.0,6,2.0,,,,56072,Finished,8.0,63.0
+1027,52,tsunoda,alphatauri,7.0,7,12.0,,,,61110,Finished,6.0,63.0
+1028,52,vettel,aston_martin,8.0,8,13.0,,,,70892,Finished,4.0,63.0
+1029,52,kevin_magnussen,haas,9.0,9,8.0,,,,75260,Finished,2.0,63.0
+1030,52,stroll,aston_martin,10.0,10,15.0,,,,,+1 Lap,1.0,62.0
+1031,52,albon,williams,11.0,11,18.0,,,,,+1 Lap,0.0,62.0
+1032,52,gasly,alphatauri,12.0,12,17.0,,,,,+1 Lap,0.0,62.0
+1033,52,hamilton,mercedes,13.0,13,14.0,,,,,+1 Lap,0.0,62.0
+1034,52,ocon,alpine,14.0,14,16.0,,,,,+1 Lap,0.0,62.0
+1035,52,zhou,alfa,15.0,15,0.0,,,,,+1 Lap,0.0,62.0
+1036,52,latifi,williams,16.0,16,19.0,,,,,+1 Lap,0.0,62.0
+1037,52,mick_schumacher,haas,17.0,17,10.0,,,,,+1 Lap,0.0,62.0
+1038,52,ricciardo,mclaren,18.0,18,6.0,,,,,+1 Lap,0.0,62.0
+1039,52,alonso,alpine,19.0,R,9.0,,,,,Collision damage,0.0,6.0
+1040,52,sainz,ferrari,20.0,R,4.0,,,,,Collision,0.0,0.0
+1041,53,leclerc,ferrari,1.0,,,89474,89130,88796,,,,
+1042,53,sainz,ferrari,2.0,,,90079,89729,88986,,,,
+1043,53,max_verstappen,red_bull,3.0,,,89836,89202,88991,,,,
+1044,53,perez,red_bull,4.0,,,90055,89673,89036,,,,
+1045,53,bottas,alfa,5.0,,,90845,89751,89475,,,,
+1046,53,hamilton,mercedes,6.0,,,90388,89797,89625,,,,
+1047,53,gasly,alphatauri,7.0,,,90779,90128,89690,,,,
+1048,53,norris,mclaren,8.0,,,90761,89634,89750,,,,
+1049,53,tsunoda,alphatauri,9.0,,,90485,90031,89932,,,,
+1050,53,stroll,aston_martin,10.0,,,90441,89996,90676,,,,
+1051,53,alonso,alpine,11.0,,,90407,90160,,,,,
+1052,53,russell,mercedes,12.0,,,90490,90173,,,,,
+1053,53,vettel,aston_martin,13.0,,,90677,90214,,,,,
+1054,53,ricciardo,mclaren,14.0,,,90583,90310,,,,,
+1055,53,mick_schumacher,haas,15.0,,,90645,90423,,,,,
+1056,53,kevin_magnussen,haas,16.0,,,90975,,,,,,
+1057,53,zhou,alfa,17.0,,,91020,,,,,,
+1058,53,albon,williams,18.0,,,91266,,,,,,
+1059,53,latifi,williams,19.0,,,91325,,,,,,
+1060,53,ocon,alpine,20.0,,,,,,,,,
+1061,54,max_verstappen,red_bull,1.0,1,3.0,,,,5664258,Finished,26.0,57.0
+1062,54,leclerc,ferrari,2.0,2,1.0,,,,3786,Finished,18.0,57.0
+1063,54,sainz,ferrari,3.0,3,2.0,,,,8229,Finished,15.0,57.0
+1064,54,perez,red_bull,4.0,4,4.0,,,,10638,Finished,12.0,57.0
+1065,54,russell,mercedes,5.0,5,12.0,,,,18582,Finished,10.0,57.0
+1066,54,hamilton,mercedes,6.0,6,6.0,,,,21368,Finished,8.0,57.0
+1067,54,bottas,alfa,7.0,7,5.0,,,,25073,Finished,6.0,57.0
+1068,54,ocon,alpine,8.0,8,20.0,,,,28386,Finished,4.0,57.0
+1069,54,albon,williams,9.0,9,18.0,,,,32365,Finished,2.0,57.0
+1070,54,stroll,aston_martin,10.0,10,0.0,,,,37026,Finished,1.0,57.0
+1071,54,alonso,alpine,11.0,11,11.0,,,,37128,Finished,0.0,57.0
+1072,54,tsunoda,alphatauri,12.0,12,9.0,,,,40146,Finished,0.0,57.0
+1073,54,ricciardo,mclaren,13.0,13,14.0,,,,40902,Finished,0.0,57.0
+1074,54,latifi,williams,14.0,14,19.0,,,,49936,Finished,0.0,57.0
+1075,54,mick_schumacher,haas,15.0,15,15.0,,,,73305,Finished,0.0,57.0
+1076,54,kevin_magnussen,haas,16.0,16,16.0,,,,,Front wing,0.0,56.0
+1077,54,vettel,aston_martin,17.0,17,0.0,,,,,Collision,0.0,54.0
+1078,54,gasly,alphatauri,18.0,R,7.0,,,,,Suspension,0.0,45.0
+1079,54,norris,mclaren,19.0,R,8.0,,,,,Collision,0.0,39.0
+1080,54,zhou,alfa,20.0,R,17.0,,,,,Water leak,0.0,6.0
+1081,55,leclerc,ferrari,1.0,,,79861,79969,78750,,,,
+1082,55,max_verstappen,red_bull,2.0,,,80091,79219,79073,,,,
+1083,55,sainz,ferrari,3.0,,,79892,79453,79166,,,,
+1084,55,russell,mercedes,4.0,,,80218,79470,79393,,,,
+1085,55,perez,red_bull,5.0,,,80447,79830,79420,,,,
+1086,55,hamilton,mercedes,6.0,,,80252,79794,79512,,,,
+1087,55,bottas,alfa,7.0,,,80355,80053,79608,,,,
+1088,55,kevin_magnussen,haas,8.0,,,80227,79810,79682,,,,
+1089,55,ricciardo,mclaren,9.0,,,80549,80287,80297,,,,
+1090,55,mick_schumacher,haas,10.0,,,80683,80436,80368,,,,
+1091,55,norris,mclaren,11.0,,,80838,80471,,,,,
+1092,55,ocon,alpine,12.0,,,80880,80638,,,,,
+1093,55,tsunoda,alphatauri,13.0,,,80707,80639,,,,,
+1094,55,gasly,alphatauri,14.0,,,80719,80861,,,,,
+1095,55,zhou,alfa,15.0,,,80476,81094,,,,,
+1096,55,vettel,aston_martin,16.0,,,80954,,,,,,
+1097,55,alonso,alpine,17.0,,,81043,,,,,,
+1098,55,stroll,aston_martin,18.0,,,81418,,,,,,
+1099,55,albon,williams,19.0,,,81645,,,,,,
+1100,55,latifi,williams,20.0,,,81915,,,,,,
+1101,56,max_verstappen,red_bull,1.0,1,2.0,,,,5840475,Finished,25.0,66.0
+1102,56,perez,red_bull,2.0,2,5.0,,,,13072,Finished,19.0,66.0
+1103,56,russell,mercedes,3.0,3,4.0,,,,32927,Finished,15.0,66.0
+1104,56,sainz,ferrari,4.0,4,3.0,,,,45208,Finished,12.0,66.0
+1105,56,hamilton,mercedes,5.0,5,6.0,,,,54534,Finished,10.0,66.0
+1106,56,bottas,alfa,6.0,6,7.0,,,,59976,Finished,8.0,66.0
+1107,56,ocon,alpine,7.0,7,12.0,,,,75397,Finished,6.0,66.0
+1108,56,norris,mclaren,8.0,8,11.0,,,,83235,Finished,4.0,66.0
+1109,56,alonso,alpine,9.0,9,20.0,,,,,+1 Lap,2.0,65.0
+1110,56,tsunoda,alphatauri,10.0,10,13.0,,,,,+1 Lap,1.0,65.0
+1111,56,vettel,aston_martin,11.0,11,16.0,,,,,+1 Lap,0.0,65.0
+1112,56,ricciardo,mclaren,12.0,12,9.0,,,,,+1 Lap,0.0,65.0
+1113,56,gasly,alphatauri,13.0,13,14.0,,,,,+1 Lap,0.0,65.0
+1114,56,mick_schumacher,haas,14.0,14,10.0,,,,,+1 Lap,0.0,65.0
+1115,56,stroll,aston_martin,15.0,15,17.0,,,,,+1 Lap,0.0,65.0
+1116,56,latifi,williams,16.0,16,19.0,,,,,+2 Laps,0.0,64.0
+1117,56,kevin_magnussen,haas,17.0,17,8.0,,,,,+2 Laps,0.0,64.0
+1118,56,albon,williams,18.0,18,18.0,,,,,+2 Laps,0.0,64.0
+1119,56,zhou,alfa,19.0,R,15.0,,,,,Power loss,0.0,28.0
+1120,56,leclerc,ferrari,20.0,R,1.0,,,,,Turbo,0.0,27.0
+1121,57,leclerc,ferrari,1.0,,,72569,71864,71376,,,,
+1122,57,sainz,ferrari,2.0,,,72616,72074,71601,,,,
+1123,57,perez,red_bull,3.0,,,73004,71954,71629,,,,
+1124,57,max_verstappen,red_bull,4.0,,,72993,72117,71666,,,,
+1125,57,norris,mclaren,5.0,,,72927,72266,71849,,,,
+1126,57,russell,mercedes,6.0,,,72787,72617,72112,,,,
+1127,57,alonso,alpine,7.0,,,73394,72688,72247,,,,
+1128,57,hamilton,mercedes,8.0,,,73444,72595,72560,,,,
+1129,57,vettel,aston_martin,9.0,,,73313,72613,72732,,,,
+1130,57,ocon,alpine,10.0,,,72848,72528,73047,,,,
+1131,57,tsunoda,alphatauri,11.0,,,73110,72797,,,,,
+1132,57,bottas,alfa,12.0,,,73541,72909,,,,,
+1133,57,kevin_magnussen,haas,13.0,,,73069,72921,,,,,
+1134,57,ricciardo,mclaren,14.0,,,73338,72964,,,,,
+1135,57,mick_schumacher,haas,15.0,,,73469,73081,,,,,
+1136,57,albon,williams,16.0,,,73611,,,,,,
+1137,57,gasly,alphatauri,17.0,,,73660,,,,,,
+1138,57,stroll,aston_martin,18.0,,,73678,,,,,,
+1139,57,latifi,williams,19.0,,,74403,,,,,,
+1140,57,zhou,alfa,20.0,,,75606,,,,,,
+1141,58,perez,red_bull,1.0,1,3.0,,,,6990265,Finished,25.0,64.0
+1142,58,sainz,ferrari,2.0,2,2.0,,,,1154,Finished,18.0,64.0
+1143,58,max_verstappen,red_bull,3.0,3,4.0,,,,1491,Finished,15.0,64.0
+1144,58,leclerc,ferrari,4.0,4,1.0,,,,2922,Finished,12.0,64.0
+1145,58,russell,mercedes,5.0,5,6.0,,,,11968,Finished,10.0,64.0
+1146,58,norris,mclaren,6.0,6,5.0,,,,12231,Finished,9.0,64.0
+1147,58,alonso,alpine,7.0,7,7.0,,,,46358,Finished,6.0,64.0
+1148,58,hamilton,mercedes,8.0,8,8.0,,,,50388,Finished,4.0,64.0
+1149,58,bottas,alfa,9.0,9,12.0,,,,52525,Finished,2.0,64.0
+1150,58,vettel,aston_martin,10.0,10,9.0,,,,53536,Finished,1.0,64.0
+1151,58,gasly,alphatauri,11.0,11,17.0,,,,54289,Finished,0.0,64.0
+1152,58,ocon,alpine,12.0,12,10.0,,,,55644,Finished,0.0,64.0
+1153,58,ricciardo,mclaren,13.0,13,14.0,,,,57635,Finished,0.0,64.0
+1154,58,stroll,aston_martin,14.0,14,18.0,,,,60802,Finished,0.0,64.0
+1155,58,latifi,williams,15.0,15,19.0,,,,,+1 Lap,0.0,63.0
+1156,58,zhou,alfa,16.0,16,20.0,,,,,+1 Lap,0.0,63.0
+1157,58,tsunoda,alphatauri,17.0,17,11.0,,,,,+1 Lap,0.0,63.0
+1158,58,albon,williams,18.0,R,16.0,,,,,Mechanical,0.0,48.0
+1159,58,mick_schumacher,haas,19.0,R,15.0,,,,,Accident,0.0,24.0
+1160,58,kevin_magnussen,haas,20.0,R,13.0,,,,,Water pressure,0.0,19.0
+1161,59,leclerc,ferrari,1.0,,,102865,102046,101359,,,,
+1162,59,perez,red_bull,2.0,,,102733,101955,101641,,,,
+1163,59,max_verstappen,red_bull,3.0,,,102722,102227,101706,,,,
+1164,59,sainz,ferrari,4.0,,,102957,102088,101814,,,,
+1165,59,russell,mercedes,5.0,,,103754,103281,102712,,,,
+1166,59,gasly,alphatauri,6.0,,,103268,103129,102845,,,,
+1167,59,hamilton,mercedes,7.0,,,103939,103182,102924,,,,
+1168,59,tsunoda,alphatauri,8.0,,,103595,103376,103056,,,,
+1169,59,vettel,aston_martin,9.0,,,103279,103268,103091,,,,
+1170,59,alonso,alpine,10.0,,,104083,103360,103173,,,,
+1171,59,norris,mclaren,11.0,,,104237,103398,,,,,
+1172,59,ricciardo,mclaren,12.0,,,104437,103574,,,,,
+1173,59,ocon,alpine,13.0,,,103903,103585,,,,,
+1174,59,zhou,alfa,14.0,,,103777,103790,,,,,
+1175,59,bottas,alfa,15.0,,,104478,104444,,,,,
+1176,59,kevin_magnussen,haas,16.0,,,104643,,,,,,
+1177,59,albon,williams,17.0,,,104719,,,,,,
+1178,59,latifi,williams,18.0,,,105367,,,,,,
+1179,59,stroll,aston_martin,19.0,,,105371,,,,,,
+1180,59,mick_schumacher,haas,20.0,,,105775,,,,,,
+1181,60,max_verstappen,red_bull,1.0,1,3.0,,,,5645941,Finished,25.0,51.0
+1182,60,perez,red_bull,2.0,2,2.0,,,,20823,Finished,19.0,51.0
+1183,60,russell,mercedes,3.0,3,5.0,,,,45995,Finished,15.0,51.0
+1184,60,hamilton,mercedes,4.0,4,7.0,,,,71679,Finished,12.0,51.0
+1185,60,gasly,alphatauri,5.0,5,6.0,,,,77299,Finished,10.0,51.0
+1186,60,vettel,aston_martin,6.0,6,9.0,,,,84099,Finished,8.0,51.0
+1187,60,alonso,alpine,7.0,7,10.0,,,,88596,Finished,6.0,51.0
+1188,60,ricciardo,mclaren,8.0,8,12.0,,,,92207,Finished,4.0,51.0
+1189,60,norris,mclaren,9.0,9,11.0,,,,92556,Finished,2.0,51.0
+1190,60,ocon,alpine,10.0,10,13.0,,,,108184,Finished,1.0,51.0
+1191,60,bottas,alfa,11.0,11,15.0,,,,,+1 Lap,0.0,50.0
+1192,60,albon,williams,12.0,12,17.0,,,,,+1 Lap,0.0,50.0
+1193,60,tsunoda,alphatauri,13.0,13,8.0,,,,,+1 Lap,0.0,50.0
+1194,60,mick_schumacher,haas,14.0,14,20.0,,,,,+1 Lap,0.0,50.0
+1195,60,latifi,williams,15.0,15,18.0,,,,,+1 Lap,0.0,50.0
+1196,60,stroll,aston_martin,16.0,16,19.0,,,,,Vibrations,0.0,46.0
+1197,60,kevin_magnussen,haas,17.0,R,16.0,,,,,Power Unit,0.0,31.0
+1198,60,zhou,alfa,18.0,R,14.0,,,,,Hydraulics,0.0,23.0
+1199,60,leclerc,ferrari,19.0,R,1.0,,,,,Power Unit,0.0,21.0
+1200,60,sainz,ferrari,20.0,R,4.0,,,,,Hydraulics,0.0,8.0
+1201,61,max_verstappen,red_bull,1.0,,,92219,83746,81299,,,,
+1202,61,alonso,alpine,2.0,,,92277,84848,81944,,,,
+1203,61,sainz,ferrari,3.0,,,92781,85197,82096,,,,
+1204,61,hamilton,mercedes,4.0,,,93841,85543,82891,,,,
+1205,61,kevin_magnussen,haas,5.0,,,92957,86254,82960,,,,
+1206,61,mick_schumacher,haas,6.0,,,93707,85684,83356,,,,
+1207,61,ocon,alpine,7.0,,,93012,86135,83529,,,,
+1208,61,russell,mercedes,8.0,,,93160,84950,83557,,,,
+1209,61,ricciardo,mclaren,9.0,,,93636,86375,83749,,,,
+1210,61,zhou,alfa,10.0,,,93692,86116,84030,,,,
+1211,61,bottas,alfa,11.0,,,93689,86788,,,,,
+1212,61,albon,williams,12.0,,,94047,86858,,,,,
+1213,61,perez,red_bull,13.0,,,93929,93127,,,,,
+1214,61,norris,mclaren,14.0,,,94066,,,,,,
+1215,61,leclerc,ferrari,15.0,,,93008,,,,,,
+1216,61,gasly,alphatauri,16.0,,,94492,,,,,,
+1217,61,vettel,aston_martin,17.0,,,94512,,,,,,
+1218,61,stroll,aston_martin,18.0,,,95532,,,,,,
+1219,61,latifi,williams,19.0,,,95660,,,,,,
+1220,61,tsunoda,alphatauri,20.0,,,96575,,,,,,
+1221,62,max_verstappen,red_bull,1.0,1,1.0,,,,5781757,Finished,25.0,70.0
+1222,62,sainz,ferrari,2.0,2,3.0,,,,993,Finished,19.0,70.0
+1223,62,hamilton,mercedes,3.0,3,4.0,,,,7006,Finished,15.0,70.0
+1224,62,russell,mercedes,4.0,4,8.0,,,,12313,Finished,12.0,70.0
+1225,62,leclerc,ferrari,5.0,5,19.0,,,,15168,Finished,10.0,70.0
+1226,62,ocon,alpine,6.0,6,7.0,,,,23890,Finished,8.0,70.0
+1227,62,bottas,alfa,7.0,7,11.0,,,,25247,Finished,6.0,70.0
+1228,62,zhou,alfa,8.0,8,10.0,,,,26952,Finished,4.0,70.0
+1229,62,alonso,alpine,9.0,9,2.0,,,,29945,Finished,2.0,70.0
+1230,62,stroll,aston_martin,10.0,10,17.0,,,,38222,Finished,1.0,70.0
+1231,62,ricciardo,mclaren,11.0,11,9.0,,,,43047,Finished,0.0,70.0
+1232,62,vettel,aston_martin,12.0,12,16.0,,,,44245,Finished,0.0,70.0
+1233,62,albon,williams,13.0,13,12.0,,,,44893,Finished,0.0,70.0
+1234,62,gasly,alphatauri,14.0,14,15.0,,,,45183,Finished,0.0,70.0
+1235,62,norris,mclaren,15.0,15,14.0,,,,52145,Finished,0.0,70.0
+1236,62,latifi,williams,16.0,16,18.0,,,,59978,Finished,0.0,70.0
+1237,62,kevin_magnussen,haas,17.0,17,5.0,,,,68180,Finished,0.0,70.0
+1238,62,tsunoda,alphatauri,18.0,R,20.0,,,,,Accident,0.0,47.0
+1239,62,mick_schumacher,haas,19.0,R,6.0,,,,,Engine,0.0,18.0
+1240,62,perez,red_bull,20.0,R,13.0,,,,,Gearbox,0.0,7.0
+1241,63,sainz,ferrari,1.0,,,100190,101602,100983,,,,
+1242,63,max_verstappen,red_bull,2.0,,,99129,100655,101055,,,,
+1243,63,leclerc,ferrari,3.0,,,99846,101247,101298,,,,
+1244,63,perez,red_bull,4.0,,,100521,102513,101616,,,,
+1245,63,hamilton,mercedes,5.0,,,100428,101062,101995,,,,
+1246,63,norris,mclaren,6.0,,,101515,101821,102084,,,,
+1247,63,alonso,alpine,7.0,,,101598,102209,102116,,,,
+1248,63,russell,mercedes,8.0,,,100028,101725,102161,,,,
+1249,63,zhou,alfa,9.0,,,100791,102640,102719,,,,
+1250,63,latifi,williams,10.0,,,101998,103273,123095,,,,
+1251,63,gasly,alphatauri,11.0,,,101680,103702,,,,,
+1252,63,bottas,alfa,12.0,,,101396,104232,,,,,
+1253,63,tsunoda,alphatauri,13.0,,,101893,104311,,,,,
+1254,63,ricciardo,mclaren,14.0,,,101933,104355,,,,,
+1255,63,ocon,alpine,15.0,,,101730,105190,,,,,
+1256,63,albon,williams,16.0,,,102078,,,,,,
+1257,63,kevin_magnussen,haas,17.0,,,102159,,,,,,
+1258,63,vettel,aston_martin,18.0,,,102666,,,,,,
+1259,63,mick_schumacher,haas,19.0,,,102708,,,,,,
+1260,63,stroll,aston_martin,20.0,,,103430,,,,,,
+1261,64,sainz,ferrari,1.0,1,1.0,,,,8270311,Finished,25.0,52.0
+1262,64,perez,red_bull,2.0,2,4.0,,,,3779,Finished,18.0,52.0
+1263,64,hamilton,mercedes,3.0,3,5.0,,,,6225,Finished,16.0,52.0
+1264,64,leclerc,ferrari,4.0,4,3.0,,,,8546,Finished,12.0,52.0
+1265,64,alonso,alpine,5.0,5,7.0,,,,9571,Finished,10.0,52.0
+1266,64,norris,mclaren,6.0,6,6.0,,,,11943,Finished,8.0,52.0
+1267,64,max_verstappen,red_bull,7.0,7,2.0,,,,18777,Finished,6.0,52.0
+1268,64,mick_schumacher,haas,8.0,8,19.0,,,,18995,Finished,4.0,52.0
+1269,64,vettel,aston_martin,9.0,9,18.0,,,,22356,Finished,2.0,52.0
+1270,64,kevin_magnussen,haas,10.0,10,17.0,,,,24590,Finished,1.0,52.0
+1271,64,stroll,aston_martin,11.0,11,20.0,,,,26147,Finished,0.0,52.0
+1272,64,latifi,williams,12.0,12,10.0,,,,32511,Finished,0.0,52.0
+1273,64,ricciardo,mclaren,13.0,13,14.0,,,,32817,Finished,0.0,52.0
+1274,64,tsunoda,alphatauri,14.0,14,13.0,,,,40910,Finished,0.0,52.0
+1275,64,ocon,alpine,15.0,R,15.0,,,,,Fuel pump,0.0,37.0
+1276,64,gasly,alphatauri,16.0,R,11.0,,,,,Collision damage,0.0,26.0
+1277,64,bottas,alfa,17.0,R,12.0,,,,,Gearbox,0.0,20.0
+1278,64,russell,mercedes,18.0,R,8.0,,,,,Collision,0.0,0.0
+1279,64,zhou,alfa,19.0,R,9.0,,,,,Collision,0.0,0.0
+1280,64,albon,williams,20.0,R,16.0,,,,,Collision,0.0,0.0
+1281,65,max_verstappen,red_bull,1.0,,,65852,65374,64984,,,,
+1282,65,leclerc,ferrari,2.0,,,65419,65287,65013,,,,
+1283,65,sainz,ferrari,3.0,,,65660,65576,65066,,,,
+1284,65,russell,mercedes,4.0,,,66235,65697,65431,,,,
+1285,65,ocon,alpine,5.0,,,66468,65993,65726,,,,
+1286,65,kevin_magnussen,haas,6.0,,,66366,65894,65879,,,,
+1287,65,mick_schumacher,haas,7.0,,,66405,66151,66011,,,,
+1288,65,alonso,alpine,8.0,,,66016,66082,66103,,,,
+1289,65,hamilton,mercedes,9.0,,,66079,65475,73151,,,,
+1290,65,gasly,alphatauri,10.0,,,66589,66160,,,,,
+1291,65,albon,williams,11.0,,,66516,66230,,,,,
+1292,65,bottas,alfa,12.0,,,66442,66319,,,,,
+1293,65,perez,red_bull,13.0,,,66143,66458,,,,,
+1294,65,tsunoda,alphatauri,14.0,,,66463,66851,,,,,
+1295,65,norris,mclaren,15.0,,,66330,85847,,,,,
+1296,65,ricciardo,mclaren,16.0,,,66613,,,,,,
+1297,65,stroll,aston_martin,17.0,,,66847,,,,,,
+1298,65,zhou,alfa,18.0,,,66901,,,,,,
+1299,65,latifi,williams,19.0,,,67003,,,,,,
+1300,65,vettel,aston_martin,20.0,,,67083,,,,,,
+1301,66,leclerc,ferrari,1.0,1,2.0,,,,5064312,Finished,25.0,71.0
+1302,66,max_verstappen,red_bull,2.0,2,1.0,,,,1532,Finished,19.0,71.0
+1303,66,hamilton,mercedes,3.0,3,8.0,,,,41217,Finished,15.0,71.0
+1304,66,russell,mercedes,4.0,4,4.0,,,,58972,Finished,12.0,71.0
+1305,66,ocon,alpine,5.0,5,6.0,,,,68436,Finished,10.0,71.0
+1306,66,mick_schumacher,haas,6.0,6,9.0,,,,,+1 Lap,8.0,70.0
+1307,66,norris,mclaren,7.0,7,10.0,,,,,+1 Lap,6.0,70.0
+1308,66,kevin_magnussen,haas,8.0,8,7.0,,,,,+1 Lap,4.0,70.0
+1309,66,ricciardo,mclaren,9.0,9,11.0,,,,,+1 Lap,2.0,70.0
+1310,66,alonso,alpine,10.0,10,19.0,,,,,+1 Lap,1.0,70.0
+1311,66,bottas,alfa,11.0,11,0.0,,,,,+1 Lap,0.0,70.0
+1312,66,albon,williams,12.0,12,15.0,,,,,+1 Lap,0.0,70.0
+1313,66,stroll,aston_martin,13.0,13,12.0,,,,,+1 Lap,0.0,70.0
+1314,66,zhou,alfa,14.0,14,13.0,,,,,+1 Lap,0.0,70.0
+1315,66,gasly,alphatauri,15.0,15,14.0,,,,,+1 Lap,0.0,70.0
+1316,66,tsunoda,alphatauri,16.0,16,16.0,,,,,+1 Lap,0.0,70.0
+1317,66,vettel,aston_martin,17.0,17,18.0,,,,,+1 Lap,0.0,70.0
+1318,66,sainz,ferrari,18.0,R,3.0,,,,,Power Unit,0.0,56.0
+1319,66,latifi,williams,19.0,R,17.0,,,,,Undertray,0.0,48.0
+1320,66,perez,red_bull,20.0,R,5.0,,,,,Collision damage,0.0,24.0
+1321,67,leclerc,ferrari,1.0,,,91727,91216,90872,,,,
+1322,67,max_verstappen,red_bull,2.0,,,91891,91990,91176,,,,
+1323,67,perez,red_bull,3.0,,,92354,92120,91335,,,,
+1324,67,hamilton,mercedes,4.0,,,93041,92274,91765,,,,
+1325,67,norris,mclaren,5.0,,,92672,92777,92032,,,,
+1326,67,russell,mercedes,6.0,,,93109,92633,92131,,,,
+1327,67,alonso,alpine,7.0,,,92819,92631,92552,,,,
+1328,67,tsunoda,alphatauri,8.0,,,93394,92836,92780,,,,
+1329,67,sainz,ferrari,9.0,,,92297,91081,,,,,
+1330,67,kevin_magnussen,haas,10.0,,,92756,92649,,,,,
+1331,67,ricciardo,mclaren,11.0,,,93404,92922,,,,,
+1332,67,ocon,alpine,12.0,,,93346,93048,,,,,
+1333,67,bottas,alfa,13.0,,,93034,93052,,,,,
+1334,67,vettel,aston_martin,14.0,,,93285,93276,,,,,
+1335,67,albon,williams,15.0,,,93423,93307,,,,,
+1336,67,gasly,alphatauri,16.0,,,93439,,,,,,
+1337,67,stroll,aston_martin,17.0,,,93439,,,,,,
+1338,67,zhou,alfa,18.0,,,93674,,,,,,
+1339,67,mick_schumacher,haas,19.0,,,93701,,,,,,
+1340,67,latifi,williams,20.0,,,93794,,,,,,
+1341,68,max_verstappen,red_bull,1.0,1,2.0,,,,5402112,Finished,25.0,53.0
+1342,68,hamilton,mercedes,2.0,2,4.0,,,,10587,Finished,18.0,53.0
+1343,68,russell,mercedes,3.0,3,6.0,,,,16495,Finished,15.0,53.0
+1344,68,perez,red_bull,4.0,4,3.0,,,,17310,Finished,12.0,53.0
+1345,68,sainz,ferrari,5.0,5,19.0,,,,28872,Finished,11.0,53.0
+1346,68,alonso,alpine,6.0,6,7.0,,,,42879,Finished,8.0,53.0
+1347,68,norris,mclaren,7.0,7,5.0,,,,52026,Finished,6.0,53.0
+1348,68,ocon,alpine,8.0,8,10.0,,,,56959,Finished,4.0,53.0
+1349,68,ricciardo,mclaren,9.0,9,9.0,,,,60372,Finished,2.0,53.0
+1350,68,stroll,aston_martin,10.0,10,15.0,,,,62549,Finished,1.0,53.0
+1351,68,vettel,aston_martin,11.0,11,12.0,,,,64494,Finished,0.0,53.0
+1352,68,gasly,alphatauri,12.0,12,14.0,,,,65448,Finished,0.0,53.0
+1353,68,albon,williams,13.0,13,13.0,,,,68565,Finished,0.0,53.0
+1354,68,bottas,alfa,14.0,14,11.0,,,,76666,Finished,0.0,53.0
+1355,68,mick_schumacher,haas,15.0,15,17.0,,,,80394,Finished,0.0,53.0
+1356,68,zhou,alfa,16.0,16,16.0,,,,,+6 Laps,0.0,47.0
+1357,68,latifi,williams,17.0,R,18.0,,,,,Collision damage,0.0,40.0
+1358,68,kevin_magnussen,haas,18.0,R,20.0,,,,,Collision damage,0.0,37.0
+1359,68,leclerc,ferrari,19.0,R,1.0,,,,,Accident,0.0,17.0
+1360,68,tsunoda,alphatauri,20.0,R,8.0,,,,,Undertray,0.0,17.0
+1361,69,russell,mercedes,1.0,,,78407,78154,77377,,,,
+1362,69,sainz,ferrari,2.0,,,78434,77946,77421,,,,
+1363,69,leclerc,ferrari,3.0,,,78806,77768,77567,,,,
+1364,69,norris,mclaren,4.0,,,78653,78121,77769,,,,
+1365,69,ocon,alpine,5.0,,,78866,78216,78018,,,,
+1366,69,alonso,alpine,6.0,,,78716,77904,78078,,,,
+1367,69,hamilton,mercedes,7.0,,,78374,78035,78142,,,,
+1368,69,bottas,alfa,8.0,,,78935,78445,78157,,,,
+1369,69,ricciardo,mclaren,9.0,,,78775,78198,78379,,,,
+1370,69,max_verstappen,red_bull,10.0,,,78509,77703,78823,,,,
+1371,69,perez,red_bull,11.0,,,79118,78516,,,,,
+1372,69,zhou,alfa,12.0,,,78973,78573,,,,,
+1373,69,kevin_magnussen,haas,13.0,,,78993,78825,,,,,
+1374,69,stroll,aston_martin,14.0,,,79205,79137,,,,,
+1375,69,mick_schumacher,haas,15.0,,,79164,79202,,,,,
+1376,69,tsunoda,alphatauri,16.0,,,79240,,,,,,
+1377,69,albon,williams,17.0,,,79256,,,,,,
+1378,69,vettel,aston_martin,18.0,,,79273,,,,,,
+1379,69,gasly,alphatauri,19.0,,,79527,,,,,,
+1380,69,latifi,williams,20.0,,,79570,,,,,,
+1381,70,max_verstappen,red_bull,1.0,1,10.0,,,,5975912,Finished,25.0,70.0
+1382,70,hamilton,mercedes,2.0,2,7.0,,,,7834,Finished,19.0,70.0
+1383,70,russell,mercedes,3.0,3,1.0,,,,12337,Finished,15.0,70.0
+1384,70,sainz,ferrari,4.0,4,2.0,,,,14579,Finished,12.0,70.0
+1385,70,perez,red_bull,5.0,5,11.0,,,,15688,Finished,10.0,70.0
+1386,70,leclerc,ferrari,6.0,6,3.0,,,,16047,Finished,8.0,70.0
+1387,70,norris,mclaren,7.0,7,4.0,,,,78300,Finished,6.0,70.0
+1388,70,alonso,alpine,8.0,8,6.0,,,,,+1 Lap,4.0,69.0
+1389,70,ocon,alpine,9.0,9,5.0,,,,,+1 Lap,2.0,69.0
+1390,70,vettel,aston_martin,10.0,10,18.0,,,,,+1 Lap,1.0,69.0
+1391,70,stroll,aston_martin,11.0,11,14.0,,,,,+1 Lap,0.0,69.0
+1392,70,gasly,alphatauri,12.0,12,0.0,,,,,+1 Lap,0.0,69.0
+1393,70,zhou,alfa,13.0,13,12.0,,,,,+1 Lap,0.0,69.0
+1394,70,mick_schumacher,haas,14.0,14,15.0,,,,,+1 Lap,0.0,69.0
+1395,70,ricciardo,mclaren,15.0,15,9.0,,,,,+1 Lap,0.0,69.0
+1396,70,kevin_magnussen,haas,16.0,16,13.0,,,,,+1 Lap,0.0,69.0
+1397,70,albon,williams,17.0,17,17.0,,,,,+1 Lap,0.0,69.0
+1398,70,latifi,williams,18.0,18,19.0,,,,,+1 Lap,0.0,69.0
+1399,70,tsunoda,alphatauri,19.0,19,16.0,,,,,+2 Laps,0.0,68.0
+1400,70,bottas,alfa,20.0,20,8.0,,,,,Power Unit,0.0,65.0
+1401,71,max_verstappen,red_bull,1.0,,,104581,104723,103665,,,,
+1402,71,sainz,ferrari,2.0,,,105050,105418,104297,,,,
+1403,71,perez,red_bull,3.0,,,105377,104794,104462,,,,
+1404,71,leclerc,ferrari,4.0,,,105572,104551,104553,,,,
+1405,71,ocon,alpine,5.0,,,106039,105475,105180,,,,
+1406,71,alonso,alpine,6.0,,,106075,105552,105368,,,,
+1407,71,hamilton,mercedes,7.0,,,105736,105420,105503,,,,
+1408,71,russell,mercedes,8.0,,,105650,105461,105776,,,,
+1409,71,albon,williams,9.0,,,105672,105675,105837,,,,
+1410,71,norris,mclaren,10.0,,,105745,105603,106178,,,,
+1411,71,ricciardo,mclaren,11.0,,,106212,105767,,,,,
+1412,71,gasly,alphatauri,12.0,,,106183,105827,,,,,
+1413,71,zhou,alfa,13.0,,,106178,106085,,,,,
+1414,71,stroll,aston_martin,14.0,,,106256,106611,,,,,
+1415,71,mick_schumacher,haas,15.0,,,106342,107718,,,,,
+1416,71,vettel,aston_martin,16.0,,,106344,,,,,,
+1417,71,latifi,williams,17.0,,,106401,,,,,,
+1418,71,kevin_magnussen,haas,18.0,,,106557,,,,,,
+1419,71,tsunoda,alphatauri,19.0,,,106692,,,,,,
+1420,71,bottas,alfa,20.0,,,107866,,,,,,
+1421,72,max_verstappen,red_bull,1.0,1,14.0,,,,5152894,Finished,26.0,44.0
+1422,72,perez,red_bull,2.0,2,2.0,,,,17841,Finished,18.0,44.0
+1423,72,sainz,ferrari,3.0,3,1.0,,,,26886,Finished,15.0,44.0
+1424,72,russell,mercedes,4.0,4,5.0,,,,29140,Finished,12.0,44.0
+1425,72,alonso,alpine,5.0,5,3.0,,,,73256,Finished,10.0,44.0
+1426,72,leclerc,ferrari,6.0,6,15.0,,,,74936,Finished,8.0,44.0
+1427,72,ocon,alpine,7.0,7,16.0,,,,75640,Finished,6.0,44.0
+1428,72,vettel,aston_martin,8.0,8,10.0,,,,78107,Finished,4.0,44.0
+1429,72,gasly,alphatauri,9.0,9,0.0,,,,92181,Finished,2.0,44.0
+1430,72,albon,williams,10.0,10,6.0,,,,101900,Finished,1.0,44.0
+1431,72,stroll,aston_martin,11.0,11,9.0,,,,103078,Finished,0.0,44.0
+1432,72,norris,mclaren,12.0,12,17.0,,,,104739,Finished,0.0,44.0
+1433,72,tsunoda,alphatauri,13.0,13,0.0,,,,105217,Finished,0.0,44.0
+1434,72,zhou,alfa,14.0,14,18.0,,,,106252,Finished,0.0,44.0
+1435,72,ricciardo,mclaren,15.0,15,7.0,,,,107163,Finished,0.0,44.0
+1436,72,kevin_magnussen,haas,16.0,16,12.0,,,,,+1 Lap,0.0,43.0
+1437,72,mick_schumacher,haas,17.0,17,19.0,,,,,+1 Lap,0.0,43.0
+1438,72,latifi,williams,18.0,18,11.0,,,,,+1 Lap,0.0,43.0
+1439,72,bottas,alfa,19.0,R,13.0,,,,,Accident,0.0,1.0
+1440,72,hamilton,mercedes,20.0,R,4.0,,,,,Collision damage,0.0,0.0
+1441,73,max_verstappen,red_bull,1.0,,,71317,70927,70342,,,,
+1442,73,leclerc,ferrari,2.0,,,71443,70988,70363,,,,
+1443,73,sainz,ferrari,3.0,,,71767,70814,70434,,,,
+1444,73,hamilton,mercedes,4.0,,,71331,71075,70648,,,,
+1445,73,perez,red_bull,5.0,,,71641,71314,71077,,,,
+1446,73,russell,mercedes,6.0,,,71561,70824,71147,,,,
+1447,73,norris,mclaren,7.0,,,71556,71116,71174,,,,
+1448,73,mick_schumacher,haas,8.0,,,71741,71420,71442,,,,
+1449,73,tsunoda,alphatauri,9.0,,,71427,71428,72556,,,,
+1450,73,stroll,aston_martin,10.0,,,71568,71416,,,,,
+1451,73,gasly,alphatauri,11.0,,,71705,71512,,,,,
+1452,73,ocon,alpine,12.0,,,71748,71605,,,,,
+1453,73,alonso,alpine,13.0,,,71667,71613,,,,,
+1454,73,zhou,alfa,14.0,,,71826,71704,,,,,
+1455,73,albon,williams,15.0,,,71695,71802,,,,,
+1456,73,bottas,alfa,16.0,,,71961,,,,,,
+1457,73,ricciardo,mclaren,17.0,,,72081,,,,,,
+1458,73,kevin_magnussen,haas,18.0,,,72319,,,,,,
+1459,73,vettel,aston_martin,19.0,,,72391,,,,,,
+1460,73,latifi,williams,20.0,,,73353,,,,,,
+1461,74,max_verstappen,red_bull,1.0,1,1.0,,,,5802773,Finished,26.0,72.0
+1462,74,russell,mercedes,2.0,2,6.0,,,,4071,Finished,18.0,72.0
+1463,74,leclerc,ferrari,3.0,3,2.0,,,,10929,Finished,15.0,72.0
+1464,74,hamilton,mercedes,4.0,4,4.0,,,,13016,Finished,12.0,72.0
+1465,74,perez,red_bull,5.0,5,5.0,,,,18168,Finished,10.0,72.0
+1466,74,alonso,alpine,6.0,6,13.0,,,,18754,Finished,8.0,72.0
+1467,74,norris,mclaren,7.0,7,7.0,,,,19306,Finished,6.0,72.0
+1468,74,sainz,ferrari,8.0,8,3.0,,,,20916,Finished,4.0,72.0
+1469,74,ocon,alpine,9.0,9,12.0,,,,21117,Finished,2.0,72.0
+1470,74,stroll,aston_martin,10.0,10,10.0,,,,22459,Finished,1.0,72.0
+1471,74,gasly,alphatauri,11.0,11,11.0,,,,27009,Finished,0.0,72.0
+1472,74,albon,williams,12.0,12,15.0,,,,30390,Finished,0.0,72.0
+1473,74,mick_schumacher,haas,13.0,13,8.0,,,,32995,Finished,0.0,72.0
+1474,74,vettel,aston_martin,14.0,14,19.0,,,,36007,Finished,0.0,72.0
+1475,74,kevin_magnussen,haas,15.0,15,18.0,,,,36869,Finished,0.0,72.0
+1476,74,zhou,alfa,16.0,16,14.0,,,,37320,Finished,0.0,72.0
+1477,74,ricciardo,mclaren,17.0,17,17.0,,,,37764,Finished,0.0,72.0
+1478,74,latifi,williams,18.0,18,20.0,,,,,+1 Lap,0.0,71.0
+1479,74,bottas,alfa,19.0,R,16.0,,,,,Engine,0.0,53.0
+1480,74,tsunoda,alphatauri,20.0,R,9.0,,,,,Differential,0.0,43.0
+1481,75,leclerc,ferrari,1.0,,,81280,81208,80161,,,,
+1482,75,max_verstappen,red_bull,2.0,,,80922,81265,80306,,,,
+1483,75,sainz,ferrari,3.0,,,81348,80878,80429,,,,
+1484,75,perez,red_bull,4.0,,,81495,81358,81206,,,,
+1485,75,hamilton,mercedes,5.0,,,82048,81708,81524,,,,
+1486,75,russell,mercedes,6.0,,,81785,81747,81542,,,,
+1487,75,norris,mclaren,7.0,,,82130,81831,81584,,,,
+1488,75,ricciardo,mclaren,8.0,,,82139,81855,81925,,,,
+1489,75,gasly,alphatauri,9.0,,,82010,82062,82648,,,,
+1490,75,alonso,alpine,10.0,,,82089,81861,,,,,
+1491,75,ocon,alpine,11.0,,,82166,82130,,,,,
+1492,75,bottas,alfa,12.0,,,82254,82235,,,,,
+1493,75,de_vries,williams,13.0,,,82567,82471,,,,,
+1494,75,zhou,alfa,14.0,,,82003,82577,,,,,
+1495,75,tsunoda,alphatauri,15.0,,,82020,,,,,,
+1496,75,latifi,williams,16.0,,,82587,,,,,,
+1497,75,vettel,aston_martin,17.0,,,82636,,,,,,
+1498,75,stroll,aston_martin,18.0,,,82748,,,,,,
+1499,75,kevin_magnussen,haas,19.0,,,82908,,,,,,
+1500,75,mick_schumacher,haas,20.0,,,83005,,,,,,
+1501,76,max_verstappen,red_bull,1.0,1,7.0,,,,4827511,Finished,25.0,53.0
+1502,76,leclerc,ferrari,2.0,2,1.0,,,,2446,Finished,18.0,53.0
+1503,76,russell,mercedes,3.0,3,2.0,,,,3405,Finished,15.0,53.0
+1504,76,sainz,ferrari,4.0,4,18.0,,,,5061,Finished,12.0,53.0
+1505,76,hamilton,mercedes,5.0,5,19.0,,,,5380,Finished,10.0,53.0
+1506,76,perez,red_bull,6.0,6,13.0,,,,6091,Finished,9.0,53.0
+1507,76,norris,mclaren,7.0,7,3.0,,,,6207,Finished,6.0,53.0
+1508,76,gasly,alphatauri,8.0,8,5.0,,,,6396,Finished,4.0,53.0
+1509,76,de_vries,williams,9.0,9,8.0,,,,7122,Finished,2.0,53.0
+1510,76,zhou,alfa,10.0,10,9.0,,,,7910,Finished,1.0,53.0
+1511,76,ocon,alpine,11.0,11,14.0,,,,8323,Finished,0.0,53.0
+1512,76,mick_schumacher,haas,12.0,12,17.0,,,,8549,Finished,0.0,53.0
+1513,76,bottas,alfa,13.0,13,15.0,,,,,+1 Lap,0.0,52.0
+1514,76,tsunoda,alphatauri,14.0,14,20.0,,,,,+1 Lap,0.0,52.0
+1515,76,latifi,williams,15.0,15,10.0,,,,,+1 Lap,0.0,52.0
+1516,76,kevin_magnussen,haas,16.0,16,16.0,,,,,+1 Lap,0.0,52.0
+1517,76,ricciardo,mclaren,17.0,R,4.0,,,,,Oil leak,0.0,45.0
+1518,76,stroll,aston_martin,18.0,R,12.0,,,,,Engine,0.0,39.0
+1519,76,alonso,alpine,19.0,R,6.0,,,,,Water pressure,0.0,31.0
+1520,76,vettel,aston_martin,20.0,R,11.0,,,,,Engine,0.0,10.0
+1521,77,leclerc,ferrari,1.0,,,114129,112343,109412,,,,
+1522,77,perez,red_bull,2.0,,,114404,112818,109434,,,,
+1523,77,hamilton,mercedes,3.0,,,113161,112691,109466,,,,
+1524,77,sainz,ferrari,4.0,,,114559,113219,109583,,,,
+1525,77,alonso,alpine,5.0,,,115360,113127,109966,,,,
+1526,77,norris,mclaren,6.0,,,115914,113942,110584,,,,
+1527,77,gasly,alphatauri,7.0,,,115606,113546,111211,,,,
+1528,77,max_verstappen,red_bull,8.0,,,113057,112723,111395,,,,
+1529,77,kevin_magnussen,haas,9.0,,,115103,114006,111573,,,,
+1530,77,tsunoda,alphatauri,10.0,,,115314,113848,111983,,,,
+1531,77,russell,mercedes,11.0,,,114633,114012,,,,,
+1532,77,stroll,aston_martin,12.0,,,115629,114211,,,,,
+1533,77,mick_schumacher,haas,13.0,,,115736,114370,,,,,
+1534,77,vettel,aston_martin,14.0,,,115602,114380,,,,,
+1535,77,zhou,alfa,15.0,,,115375,115518,,,,,
+1536,77,bottas,alfa,16.0,,,116083,,,,,,
+1537,77,ricciardo,mclaren,17.0,,,116226,,,,,,
+1538,77,ocon,alpine,18.0,,,116337,,,,,,
+1539,77,albon,williams,19.0,,,116985,,,,,,
+1540,77,latifi,williams,20.0,,,117532,,,,,,
+1541,78,perez,red_bull,1.0,1,2.0,,,,7340238,Finished,25.0,59.0
+1542,78,leclerc,ferrari,2.0,2,1.0,,,,2595,Finished,18.0,59.0
+1543,78,sainz,ferrari,3.0,3,4.0,,,,10305,Finished,15.0,59.0
+1544,78,norris,mclaren,4.0,4,6.0,,,,21133,Finished,12.0,59.0
+1545,78,ricciardo,mclaren,5.0,5,16.0,,,,53282,Finished,10.0,59.0
+1546,78,stroll,aston_martin,6.0,6,11.0,,,,56330,Finished,8.0,59.0
+1547,78,max_verstappen,red_bull,7.0,7,8.0,,,,58825,Finished,6.0,59.0
+1548,78,vettel,aston_martin,8.0,8,13.0,,,,60032,Finished,4.0,59.0
+1549,78,hamilton,mercedes,9.0,9,3.0,,,,61515,Finished,2.0,59.0
+1550,78,gasly,alphatauri,10.0,10,7.0,,,,69576,Finished,1.0,59.0
+1551,78,bottas,alfa,11.0,11,15.0,,,,88844,Finished,0.0,59.0
+1552,78,kevin_magnussen,haas,12.0,12,9.0,,,,92610,Finished,0.0,59.0
+1553,78,mick_schumacher,haas,13.0,13,12.0,,,,,+1 Lap,0.0,58.0
+1554,78,russell,mercedes,14.0,14,0.0,,,,,+2 Laps,0.0,57.0
+1555,78,tsunoda,alphatauri,15.0,R,10.0,,,,,Accident,0.0,34.0
+1556,78,ocon,alpine,16.0,R,17.0,,,,,Engine,0.0,26.0
+1557,78,albon,williams,17.0,R,18.0,,,,,Collision damage,0.0,25.0
+1558,78,alonso,alpine,18.0,R,5.0,,,,,Engine,0.0,20.0
+1559,78,latifi,williams,19.0,R,19.0,,,,,Collision damage,0.0,7.0
+1560,78,zhou,alfa,20.0,R,14.0,,,,,Collision,0.0,6.0
+1561,79,max_verstappen,red_bull,1.0,,,90224,90346,89304,,,,
+1562,79,leclerc,ferrari,2.0,,,90402,90486,89314,,,,
+1563,79,sainz,ferrari,3.0,,,90336,90444,89361,,,,
+1564,79,perez,red_bull,4.0,,,90622,89925,89709,,,,
+1565,79,ocon,alpine,5.0,,,90696,90357,90165,,,,
+1566,79,hamilton,mercedes,6.0,,,90906,90443,90261,,,,
+1567,79,alonso,alpine,7.0,,,90603,90343,90322,,,,
+1568,79,russell,mercedes,8.0,,,90865,90465,90389,,,,
+1569,79,vettel,aston_martin,9.0,,,91256,90656,90554,,,,
+1570,79,norris,mclaren,10.0,,,90881,90473,91003,,,,
+1571,79,ricciardo,mclaren,11.0,,,90880,90659,,,,,
+1572,79,bottas,alfa,12.0,,,91226,90709,,,,,
+1573,79,tsunoda,alphatauri,13.0,,,91130,90808,,,,,
+1574,79,zhou,alfa,14.0,,,90894,90953,,,,,
+1575,79,mick_schumacher,haas,15.0,,,91152,91439,,,,,
+1576,79,albon,williams,16.0,,,91311,,,,,,
+1577,79,gasly,alphatauri,17.0,,,91322,,,,,,
+1578,79,kevin_magnussen,haas,18.0,,,91352,,,,,,
+1579,79,stroll,aston_martin,19.0,,,91419,,,,,,
+1580,79,latifi,williams,20.0,,,91511,,,,,,
+1581,80,max_verstappen,red_bull,1.0,1,1.0,,,,10904004,Finished,25.0,28.0
+1582,80,perez,red_bull,2.0,2,4.0,,,,27066,Finished,18.0,28.0
+1583,80,leclerc,ferrari,3.0,3,2.0,,,,31763,Finished,15.0,28.0
+1584,80,ocon,alpine,4.0,4,5.0,,,,39685,Finished,12.0,28.0
+1585,80,hamilton,mercedes,5.0,5,6.0,,,,40326,Finished,10.0,28.0
+1586,80,vettel,aston_martin,6.0,6,9.0,,,,46358,Finished,8.0,28.0
+1587,80,alonso,alpine,7.0,7,7.0,,,,46369,Finished,6.0,28.0
+1588,80,russell,mercedes,8.0,8,8.0,,,,47661,Finished,4.0,28.0
+1589,80,latifi,williams,9.0,9,20.0,,,,70143,Finished,2.0,28.0
+1590,80,norris,mclaren,10.0,10,10.0,,,,70782,Finished,1.0,28.0
+1591,80,ricciardo,mclaren,11.0,11,11.0,,,,72877,Finished,0.0,28.0
+1592,80,stroll,aston_martin,12.0,12,19.0,,,,73904,Finished,0.0,28.0
+1593,80,tsunoda,alphatauri,13.0,13,13.0,,,,75599,Finished,0.0,28.0
+1594,80,kevin_magnussen,haas,14.0,14,18.0,,,,86016,Finished,0.0,28.0
+1595,80,bottas,alfa,15.0,15,12.0,,,,86496,Finished,0.0,28.0
+1596,80,zhou,alfa,16.0,16,14.0,,,,87043,Finished,0.0,28.0
+1597,80,mick_schumacher,haas,17.0,17,15.0,,,,92523,Finished,0.0,28.0
+1598,80,gasly,alphatauri,18.0,18,17.0,,,,108091,Finished,0.0,28.0
+1599,80,sainz,ferrari,19.0,R,3.0,,,,,Accident,0.0,0.0
+1600,80,albon,williams,20.0,R,16.0,,,,,Hydraulics,0.0,0.0
+1601,81,sainz,ferrari,1.0,,,95297,95590,94356,,,,
+1602,81,leclerc,ferrari,2.0,,,95795,95246,94421,,,,
+1603,81,max_verstappen,red_bull,3.0,,,95864,95294,94448,,,,
+1604,81,perez,red_bull,4.0,,,96163,95864,94645,,,,
+1605,81,hamilton,mercedes,5.0,,,96148,95732,94947,,,,
+1606,81,russell,mercedes,6.0,,,96195,95692,94988,,,,
+1607,81,stroll,aston_martin,7.0,,,96860,96032,95598,,,,
+1608,81,norris,mclaren,8.0,,,96465,96341,95690,,,,
+1609,81,alonso,alpine,9.0,,,96446,95988,95876,,,,
+1610,81,bottas,alfa,10.0,,,96746,96321,96319,,,,
+1611,81,albon,williams,11.0,,,96932,96368,,,,,
+1612,81,vettel,aston_martin,12.0,,,96695,96398,,,,,
+1613,81,gasly,alphatauri,13.0,,,96577,96740,,,,,
+1614,81,zhou,alfa,14.0,,,96656,96970,,,,,
+1615,81,tsunoda,alphatauri,15.0,,,96808,97147,,,,,
+1616,81,kevin_magnussen,haas,16.0,,,96949,,,,,,
+1617,81,ricciardo,mclaren,17.0,,,97046,,,,,,
+1618,81,ocon,alpine,18.0,,,97068,,,,,,
+1619,81,mick_schumacher,haas,19.0,,,97111,,,,,,
+1620,81,latifi,williams,20.0,,,97244,,,,,,
+1621,82,max_verstappen,red_bull,1.0,1,2.0,,,,6131687,Finished,25.0,56.0
+1622,82,hamilton,mercedes,2.0,2,3.0,,,,5023,Finished,18.0,56.0
+1623,82,leclerc,ferrari,3.0,3,12.0,,,,7501,Finished,15.0,56.0
+1624,82,perez,red_bull,4.0,4,9.0,,,,8293,Finished,12.0,56.0
+1625,82,russell,mercedes,5.0,5,4.0,,,,44815,Finished,11.0,56.0
+1626,82,norris,mclaren,6.0,6,6.0,,,,53785,Finished,8.0,56.0
+1627,82,alonso,alpine,7.0,7,14.0,,,,55078,Finished,6.0,56.0
+1628,82,vettel,aston_martin,8.0,8,10.0,,,,65354,Finished,4.0,56.0
+1629,82,kevin_magnussen,haas,9.0,9,13.0,,,,65834,Finished,2.0,56.0
+1630,82,tsunoda,alphatauri,10.0,10,19.0,,,,70919,Finished,1.0,56.0
+1631,82,ocon,alpine,11.0,11,0.0,,,,72875,Finished,0.0,56.0
+1632,82,zhou,alfa,12.0,12,18.0,,,,76164,Finished,0.0,56.0
+1633,82,albon,williams,13.0,13,8.0,,,,80057,Finished,0.0,56.0
+1634,82,gasly,alphatauri,14.0,14,11.0,,,,81763,Finished,0.0,56.0
+1635,82,mick_schumacher,haas,15.0,15,16.0,,,,84490,Finished,0.0,56.0
+1636,82,ricciardo,mclaren,16.0,16,15.0,,,,90487,Finished,0.0,56.0
+1637,82,latifi,williams,17.0,17,17.0,,,,103588,Finished,0.0,56.0
+1638,82,stroll,aston_martin,18.0,R,5.0,,,,,Collision,0.0,21.0
+1639,82,bottas,alfa,19.0,R,7.0,,,,,Spun off,0.0,16.0
+1640,82,sainz,ferrari,20.0,R,1.0,,,,,Collision damage,0.0,1.0
+1641,83,max_verstappen,red_bull,1.0,,,79222,78566,77775,,,,
+1642,83,russell,mercedes,2.0,,,79583,78565,78079,,,,
+1643,83,hamilton,mercedes,3.0,,,79169,78552,78084,,,,
+1644,83,perez,red_bull,4.0,,,79706,78615,78128,,,,
+1645,83,sainz,ferrari,5.0,,,79566,78560,78351,,,,
+1646,83,bottas,alfa,6.0,,,79523,78762,78401,,,,
+1647,83,leclerc,ferrari,7.0,,,79505,79109,78555,,,,
+1648,83,norris,mclaren,8.0,,,79857,79119,78721,,,,
+1649,83,alonso,alpine,9.0,,,80006,79272,78939,,,,
+1650,83,ocon,alpine,10.0,,,79945,79081,79010,,,,
+1651,83,ricciardo,mclaren,11.0,,,80279,79325,,,,,
+1652,83,zhou,alfa,12.0,,,80283,79476,,,,,
+1653,83,tsunoda,alphatauri,13.0,,,79907,79589,,,,,
+1654,83,gasly,alphatauri,14.0,,,80256,79672,,,,,
+1655,83,kevin_magnussen,haas,15.0,,,80293,79833,,,,,
+1656,83,mick_schumacher,haas,16.0,,,80419,,,,,,
+1657,83,vettel,aston_martin,17.0,,,80419,,,,,,
+1658,83,stroll,aston_martin,18.0,,,80520,,,,,,
+1659,83,albon,williams,19.0,,,80859,,,,,,
+1660,83,latifi,williams,20.0,,,81167,,,,,,
+1661,84,max_verstappen,red_bull,1.0,1,1.0,,,,5916729,Finished,25.0,71.0
+1662,84,hamilton,mercedes,2.0,2,3.0,,,,15186,Finished,18.0,71.0
+1663,84,perez,red_bull,3.0,3,4.0,,,,18097,Finished,15.0,71.0
+1664,84,russell,mercedes,4.0,4,2.0,,,,49431,Finished,13.0,71.0
+1665,84,sainz,ferrari,5.0,5,5.0,,,,58123,Finished,10.0,71.0
+1666,84,leclerc,ferrari,6.0,6,7.0,,,,68774,Finished,8.0,71.0
+1667,84,ricciardo,mclaren,7.0,7,11.0,,,,,+1 Lap,6.0,70.0
+1668,84,ocon,alpine,8.0,8,10.0,,,,,+1 Lap,4.0,70.0
+1669,84,norris,mclaren,9.0,9,8.0,,,,,+1 Lap,2.0,70.0
+1670,84,bottas,alfa,10.0,10,6.0,,,,,+1 Lap,1.0,70.0
+1671,84,gasly,alphatauri,11.0,11,14.0,,,,,+1 Lap,0.0,70.0
+1672,84,albon,williams,12.0,12,17.0,,,,,+1 Lap,0.0,70.0
+1673,84,zhou,alfa,13.0,13,12.0,,,,,+1 Lap,0.0,70.0
+1674,84,vettel,aston_martin,14.0,14,16.0,,,,,+1 Lap,0.0,70.0
+1675,84,stroll,aston_martin,15.0,15,20.0,,,,,+1 Lap,0.0,70.0
+1676,84,mick_schumacher,haas,16.0,16,15.0,,,,,+1 Lap,0.0,70.0
+1677,84,kevin_magnussen,haas,17.0,17,19.0,,,,,+1 Lap,0.0,70.0
+1678,84,latifi,williams,18.0,18,18.0,,,,,+2 Laps,0.0,69.0
+1679,84,alonso,alpine,19.0,19,9.0,,,,,Engine,0.0,63.0
+1680,84,tsunoda,alphatauri,20.0,R,13.0,,,,,Collision damage,0.0,50.0
+1681,85,kevin_magnussen,haas,1.0,,,73954,71410,71674,,,,
+1682,85,max_verstappen,red_bull,2.0,,,73625,70881,71877,,,,
+1683,85,russell,mercedes,3.0,,,74427,71318,72059,,,,
+1684,85,norris,mclaren,4.0,,,73106,71377,72263,,,,
+1685,85,sainz,ferrari,5.0,,,74680,70890,72357,,,,
+1686,85,ocon,alpine,6.0,,,74663,71587,72425,,,,
+1687,85,alonso,alpine,7.0,,,73542,71394,72504,,,,
+1688,85,hamilton,mercedes,8.0,,,73403,71539,72611,,,,
+1689,85,perez,red_bull,9.0,,,73613,71456,75601,,,,
+1690,85,leclerc,ferrari,10.0,,,74486,70950,,,,,
+1691,85,albon,williams,11.0,,,74324,71631,,,,,
+1692,85,gasly,alphatauri,12.0,,,74371,71675,,,,,
+1693,85,vettel,aston_martin,13.0,,,73597,71678,,,,,
+1694,85,ricciardo,mclaren,14.0,,,74931,72140,,,,,
+1695,85,stroll,aston_martin,15.0,,,74398,72210,,,,,
+1696,85,latifi,williams,16.0,,,75095,,,,,,
+1697,85,zhou,alfa,17.0,,,75197,,,,,,
+1698,85,bottas,alfa,18.0,,,75486,,,,,,
+1699,85,tsunoda,alphatauri,19.0,,,76264,,,,,,
+1700,85,mick_schumacher,haas,20.0,,,76361,,,,,,
+1701,86,russell,mercedes,1.0,1,1.0,,,,5914044,Finished,26.0,71.0
+1702,86,hamilton,mercedes,2.0,2,2.0,,,,1529,Finished,18.0,71.0
+1703,86,sainz,ferrari,3.0,3,7.0,,,,4051,Finished,15.0,71.0
+1704,86,leclerc,ferrari,4.0,4,5.0,,,,8441,Finished,12.0,71.0
+1705,86,alonso,alpine,5.0,5,17.0,,,,9561,Finished,10.0,71.0
+1706,86,max_verstappen,red_bull,6.0,6,3.0,,,,10056,Finished,8.0,71.0
+1707,86,perez,red_bull,7.0,7,4.0,,,,14080,Finished,6.0,71.0
+1708,86,ocon,alpine,8.0,8,16.0,,,,18690,Finished,4.0,71.0
+1709,86,bottas,alfa,9.0,9,14.0,,,,22552,Finished,2.0,71.0
+1710,86,stroll,aston_martin,10.0,10,15.0,,,,23552,Finished,1.0,71.0
+1711,86,vettel,aston_martin,11.0,11,9.0,,,,26183,Finished,0.0,71.0
+1712,86,zhou,alfa,12.0,12,13.0,,,,29325,Finished,0.0,71.0
+1713,86,mick_schumacher,haas,13.0,13,12.0,,,,29899,Finished,0.0,71.0
+1714,86,gasly,alphatauri,14.0,14,10.0,,,,31867,Finished,0.0,71.0
+1715,86,albon,williams,15.0,15,19.0,,,,36016,Finished,0.0,71.0
+1716,86,latifi,williams,16.0,16,18.0,,,,37038,Finished,0.0,71.0
+1717,86,tsunoda,alphatauri,17.0,17,0.0,,,,,+1 Lap,0.0,70.0
+1718,86,norris,mclaren,18.0,R,6.0,,,,,Gearbox,0.0,50.0
+1719,86,kevin_magnussen,haas,19.0,R,8.0,,,,,Collision,0.0,0.0
+1720,86,ricciardo,mclaren,20.0,R,11.0,,,,,Collision,0.0,0.0
+1721,87,max_verstappen,red_bull,1.0,,,84754,84622,83824,,,,
+1722,87,perez,red_bull,2.0,,,84820,84419,84052,,,,
+1723,87,leclerc,ferrari,3.0,,,85211,84517,84092,,,,
+1724,87,sainz,ferrari,4.0,,,85090,84521,84242,,,,
+1725,87,hamilton,mercedes,5.0,,,85594,84774,84508,,,,
+1726,87,russell,mercedes,6.0,,,85545,84940,84511,,,,
+1727,87,norris,mclaren,7.0,,,85387,84903,84769,,,,
+1728,87,ocon,alpine,8.0,,,85735,85007,84830,,,,
+1729,87,vettel,aston_martin,9.0,,,85523,84974,84961,,,,
+1730,87,ricciardo,mclaren,10.0,,,85766,85068,85045,,,,
+1731,87,alonso,alpine,11.0,,,85782,85096,,,,,
+1732,87,tsunoda,alphatauri,12.0,,,85630,85219,,,,,
+1733,87,mick_schumacher,haas,13.0,,,85711,85225,,,,,
+1734,87,stroll,aston_martin,14.0,,,85741,85359,,,,,
+1735,87,zhou,alfa,15.0,,,85594,85408,,,,,
+1736,87,kevin_magnussen,haas,16.0,,,85834,,,,,,
+1737,87,gasly,alphatauri,17.0,,,85859,,,,,,
+1738,87,bottas,alfa,18.0,,,85892,,,,,,
+1739,87,albon,williams,19.0,,,86028,,,,,,
+1740,87,latifi,williams,20.0,,,86054,,,,,,
+1741,88,max_verstappen,red_bull,1.0,1,1.0,,,,5265914,Finished,25.0,58.0
+1742,88,leclerc,ferrari,2.0,2,3.0,,,,8771,Finished,18.0,58.0
+1743,88,perez,red_bull,3.0,3,2.0,,,,10093,Finished,15.0,58.0
+1744,88,sainz,ferrari,4.0,4,4.0,,,,24892,Finished,12.0,58.0
+1745,88,russell,mercedes,5.0,5,6.0,,,,35888,Finished,10.0,58.0
+1746,88,norris,mclaren,6.0,6,7.0,,,,56234,Finished,9.0,58.0
+1747,88,ocon,alpine,7.0,7,8.0,,,,57240,Finished,6.0,58.0
+1748,88,stroll,aston_martin,8.0,8,14.0,,,,76931,Finished,4.0,58.0
+1749,88,ricciardo,mclaren,9.0,9,13.0,,,,83268,Finished,2.0,58.0
+1750,88,vettel,aston_martin,10.0,10,9.0,,,,83898,Finished,1.0,58.0
+1751,88,tsunoda,alphatauri,11.0,11,11.0,,,,89371,Finished,0.0,58.0
+1752,88,zhou,alfa,12.0,12,15.0,,,,,+1 Lap,0.0,57.0
+1753,88,albon,williams,13.0,13,19.0,,,,,+1 Lap,0.0,57.0
+1754,88,gasly,alphatauri,14.0,14,17.0,,,,,+1 Lap,0.0,57.0
+1755,88,bottas,alfa,15.0,15,18.0,,,,,+1 Lap,0.0,57.0
+1756,88,mick_schumacher,haas,16.0,16,12.0,,,,,+1 Lap,0.0,57.0
+1757,88,kevin_magnussen,haas,17.0,17,16.0,,,,,+1 Lap,0.0,57.0
+1758,88,hamilton,mercedes,18.0,18,5.0,,,,,Hydraulics,0.0,55.0
+1759,88,latifi,williams,19.0,19,20.0,,,,,Collision damage,0.0,55.0
+1760,88,alonso,alpine,20.0,R,10.0,,,,,Water leak,0.0,27.0
