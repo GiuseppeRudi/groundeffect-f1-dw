@@ -4,24 +4,32 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 
 # ============================================================
 # CONFIG
 # ============================================================
 
-CSV_DIR = Path("f1_data_reconciled")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+CSV_DIR = PROJECT_ROOT / "data" / "reconciled"
+
+SQL_DIR = PROJECT_ROOT / "database" / "reconciled" / "schema"
+DROP_SQL_FILE = SQL_DIR / "00_drop_reconciled_tables.sql"
+CREATE_SQL_FILE = SQL_DIR / "01_create_reconciled_tables.sql"
+
 DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_reconciled"
 
 DROP_EXISTING_TABLES = True
 
 TABLE_FILES = {
     "season": "season.csv",
-    "grand_prix": "grand_prix.csv",
-    "session": "session.csv",
+    "circuit": "circuit.csv",
     "driver": "driver.csv",
     "team": "team.csv",
+    "grand_prix": "grand_prix.csv",
+    "session": "session.csv",
     "result": "result.csv",
     "lap": "lap.csv",
     "weather": "weather.csv",
@@ -51,7 +59,7 @@ def try_parse_dates(df: pd.DataFrame) -> pd.DataFrame:
     for col in df.columns:
         if "date" in col:
             try:
-                df[col] = pd.to_datetime(df[col])
+                df[col] = pd.to_datetime(df[col], errors="coerce")
             except Exception:
                 pass
 
@@ -65,28 +73,14 @@ def load_csv(csv_path: Path) -> pd.DataFrame:
     return df
 
 
-def drop_all_tables(conn, schema: str = "public") -> None:
-    result = conn.execute(
-        text("""
-            SELECT tablename
-            FROM pg_tables
-            WHERE schemaname = :schema
-        """),
-        {"schema": schema}
-    )
+def execute_sql_file(conn, sql_path: Path) -> None:
+    if not sql_path.exists():
+        raise FileNotFoundError(f"SQL file not found: {sql_path}")
 
-    table_names = [row[0] for row in result]
+    print(f"EXECUTING SQL FILE: {sql_path.relative_to(PROJECT_ROOT)}")
 
-    if not table_names:
-        print(f"No tables found in schema '{schema}'")
-        return
-
-    qualified_tables = ", ".join(
-        f'"{schema}"."{table_name}"' for table_name in table_names
-    )
-
-    print(f"DROPPING ALL TABLES IN SCHEMA {schema}")
-    conn.execute(text(f"DROP TABLE {qualified_tables} CASCADE"))
+    sql = sql_path.read_text(encoding="utf-8")
+    conn.exec_driver_sql(sql)
 
 
 # ============================================================
@@ -98,6 +92,7 @@ def main() -> None:
 
     load_order = [
         "season",
+        "circuit",
         "driver",
         "team",
         "grand_prix",
@@ -108,20 +103,29 @@ def main() -> None:
         "track_status",
     ]
 
+    # --------------------------------------------------------
+    # DROP + CREATE TABLES FROM SQL FILES
+    # --------------------------------------------------------
     with engine.begin() as conn:
         if DROP_EXISTING_TABLES:
-            drop_all_tables(conn)
+            execute_sql_file(conn, DROP_SQL_FILE)
 
+        execute_sql_file(conn, CREATE_SQL_FILE)
+
+    # --------------------------------------------------------
+    # LOAD CSV DATA INTO EXISTING TABLES
+    # --------------------------------------------------------
     with engine.begin() as conn:
         for table_name in load_order:
             filename = TABLE_FILES[table_name]
             csv_path = CSV_DIR / filename
 
             if not csv_path.exists():
-                print(f"SKIP: {filename} not found")
+                print(f"SKIP: {filename} not found in {CSV_DIR}")
                 continue
 
             print(f"LOADING {filename} -> {table_name}")
+
             df = load_csv(csv_path)
 
             print(f"  shape = {df.shape}")
@@ -129,12 +133,13 @@ def main() -> None:
             df.to_sql(
                 table_name,
                 conn,
-                if_exists="fail",
+                if_exists="append",
                 index=False,
                 chunksize=100,
+                method="multi",
             )
 
-    print("\nDONE: ALL TABLES LOADED.")
+    print("\nDONE: ALL RECONCILED TABLES LOADED.")
 
 
 if __name__ == "__main__":

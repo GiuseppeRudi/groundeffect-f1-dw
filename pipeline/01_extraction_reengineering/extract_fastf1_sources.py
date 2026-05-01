@@ -9,27 +9,33 @@ import pandas as pd
 import fastf1
 from fastf1.ergast import Ergast
 
+
 # ============================================================
 # CONFIG
 # ============================================================
 
-OUTPUT_DIR_RECONCILED = Path("f1_data_reconciled")
-OUTPUT_DIR_RAW        = Path("f1_raw_api_data")
-LOG = Path("")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+DATA_DIR = PROJECT_ROOT / "data"
 
-INPUT_EXTERNAL_DATA = Path("f1_extern_data")
+INPUT_EXTERNAL_DATA = DATA_DIR / "external"
 
-CACHE_DIR = Path("fastf1_cache")
+OUTPUT_DIR_RECONCILED = DATA_DIR / "reconciled"
+OUTPUT_DIR_RAW = DATA_DIR / "raw_api_data"
 
+LOG_DIR = PROJECT_ROOT / "logs"
+
+CACHE_DIR = PROJECT_ROOT / "cache" / "fastf1_cache"
 
 # ============================================================
 # HELPERS
 # ============================================================
 
 def ensure_dirs() -> None:
+    INPUT_EXTERNAL_DATA.mkdir(parents=True, exist_ok=True)
     OUTPUT_DIR_RAW.mkdir(parents=True, exist_ok=True)
-    OUTPUT_DIR_RECONCILED.mkdir(parents=True , exist_ok=True)
+    OUTPUT_DIR_RECONCILED.mkdir(parents=True, exist_ok=True)
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 def read_csv(path: Path) -> pd.DataFrame:
@@ -612,7 +618,7 @@ def main() -> None:
 
 
     # LOG 
-    export_dataframe(extraction_log_df, "extraction_log", LOG)
+    export_dataframe(extraction_log_df, "extraction_log", LOG_DIR)
 
 
     print("\n=== DONE ===")
