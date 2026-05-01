@@ -1,0 +1,2430 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage{amsmath, amssymb, amsfonts, mathtools}
+\usepackage{stmaryrd}
+\usepackage{bm}
+
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\usepackage{amsthm}
+
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{hyperref}
+
+\usepackage{enumitem}
+
+\usepackage{listings}
+\usepackage{verbatim}
+
+\usepackage{csquotes}
+\usepackage{microtype}
+
+\setcounter{secnumdepth}{0}
+
+\title{Fact Schema Design Workflow}
+\author{Giuseppe Rudi}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section{Introduction}
+	
+	This document describes the complete workflow used to design the Fact Schema starting from the reconciled database.
+	The process follows a structured methodology that includes conceptual design, transformation, and logical modeling.
+	
+
+	\section{Naming Convention}
+	
+	The attribute tree is built following the data-driven DFM methodology.
+	According to this methodology, the root of the attribute tree formally corresponds to the
+	identifier of the selected fact.
+	
+	In this project, the selected fact is the lap-level performance event and the reconciled
+	schema uses a surrogate key, the formal identifier of the fact is \texttt{lap\_id}.
+	
+	However, for graphical readability, the root of the attribute tree and the DFM fact schema
+	may be labelled with a conceptual name such as  \textit{Lap Performance}.
+	This label must be interpreted as a readable representation of the fact identifier, while the
+	formal construction of the attribute tree remains based on the identifier of the selected
+	fact.
+	
+	
+	The DFM fact schema is a conceptual multidimensional model. Its goal is to describe the
+	fact, the dimensions, the hierarchies, and the measures from an analytical point of view.
+	For this reason, it may use readable business-oriented names.
+	
+	The star schema, instead, is the logical translation of the DFM into relational tables.
+	For this reason, the star schema must use the implementation-oriented naming convention
+	adopted in the database, including \texttt{snake\_case} table names, attributes, primary keys,
+	foreign keys, and measures.
+	
+	\section{Starting Point: Reconciled Database}
+	
+	The reconciled database remains the correct operational starting point of the project. It already organizes the source data into a coherent relational structure and should not be considered wrong just because some tables are not directly transferable into a single fact schema.
+	
+	
+	The process starts from the reconciled database, which contains normalized and integrated data.
+	
+	In our case, the reconciled schema includes entities such as:
+	\begin{itemize}
+		\item Lap
+		\item Driver
+		\item Team
+		\item Session
+		\item Grand Prix
+		\item Weather
+		\item Track Status
+	\end{itemize}
+	
+	The reconciled schema represents the operational structure and is not optimized for analytical queries.
+	
+	In particular:
+	\begin{itemize}[leftmargin=1.5em]
+		\item the \textbf{Lap} relation is the reconciled representation of lap-level events;
+		\item the \textbf{Result} relation is the reconciled representation of final results at session level;
+	\end{itemize}
+	
+	Therefore, the reconciled database must be interpreted as the \emph{source structure} for conceptual design, not as a structure that must be copied one-to-one into the fact schema.
+	
+
+	A fact must represent a meaningful analytical event, and its grain must be declared before defining dimensions, measures, and hierarchies.
+	
+	Once the grain is fixed, only information coherent with that grain can be attached directly to the fact.
+	
+	
+	\section{Fact 1: Lap Performance}
+	
+	This is the most natural fact for the core analytical goal of the project, namely the comparison of performance at lap level, enriched by sector information.
+	
+	\subsection{Grain}
+	
+	The grain of this fact is:
+	\begin{quote}
+		One lap performed by one driver in one specific session, belonging to one specific Grand Prix and one specific Formula 1 season.
+	\end{quote}
+	
+	Operationally, this fact is rooted in the reconciled \texttt{Lap} table.
+	
+	
+	\section{Fact 2: Session Result}
+	
+	A second fact is necessary because not all relevant analyses of the project are lap-level analyses.
+	
+	Some questions concern the \textbf{final behaviour of a driver, team, or car in a session or along a season}, not the performance of a single lap.
+	
+	Examples include:
+	\begin{itemize}[leftmargin=1.5em]
+		\item comparison of qualifying outcomes;
+		\item comparison of race outcomes;
+		\item season-level summary of driver or team results;
+	\end{itemize}
+	
+
+	
+	The second fact should be based on \textbf{Result}.
+	
+	\subsection{Grain}
+	
+	The grain of this fact is:
+	\begin{quote}
+		One driver in one specific session, belonging to one specific Grand Prix and one specific Formula 1 season.
+	\end{quote}
+	
+	Operationally, this fact is rooted in the reconciled \texttt{result} table.
+	
+	\section{Expected Results}
+	
+	\subsection{Attribute Trees and Editing}
+	
+	The next conceptual consequence is straightforward:
+	\begin{quote}
+		Two facts imply two attribute trees, two editing processes, and two fact schemas.
+	\end{quote}
+	
+	Therefore, the project should produce:
+	\begin{itemize}[leftmargin=1.5em]
+		\item a DFM for \textbf{Lap Performance};
+		\item a DFM for \textbf{Result}.
+	\end{itemize}
+	
+	These two schemas should not be considered isolated. They should be connected through shared dimensions such as Driver, Team, Session, Grand Prix, Circuit, Season. This will later support integrated analyses across the two facts.
+	
+
+	Once the two facts are defined, it becomes possible to support both separate and combined analyses:
+	\begin{itemize}[leftmargin=1.5em]
+		\item \textbf{Lap Performance} for fine-grained comparison of laps and sectors;
+		\item \textbf{Session Result} for broader outcome-oriented analysis of drivers and teams;
+		\item shared analyses through common dimensions when the two facts must be read together.
+	\end{itemize}
+	
+	This means that the final data warehouse should be designed as a multidimensional model with \textbf{multiple facts and shared dimensions}, not as a single monolithic fact table trying to answer every type of analytical question.
+	
+	
+	
+	\section{Weather and Track Status}
+	
+
+	The \textit{Weather} and \textit{Track Status} relations are not represented as direct
+	branches in the formal attribute trees of the \textit{Lap Performance} fact and the
+	\textit{Session Result} fact.
+	
+	This choice is due to the absence of a valid to-one branch. In the reconciled database,
+	both relations are time-dependent at session level: one session can contain multiple
+	weather observations and multiple track-status changes. Therefore, a fact instance does
+	not directly determine one unique weather or track-status record.
+	
+	Nevertheless, these relations remain analytically important. Their information can be
+	used during the ETL process to derive new attributes coherent with the grain of each
+	fact. In particular, weather and track-status data can produce lap-level derived attributes
+	for \textit{Lap Performance} and session-level derived attributes for
+	\textit{Session Result}.
+	
+	For this reason, the following sections describe these two source relations and the
+	attributes that may be used to build derived analytical attributes.
+		
+	
+	\subsubsection{Weather }
+	
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		AirTemp & Air temperature measured during the session. \\ \hline
+		
+		Humidity & Relative humidity measured during the session. \\ \hline
+		
+		Pressure & Atmospheric pressure measured during the session. \\ \hline
+		
+		Rainfall & Boolean flag indicating whether rainfall was detected. \\ \hline
+		
+		TrackTemp & Track surface temperature measured during the session. \\ \hline
+		
+		WindDirection & Wind direction measured during the session. \\ \hline
+		
+		WindSpeed & Wind speed measured during the session. \\ \hline
+	\end{longtable}
+	
+	
+	
+	\subsubsection{Track Status}
+	
+	
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		Status & Numeric code associated with the track status event. \\ \hline
+		
+		Message & Textual description of the track status event. \\ \hline
+	\end{longtable}
+	
+	\paragraph*{Main categories of the \texttt{Message} attribute}
+	
+	\begin{longtable}{|p{4.2cm}|p{10.6cm}|}
+		\hline
+		\textbf{Message} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Message} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		AllClear & The track is in normal condition and no special restriction is active. \\ \hline
+		
+		Yellow & Yellow flag condition on track, usually caused by an incident, stopped car, or local danger. \\ \hline
+		
+		SCDeployed & The Safety Car has been deployed. \\ \hline
+		
+		Red & Red flag condition. The session is stopped or suspended. \\ \hline
+		
+		VSCDeployed & The Virtual Safety Car has been deployed. \\ \hline
+		
+		VSCEnding & The Virtual Safety Car phase is ending. \\ \hline
+	\end{longtable}
+	
+	
+	
+	\section{WorkFlow Lap Performance Fact}
+	
+	
+	\subsection{Relations retained}
+	
+	The following relations are retained in the attribute tree because they are structurally coherent with the grain of the fact and support the intended analytical dimensions and hierarchies.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|p{3.5cm}|p{10cm}|}
+			\hline
+			\textbf{Relation} & \textbf{Motivation} \\
+			\hline
+			Lap & It is the source relation of the chosen fact \\
+			\hline
+			Driver & Each lap is performed by exactly one driver.  \\
+			\hline
+			Team & Each lap is associated with exactly one team. \\
+			\hline
+			Session & Each lap belongs to exactly one session. \\
+			\hline
+			Grand Prix & Each session belongs to exactly one Grand Prix. \\
+			\hline
+			Circuit & Each Grand Prix is associated with exactly one circuit. \\
+			\hline
+			Season & Each Grand Prix belongs to exactly one Formula 1 season.  \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\subsubsection{Relations excluded}
+	
+	The following relations are part of the reconciled schema, but they are not included in the formal attribute tree of \textit{Lap Performance}.
+	The reason is that they do not define valid branches under the attribute-tree construction rules, since the parent node does not determine a unique child instance.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|p{3.5cm}|p{10cm}|}
+			\hline
+			\textbf{Relation} & \textbf{Motivation} \\
+			\hline
+			Weather & A session is associated with multiple weather observations collected at different times.  \\
+			\hline
+			TrackStatus & A session is associated with multiple track-status changes over time.  \\
+			\hline
+			Result & A session contains one result for each driver \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\subsubsection{Derived lap-level attributes from Weather and TrackStatus}
+	
+	Although the relations \textit{Weather} and \textit{TrackStatus} are excluded from the formal attribute tree of \textit{Lap Performance}, the information they contain remains analytically important for the project.
+	
+	In particular, weather conditions and track status may strongly affect lap performance.
+	For this reason, they are still relevant when the goal is to classify, compare, or filter laps according to the external conditions under which they were performed.
+	
+	However, in the reconciled database these two relations are modeled as \textit{session-level time-dependent data}.
+	This means that a session is associated with multiple weather observations and multiple track-status changes, each identified by a different time instant.
+	
+	For this reason, the adopted solution is not to connect \textit{Weather} and \textit{TrackStatus} directly to \textit{Session} inside the attribute tree.
+	Instead, the chosen solution is to derive a set of new lap-level descriptive attributes and attach them directly to \textit{Lap Performance}.
+	
+	Operationally, this transformation will be carried out during the ETL process.
+	The ETL will use the time information available in the lap data to associate each lap with the weather observation and track-status record that are valid in the corresponding time interval of the same session.
+	In this way, session-level temporal data are transformed into lap-level attributes.
+	
+	Derived attributes are:
+	\begin{itemize}
+		\item \textit{AirTemp}
+		\item \textit{TrackTemp}
+		\item \textit{RainFlag}
+		\item \textit{WindSpeed}
+		\item \textit{TrackStatusCategory}
+		\item \textit{TrackStatusMessageCategory}
+	\end{itemize}
+	
+
+	\subsection{Pruning and Grafting Operations}
+	
+	\subsubsection{Lap Table}
+	
+	We indicate in this table only the descriptive attributes not full of them. In particular the composte primary key attribute are not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		Time\_ms & Elapsed session time, in milliseconds, at which the lap record  \\ \hline
+		
+		Driver & Driver abbreviation (for example, \texttt{GAS} for Pierre Gasly). \\ \hline
+		
+		DriverNumber & Official racing number of the driver for that session. \\ \hline
+		
+		LapTime\_ms & Total duration of the completed lap, expressed in milliseconds.  \\ \hline
+		
+		LapNumber & Sequential number of the lap completed by the driver. \\ \hline
+		
+		Stint & Tyre stint number to which the lap belongs. A new stint usually starts after a pit stop. \\ \hline
+		
+		PitOutTime\_ms & Session elapsed time at which the driver exited the pit lane before or during the lap. Usually null for standard laps. \\ \hline
+		
+		PitInTime\_ms & Session elapsed time at which the driver entered the pit lane at the end of or during the lap. Usually null for standard laps. \\ \hline
+		
+		Sector1Time\_ms & Time spent in Sector 1 of the lap \\ \hline
+		Sector2Time\_ms & Time spent in Sector 2 of the lap \\ \hline
+		Sector3Time\_ms & Time spent in Sector 3 of the lap \\ \hline
+		
+		Sector1SessionTime\_ms & Session elapsed time at which the driver completed Sector 1 of the lap. \\ \hline
+		Sector2SessionTime\_ms & Session elapsed time at which the driver completed Sector 2 of the lap. \\ \hline
+		Sector3SessionTime\_ms & Session elapsed time at which the driver completed Sector 3 of the lap and therefore completed the whole lap. \\ \hline
+		
+		SpeedI1 & Speed measured at the first intermediate speed trap of the circuit. \\ \hline
+		SpeedI2 & Speed measured at the second intermediate speed trap of the circuit. \\ \hline
+		SpeedFL & Speed measured at the finish line. \\ \hline
+		SpeedST & Speed measured at the main speed trap, usually the highest-speed checkpoint on the track. \\ \hline
+		
+		
+		IsPersonalBest & this lap is the driver's personal best lap within that session up to that point. \\ \hline
+		
+		
+		Compound & Tyre compound used during the lap, such as \texttt{SOFT}, \texttt{MEDIUM}, or \texttt{HARD}. \\ \hline
+		
+		TyreLife & Number of laps already completed on that tyre set when this lap was run. \\ \hline
+		
+		FreshTyre & Boolean flag indicating whether the tyre set was new when fitted to the car. \\ \hline
+		
+		
+		Team & Team name  \\ \hline
+		
+		LapStartTime\_ms & Session elapsed time at which the lap started. \\ \hline
+		LapStartDate & Absolute timestamp of the lap start, when available. \\ \hline
+		
+		TrackStatus & Track status code associated with the lap context, for example normal conditions, yellow flag, safety car, or other control conditions. \\ \hline
+		
+		
+		Position & Driver's race position associated with that lap \\ \hline
+		
+		Deleted & Boolean flag indicating whether the lap was deleted or invalidated in the source data. \\ \hline
+		
+		DeletedReason & Textual explanation, when available, describing why the lap was deleted or invalidated. \\ \hline
+		
+		
+		FastF1Generated & Boolean flag indicating that the value or record was generated or reconstructed internally by FastF1 rather than directly available from the source feed. \\ \hline
+		
+		
+		IsAccurate & Boolean flag indicating whether FastF1 considers the lap timing information reliable and accurate enough for analysis. \\ \hline
+		
+	\end{longtable}
+	
+	
+	Pruning Operations : 
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		PitOutTime\_ms & it does not describe the competitive performance of a lap itself. \\ \hline
+
+		PitInTime\_ms & it does not measure the intrinsic quality of a lap. \\ \hline
+		
+		Sector1SessionTime\_ms & removed because it is a technical timing reference to the session timeline and not essential for the selected business analyses. \\ \hline
+		
+		Sector2SessionTime\_ms & removed because it is a technical timing reference to the session timeline and not essential for the selected business analyses. \\ \hline
+		
+		Sector3SessionTime\_ms & removed because it is a technical timing reference to the session timeline and not essential for the selected business analyses. \\ \hline
+		
+		LapStartDate & not usefull to know the date because this information it also reported in the session table  \\ \hline
+		
+		Deleted & removed because it is treated as a data quality control flag \\ \hline
+		
+		TrackStatus & removed because as it is it does not provide precise and categorical information \\ \hline
+		
+		DeletedReason & removed because it is mainly useful for cleaning and validation tasks\\ \hline
+		
+		FastF1Generated & removed because it is a technical flag  \\ \hline
+		
+		IsAccurate & removed because it is relevant for data quality assessment. \\ \hline
+		
+		DriverNumber & removed because the analytical model already identifies the driver through DriverId and the related Driver dimension, making this attribute redundant. \\ \hline
+		
+		Team & removed because the team is already represented structurally through TeamId and the Team dimension, so the textual field would introduce redundancy. \\ \hline
+		
+				
+		Time\_ms & Removed because the analysis focuses on lap-order-based performance rather than on absolute session timing \\ \hline
+		
+		LapStartTime\_ms & Removed because it represents a technical session timestamp that does not add analytical value in a lap-based model. \\ \hline
+		
+		FreshTyre
+		& Removed from the dimensional model in its raw boolean form because its meaning is potentially ambiguous. I \\
+		\hline
+		
+		TyreLife
+		& Removed from the dimensional model in its raw numerical form because it would introduce too many distinct values in the tyre-related dimension. \\
+		\hline
+		
+		Stint
+		& Removed because the analysis does not focus on the progressive stint number itself. \\
+		\hline
+		
+		IsPersonalBest
+		& Removed because it is not central to the analytical goal of the project and its semantic interpretation may be ambiguous. \\
+		\hline
+	\end{longtable}
+
+	Although \texttt{FreshTyre} and \texttt{TyreLife} are pruned from the dimensional model
+	in their original form, their analytical meaning is not discarded.
+	
+	In the dedicated section, these attributes are used to derive two categorical attributes,
+	namely \textit{StartingTyreSetStatus} and \textit{TyreLifeClass}, which are more suitable
+	for the final \textit{Tyre Context} dimension.
+
+	\textit{Derived attribute for lap filtering.}
+	Even though \textit{PitOutTime\_ms} and \textit{PitInTime\_ms} are removed from the formal attribute tree, their information is not lost.
+	Instead, they can be used during the ETL process to derive a new categorical attribute that indicates whether a lap is a normal lap, an out-lap, or an in-lap.
+	This derived attribute is useful to exclude pit-affected laps from analyses focused on fast and clean racing laps, thus improving the quality and interpretability of lap-performance comparisons.
+		
+	\subsubsection{Driver Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, the identifier attribute is not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		PermanentNumber & Official permanent racing number assigned to the driver in Formula 1. \\ \hline
+		
+		Abbreviation & Standard three-letter abbreviation used to identify the driver in Formula 1 timing and result systems. \\ \hline
+		
+		DriverUrl & URL of the reference page associated with the driver in the source data. \\ \hline
+		
+		FirstName & Driver's first name. \\ \hline
+		
+		LastName & Driver's last name. \\ \hline
+		
+		DateOfBirth & Driver's date of birth. \\ \hline
+		
+		Nationality & Nationality associated with the driver. \\ \hline
+		
+	\end{longtable}
+	
+	Retained Attributes Motivation
+	
+	\begin{itemize}
+		\item \textbf{Abbreviation} was retained because, although it is not a core analytical attribute, it is useful as a compact descriptive label in plots, tables, and dashboards.
+	\end{itemize}
+	
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		PermanentNumber & Removed because it mainly acts as a display-oriented sporting identifier  \\ \hline
+		
+		
+		DateOfBirth & it does not provide a directly meaningful analytical level \\ \hline
+		
+		DriverUrl & Removed because it is an external reference link and has no analytical value \\ \hline
+		
+	    Nationality & Not usefull for the analyses. \\ \hline
+		
+		
+	\end{longtable}
+	
+	Potential Derived Attributes
+	
+	Although \textbf{DateOfBirth} is removed from the final attribute tree, its information is not necessarily lost. It may be used in a transformation step to derive more analytically meaningful attributes, such as age-based driver categories.
+	
+	For example, a derived attribute such as \textit{DriverAgeClass} could classify drivers into groups like younger, intermediate, and senior drivers. This type of categorization could be useful to investigate whether drivers of different age groups adapted differently to the 2022 regulatory change.
+	
+	A second potentially interesting classification would be based on Formula 1 experience rather than biological age. However, this attribute cannot be derived from the current \textit{Driver} table alone, because the table does not include information about the number of seasons completed by each driver in Formula 1. Such an attribute would require additional domain knowledge or an extra relation in the reconciled database.
+	
+	\subsubsection{Team Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, the identifier attribute is not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		TeamUrl & External web reference associated with the team \\ \hline
+		
+		TeamName & Official name of the Formula 1 team. \\ \hline
+		
+		Nationality & Nationality associated with the team. \\ \hline
+		
+	\end{longtable}
+	
+	
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		TeamUrl & Removed because it is an external reference link \\ \hline
+		
+		Nationality & Not usefull for the analyses. \\ \hline
+		
+	\end{longtable}
+	
+
+	\subsubsection{Season Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, the identifier attribute is not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		SeasonStartDate & Official starting date of the Formula 1 season. \\ \hline
+		
+		SeasonEndDate & Official ending date of the Formula 1 season. \\ \hline
+		
+		NumberOfEvents & Total number of championship events included in the season. \\ \hline
+		
+		ChampionDriver & Driver who won the Drivers' Championship in that season. \\ \hline
+		
+		ChampionTeam & Team that won the Constructors' Championship in that season. \\ \hline
+		
+	\end{longtable}
+	
+	Retained Attributes Motivation
+	
+	\begin{itemize}
+		
+		\item \textbf{ChampionDriver} and \textbf{ChampionTeam} were retained because they provide high-level contextual information about the final competitive outcome of the season and may support season-level interpretation and storytelling.
+		
+	\end{itemize}
+		
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		SeasonStartDate & The exact calendar start date does not add relevant value to the intended analyses. \\ \hline
+		
+		SeasonEndDate & The exact calendar end date does not add relevant value to the intended analyses. \\ \hline
+		
+		NumberOfEvents & The analysis does not focus on the overall size of the season. \\ \hline
+		
+	\end{longtable}
+	
+	IMPORTANT NOTE : 
+	The attributes \texttt{champion\_driver} and \texttt{champion\_team} were pruned from
+	the attribute tree of the \textit{Lap Performance} fact. This choice was made because
+	these attributes do not provide information about the performance of a specific lap.
+	
+	The \textit{Lap Performance} fact focuses on lap-level analysis, such as lap time, sector
+	times, tyre compound, session type, Grand Prix, circuit characteristics, driver, and team.
+	From this point of view, knowing the final champion of the season does not directly help
+	to explain the behaviour or performance of a single lap.
+	
+	However, this pruning choice is specific to the \textit{Lap Performance} fact. The same
+	attributes are not pruned in the \textit{Session Result} fact. In that context,
+	\texttt{champion\_driver} and \texttt{champion\_team} can be useful to answer questions
+	about how the world champion driver or the championship-winning team performed during
+	a Formula 1 season.
+	
+	For example, the \textit{Session Result} fact can support analyses about the results
+	obtained by the champion driver across sessions, races, or seasons, without going down
+	to the detailed level of each individual racing lap.
+
+	
+	
+	\subsubsection{Grand Prix Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, the identifier attributes and foreign keys are not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		RoundNumber & numerical order from 1 to the total number of Grand Prix in a season \\ \hline
+		
+		EventName & Short and readable name of the Formula 1 Grand Prix. \\ \hline
+		
+		OfficialEventName & Full official commercial name of the Formula 1 Grand Prix. \\ \hline
+		
+		Country & Country in which the Grand Prix takes place. \\ \hline
+		
+		Location & Geographic location associated with the Grand Prix. \\ \hline
+		
+		EventDate & Official date of the Grand Prix event. \\ \hline
+		
+		EventFormat & Format of the race weekend, for example conventional or sprint. \\ \hline
+		
+		F1ApiSupport & Boolean flag indicating whether the official F1 API provides session timing support for that event. \\ \hline
+		
+	\end{longtable}
+	
+	
+	Retained Attributes Motivation
+	
+	\begin{itemize}
+		\item \textbf{EventName} was retained because it provides the most useful and readable business name for identifying each Grand Prix in the analytical model.
+		
+		\item \textbf{EventDate} was retained because it provides a direct temporal reference for the Grand Prix 
+		
+		\item \textbf{EventFormat} was retained because it may be useful to distinguish conventional weekends from sprint weekends and therefore support homogeneous analytical filtering.
+	\end{itemize}
+	
+
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		OfficialEventName & Removed because it is too verbose and commercial in style, while EventName already provides a clearer  identification \\ \hline
+		
+		Country & Removed because this geographic information is already represented in the Circuit table \\ \hline
+		
+		Location & Removed because this geographic information is already represented in the Circuit table  \\ \hline
+		
+		F1ApiSupport & Removed because it is a technical source-level flag. \\ \hline
+		
+	\end{longtable}
+	
+	
+	
+	\subsubsection{Circuit Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, the identifier attribute is not reported.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		CircuitName & Official name of the Formula 1 circuit. \\ \hline
+		
+		Country & Country in which the circuit is located. \\ \hline
+		
+		Location & Geographic location of the circuit. \\ \hline
+		
+		SeasonsPresent & List of seasons in which the circuit appears in the project scope. \\ \hline
+		
+		GlobalCircuitCategory & General technical category assigned to the circuit, such as Street, PowerSensitive, AeroSensitive, or Mixed. \\ \hline
+		
+		Sector1Category & Technical category assigned to Sector 1 of the circuit. \\ \hline
+		
+		Sector2Category & Technical category assigned to Sector 2 of the circuit. \\ \hline
+		
+		Sector3Category & Technical category assigned to Sector 3 of the circuit. \\ \hline
+		
+	\end{longtable}
+	
+	
+	
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		SeasonsPresent & Removed because the presence of a circuit across seasons can already be inferred from the relationships between Season and Grand Prix \\ \hline
+		
+	\end{longtable}
+	
+	
+
+	\subsubsection{Session Table}
+	
+	We indicate in this table only the descriptive attributes. In particular, identifier attributes are generally not reported. However, \textit{SessionType} is included here because, although it is part of the composite identifier, it also conveys a relevant semantic meaning for the analysis by distinguishing the type of session.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		SessionType & Type of Formula 1 session, such as \texttt{Q} for Qualifying or \texttt{R} for Race. \\ \hline
+		
+		SessionName & Full textual name of the session, such as \texttt{Qualifying} or \texttt{Race}. \\ \hline
+		
+		SessionDate & Calendar date on which the session took place. \\ \hline
+		
+	\end{longtable}
+	
+	Pruning Operations
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		SessionName & Removed because it is semantically redundant with \textit{SessionType} \\ \hline
+		
+		SessionDate & Removed because the exact calendar date of the session is not central already available through the related Grand Prix. \\ \hline
+		
+	\end{longtable}
+	
+	
+	\subsubsection{Grafting Operation}
+	
+	After the pruning operations, a grafting operation was applied to the
+	\texttt{Session\_Id} node.
+	
+	In the \textit{Lap Performance} workflow, the root of the attribute tree is
+	\texttt{Lap\_Id}.
+	
+	Before grafting, the fact was connected to the session branch through
+	\texttt{Session\_Id}. The \texttt{Session\_Id} node represented the session entity and
+	connected the lap-level fact to the higher-level event hierarchy.
+	
+	The initial structure was:
+	
+	\begin{quote}
+		\texttt{Lap\_Id} $\rightarrow$ \texttt{Session\_Id} $\rightarrow$ \texttt{GrandPrix\_Id}
+	\end{quote}
+	
+	After the pruning operations, the only analytically relevant attribute retained from the
+	session node was \texttt{SessionType}. Since \texttt{Session\_Id} is mainly a technical
+	identifier and does not represent an analytical level of interest by itself, it was removed
+	through grafting.
+	
+	After grafting, the useful descendants of \texttt{Session\_Id} are connected directly to
+	\texttt{Lap\_Id}. Therefore, \texttt{SessionType} becomes a direct attribute of
+	\texttt{Lap\_Id}, and \texttt{GrandPrix\_Id} becomes a direct child of \texttt{Lap\_Id}.
+	
+	The resulting structure is:
+	
+	\begin{quote}
+		\texttt{Lap\_Id} $\rightarrow$ \texttt{SessionType}
+	\end{quote}
+	
+	and
+	
+	\begin{quote}
+		\texttt{Lap\_Id} $\rightarrow$ \texttt{GrandPrix\_Id}.
+	\end{quote}
+	
+	
+	\subsection{Derived Attributes}
+	
+	After the pruning and grafting operations, some additional attributes are introduced as
+	derived attributes.
+	
+	These attributes are not directly taken as branches from the reconciled schema. Instead,
+	they are computed during the ETL process from source relations or from pruned technical
+	attributes.
+	
+	The reason is that some useful analytical information is available in the reconciled
+	database, but it is not directly represented at the same grain of the \textit{Lap Performance}
+	fact.
+
+
+	
+	Therefore, every derived attribute attached to this fact must also be transformed to the
+	lap-level grain.
+	
+
+	
+	The \textit{Weather} relation is not included as a direct branch of the formal attribute tree.
+	The reason is that weather data are recorded several times during a session. Therefore,
+	one session is associated with multiple weather observations.
+	
+	This means that the relationship:
+	
+	\begin{quote}
+		\texttt{Session\_Id} $\rightarrow$ \texttt{Weather}
+	\end{quote}
+	
+	does not determine a single weather record. For this reason, the raw \textit{Weather}
+	relation cannot be directly attached to the \textit{Lap Performance} attribute tree.
+	
+	However, weather information is analytically relevant because environmental conditions
+	can influence lap performance, tyre behaviour, grip level, and track evolution.
+	
+	For this reason, the ETL process derives lap-level weather attributes by associating each
+	lap with the weather observation valid during that lap interval.
+	
+	Conceptually, the ETL uses the lap time information, such as the lap start time and the
+	lap end time, to find the corresponding weather observation within the same session.
+	After this transformation, the weather information becomes coherent with the grain of
+	the \textit{Lap Performance} fact.
+	
+	The original weather attributes \textit{AirTemp}, \textit{TrackTemp}, and
+	\textit{WindSpeed} are continuous numerical values. Although they could be stored as
+	contextual numerical measures, in the current Data Warehouse design they are transformed
+	into categorical dimensional attributes.
+	
+	This choice is motivated by the analytical goal of the project. The analysis is not based
+	on exact temperature or wind-speed values, but on comparisons between laps performed
+	under similar environmental conditions. Therefore, fixed ranges are defined during the
+	ETL process and used to derive the attributes \textit{AirTempClass},
+	\textit{TrackTempClass}, and \textit{WindSpeedClass}.
+	
+	The original numerical values are preserved in the reconciled database, while the Data
+	Warehouse stores their categorical representation. This avoids unnecessary numerical
+	detail in the fact table and makes OLAP queries simpler and more consistent.
+	
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{AirTempClass}
+		& \texttt{weather.air\_temp}
+		& Air temperature associated with the lap.  \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \texttt{weather.track\_temp}
+		& Track surface temperature associated with the lap. \\
+		\hline
+		
+		\textit{RainFlag}
+		& \texttt{weather.rainfall}
+		& Boolean flag indicating whether the lap was performed under rainy or wet conditions. \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \texttt{weather.wind\_speed}
+		& Wind speed associated with the lap. \\
+		\hline
+	\end{longtable}
+	
+	The derived attribute \textit{AirTempClass}, \textit{TrackTempClass}, \textit{WindSpeedClass} are attached directly to \texttt{Lap\_Id}
+	
+	Possible values are:
+	
+	\begin{longtable}{|p{4cm}|p{4cm}|p{6cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Possible Values} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Possible Values} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{AirTempClass}
+		& \textit{Low}, \textit{Medium}, \textit{High}, \textit{Unknown}
+		& Classifies the air temperature associated with the lap into fixed ranges. It is useful to compare laps performed under similar ambient temperature conditions. \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{Low}, \textit{Medium}, \textit{High}, \textit{Unknown}
+		& Classifies the track temperature associated with the lap. It is useful because track temperature can influence tyre behaviour and grip. \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{Low}, \textit{Medium}, \textit{High}, \textit{Unknown}
+		& Classifies the wind speed associated with the lap. It helps distinguish laps performed in more stable wind conditions from laps performed in stronger wind conditions. \\
+		\hline
+		
+	\end{longtable}
+		
+		
+	\begin{longtable}{|p{4cm}|p{4cm}|p{6cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Class} & \textbf{Initial Rule} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Class} & \textbf{Initial Rule} \\
+		\hline
+		\endhead
+		
+		\textit{AirTempClass}
+		& \textit{Low}
+		& \textit{AirTemp} $< 20^\circ C$ \\
+		\hline
+		
+		\textit{AirTempClass}
+		& \textit{Medium}
+		& $20^\circ C \leq$ \textit{AirTemp} $< 28^\circ C$ \\
+		\hline
+		
+		\textit{AirTempClass}
+		& \textit{High}
+		& \textit{AirTemp} $\geq 28^\circ C$ \\
+		\hline
+		
+		\textit{AirTempClass}
+		& \textit{Unknown}
+		& \textit{AirTemp} is missing or unreliable \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{Low}
+		& \textit{TrackTemp} $< 30^\circ C$ \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{Medium}
+		& $30^\circ C \leq$ \textit{TrackTemp} $< 42^\circ C$ \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{High}
+		& \textit{TrackTemp} $\geq 42^\circ C$ \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{Unknown}
+		& \textit{TrackTemp} is missing or unreliable \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{Low}
+		& \textit{WindSpeed} $< 2$ \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{Medium}
+		& $2 \leq$ \textit{WindSpeed} $< 5$ \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{High}
+		& \textit{WindSpeed} $\geq 5$ \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{Unknown}
+		& \textit{WindSpeed} is missing or unreliable \\
+		\hline
+		
+	\end{longtable}
+		
+
+	These attributes are attached directly to \texttt{Lap\_Id} in the attribute tree, because after
+	the ETL process they describe the specific conditions under which each lap was performed.
+	
+	
+	The \textit{TrackStatus} relation is also not included as a direct branch of the formal
+	attribute tree.
+	
+	The reason is similar to the weather case. Track status data are time-dependent: during
+	the same session, the track can move through different states, such as normal condition,
+	yellow flag, safety car, virtual safety car, or red flag.
+	
+	Therefore, a session does not determine a single track-status record.
+	
+	However, track status is important for lap-performance analysis because a lap performed
+	under yellow flag, safety car, or red flag conditions is not directly comparable with a lap
+	performed under normal racing conditions.
+	
+	For this reason, the raw track-status information is transformed into lap-level categorical
+	attributes during the ETL process.
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{TrackStatusCategory}
+		& \texttt{track\_status.message}
+		& categorical description of the track-status message, such as all-clear, yellow flag, safety car, virtual safety car, or red flag. \\
+		\hline
+	\end{longtable}
+	
+	These attributes are attached directly to \texttt{Lap\_Id}, because after the ETL process
+	each lap is associated with the track condition valid during that lap.
+	
+	
+	Some technical attributes of the \textit{Lap} relation were pruned from the formal attribute
+	tree because they are not useful as analytical dimensions or measures.
+	
+	This is the case of \texttt{PitOutTime\_ms} and \texttt{PitInTime\_ms}. These attributes do
+	not directly describe the competitive quality of a lap, but they are still useful during the
+	ETL process because they allow the identification of pit-affected laps.
+	
+	For this reason, their information is used to derive a new lap-level categorical attribute.
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{LapType}
+		& \texttt{pit\_out\_time\_ms}, \texttt{pit\_in\_time\_ms}
+		& Categorical attribute used to distinguish normal laps, out-laps, in-laps, and pit-affected laps. It is useful to filter the dataset when the analysis focuses on clean performance laps. \\
+		\hline
+	\end{longtable}
+	
+	The derived attribute \textit{LapType} is attached directly to \texttt{Lap\_Id}, because it
+	describes the nature of the specific lap.
+	
+	Possible values are:
+	
+	\begin{itemize}
+		\item \textit{NormalLap}
+		\item \textit{OutLap}
+		\item \textit{InLap}
+		\item \textit{PitAffectedLap}
+	\end{itemize}
+	
+	This derived attribute is particularly useful because out-laps and in-laps usually do not
+	represent pure performance laps. Therefore, they should often be excluded from analyses
+	focused on lap-time comparison.
+	
+	
+
+	
+	The original lap data contain two tyre-related attributes that are not directly used in
+	their raw form in the final dimensional model: \textit{TyreLife} and \textit{FreshTyre}.
+	
+	The attribute \textit{TyreLife} is a numerical value representing the number of laps
+	already completed on the tyre set, including laps completed in previous sessions when
+	the same tyre set was already used. Although this attribute is useful to understand tyre
+	usage, it is not suitable as a dimensional attribute in its original numerical form. Using
+	the exact value of \textit{TyreLife} would generate too many possible combinations in the
+	tyre context dimension and would not reflect the intended analytical usage of the model.
+	
+	For this reason, the raw attribute \textit{TyreLife} is pruned from the dimensional model
+	and replaced by the derived categorical attribute \textit{TyreLifeClass}. This attribute
+	groups tyre usage into a limited number of meaningful ranges, for example:
+	
+	\begin{itemize}
+		\item \textit{LowWear}: tyres with low usage;
+		\item \textit{MediumWear}: tyres with intermediate usage;
+		\item \textit{HighWear}: tyres with high usage.
+	\end{itemize}
+	
+	The exact thresholds used to define these classes are decided during the data profiling
+	and ETL phase, according to the distribution of the values observed in the reconciled
+	database.
+	
+	The attribute \textit{FreshTyre} is also not used directly in the final dimensional model.
+	In the source data, \textit{FreshTyre} indicates whether the tyre set had
+	\textit{TyreLife} equal to zero at the beginning of the stint. Therefore, it does not mean
+	that the tyre is necessarily new in the current lap, but rather that the tyre set was new
+	when it was mounted at the start of the stint.
+	
+	For this reason, the raw attribute \textit{FreshTyre} is pruned and replaced by the
+	derived categorical attribute \textit{StartingTyreSetStatus}. This attribute provides a
+	clearer semantic interpretation and distinguishes between tyre sets that were new or
+	already used at stint start.
+	
+	
+	\begin{itemize}
+		\item \textit{NewSet}: the tyre set was new at the beginning of the stint, i.e., \texttt{FreshTyre = True};
+		\item \textit{UsedSet}: the tyre set was already used at the beginning of the stint, i.e., \texttt{FreshTyre = False};
+		\item \textit{Unknown}: the initial status of the tyre set is not available or the value of \texttt{FreshTyre} is missing.
+	\end{itemize}
+	
+	The resulting tyre-related derived attributes are therefore:
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{StartingTyreSetStatus}
+		& \texttt{FreshTyre}
+		& Categorical attribute used to clarify whether the tyre set was new or already used at the beginning of the stint. It replaces the raw boolean attribute \texttt{FreshTyre} with a more explicit semantic interpretation, such as \textit{NewSet}, \textit{UsedSet}, or \textit{Unknown}. \\
+		\hline
+		
+		\textit{TyreLifeClass}
+		& \texttt{TyreLife}
+		& Categorical attribute used to group the numerical tyre life into usage ranges. \\
+		\hline
+		
+	\end{longtable}
+		
+
+	These derived attributes are then included in the \textit{Tyre Context} dimension together
+	with the original categorical attribute \textit{Compound}.
+	
+	The attribute \texttt{DateOfBirth} was pruned from the formal attribute tree in \textit{driver} table because the
+	exact birth date is not directly useful as an analytical level for lap-performance analysis.
+	
+	However, it can be used to derive a more meaningful categorical attribute.
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{DriverAgeClass}
+		& \texttt{driver.date\_of\_birth}
+		& Categorical attribute that groups drivers into age classes. It may support optional analyses about whether drivers of different age groups adapted differently to the 2022 regulatory change. \\
+		\hline
+	\end{longtable}
+	
+	
+	Possible values are:
+	
+	\begin{itemize}
+		\item \textit{Young}
+		\item \textit{Intermediate}
+		\item \textit{Senior}
+	\end{itemize}
+
+	It is not central to the main business question, which is mainly focused on team and car
+	performance. However, it can be retained as a possible secondary analytical attribute if
+	driver-level comparisons become relevant.
+	
+	\textit{DriverAgeClass} should be attached to the \texttt{Driver\_Id} branch,
+	because it describes the driver rather than the lap itself.
+	
+	
+	The following table summarizes the derived attributes considered for the
+	\textit{Lap Performance} fact.
+	
+	\begin{longtable}{|p{4.2cm}|p{4cm}|p{3.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Derived From} & \textbf{Attached To} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Derived From} & \textbf{Attached To} \\
+		\hline
+		\endhead
+		
+		\textit{AirTempClass}
+		& \textit{Weather}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{TrackTempClass}
+		& \textit{Weather}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{RainFlag}
+		& \textit{Weather}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{WindSpeedClass}
+		& \textit{Weather}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{TrackStatusCategory}
+		& \textit{TrackStatus}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{StartingTyreSetStatus}
+		& \texttt{fresh\_tyre}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{TyreLifeClass}
+		& \texttt{tyre\,life}
+		& \texttt{Lap\_Id} \\
+		\hline
+	
+		\textit{LapType}
+		& \texttt{pit\_out\_time\_ms}, \texttt{pit\_in\_time\_ms}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{DriverAgeClass}
+		& \texttt{driver.date\_of\_birth}
+		& \texttt{Driver\_Id} \\
+		\hline
+	\end{longtable}
+
+	
+	
+	%================================================
+	\subsection{Dimension Definition}
+	%================================================
+	
+	After the pruning and grafting operations, and after the introduction of the derived
+	attributes, the final edited attribute tree is used to define the dimensions of the
+	\textit{Lap Performance} fact.
+	
+	In the Dimensional Fact Model, dimensions are the analytical coordinates used to
+	study the fact from different points of view. 
+	
+	The following table summarizes the main dimensions selected for the
+	\textit{Lap Performance} fact.
+	
+	\begin{longtable}{|p{3cm}|p{6cm}|p{8cm}|}
+		\hline
+		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		\textit{Driver}
+		& \texttt{Driver\_Id}, \textit{FirstName}, \textit{LastName}, \textit{Abbreviation}, \textit{DriverAgeClass}
+		& This dimension is used to compare lap performance among drivers. \\
+		\hline
+		
+		\textit{Team}
+		& \texttt{Team\_Id}, \textit{TeamName}
+		&  The main analytical goal is to compare
+		the competitive performance of teams \\
+		\hline
+		
+		\textit{Grand Prix}
+		& \texttt{GrandPrix\_Id}, \textit{EventName}, \textit{RoundNumber}, \textit{EventDate},
+		\textit{EventFormat}, \textit{SeasonYear}
+		& This dimension allows the analysis of lap performance by grand prix, season, calendar
+		order, and weekend format. \\
+		\hline
+		
+		\textit{Circuit}
+		& \texttt{Circuit\_Id}, \textit{CircuitName}, \textit{Country}, \textit{Location},
+		\textit{GlobalCircuitCategory}, \textit{Sector1Category}, \textit{Sector2Category},
+		\textit{Sector3Category}
+		& This dimension is used to interpret performance according to the technical
+		characteristics of the circuit and of its sectors.  \\
+		\hline
+		
+		\textit{Session Type}
+		& \textit{SessionType}
+		& This dimension distinguishes qualifying sessions from race sessions. \\
+		\hline
+		
+		\textit{Tyre Context}
+		& \textit{Compound}, \textit{StartingTyreSetStatus}, \textit{TyreLifeClass}
+		& This dimension describes the tyre condition of the lap. \\
+		\hline
+		
+		\textit{Track Status}
+		&  \textit{TrackStatusCategory}
+		& This dimension is mainly used for filtering the track condition. \\
+		\hline
+		
+		\textit{Weather Context}
+		& \textit{RainFlag}, \textit{AirTempClass}, \textit{TrackTempClass}, \textit{WindSpeedClass}
+		& This dimension describes the environmental conditions of the lap using categorical
+		attributes. \\
+		\hline
+		
+		
+		\textit{Lap Type}
+		& \textit{LapType}
+		& This dimension is used to distinguish normal laps, out-laps, in-laps, and pit-affected laps. \\
+		\hline
+		
+		\textit{Lap Number}
+		& \textit{LapNumber}
+		& This dimension represents the progressive lap number completed by a driver within a session.  \\
+		\hline
+		
+	\end{longtable}
+	
+	
+	
+	%================================================
+	\subsection{Measure Definition}
+	%================================================
+	
+	In the \textit{Lap Performance}
+	fact, the selected measures must quantify the performance of a single lap.
+	
+	The main numerical attributes retained as measures are lap time, sector times, speed
+	values, position, and some derived count-based indicators.
+	
+	The following table summarizes the main measures selected for the
+	\textit{Lap Performance} fact.
+	
+	\begin{longtable}{|p{8cm}|}
+	\hline
+	\textbf{Measure Attribute} \\
+	\hline
+	\endfirsthead
+	
+	\hline
+	\textbf{Measure Attribute} \\
+	\hline
+	\endhead
+	
+	\texttt{LapTime\_ms} \\
+	\hline
+	
+	\texttt{Sector1Time\_ms} \\
+	\hline
+	
+	\texttt{Sector2Time\_ms} \\
+	\hline
+	
+	\texttt{Sector3Time\_ms} \\
+	\hline
+	
+	\texttt{SpeedI1} \\
+	\hline
+	
+	\texttt{SpeedI2} \\
+	\hline
+	
+	\texttt{SpeedFL} \\
+	\hline
+	
+	\texttt{SpeedST} \\
+	\hline
+	
+	\texttt{Position} \\
+	\hline
+	
+	\end{longtable}
+	
+
+	All the selected measures are non-additive measures. This means that they cannot be
+	meaningfully aggregated using the \texttt{SUM} operator across dimensions.
+	
+	These measures are instead analyzed using aggregation functions such as
+	\texttt{AVG}, \texttt{MIN}, and \texttt{MAX}.
+	
+	In particular, \texttt{Position} is an ordinal measure. For this reason, even when
+	\texttt{AVG}, \texttt{MIN}, or \texttt{MAX} are used, the result must be interpreted
+	carefully.
+
+	%================================================
+	\subsection{Glossary of Measures}
+	%================================================
+	
+
+	\begin{longtable}{|p{4.5cm}|p{5.2cm}|p{6cm}|}
+		\hline
+		\textbf{Analytical Indicator} & \textbf{Formula} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Analytical Indicator} & \textbf{Formula} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		Average Lap Time
+		& \texttt{AVG(lap\_time\_ms)}
+		& Average lap time for the selected analytical group. \\
+		\hline
+		
+		Best Lap Time
+		& \texttt{MIN(lap\_time\_ms)}
+		& Fastest lap time in the selected analytical group. \\
+		\hline
+		
+		Worst Lap Time
+		& \texttt{MAX(lap\_time\_ms)}
+		& Slowest lap time in the selected analytical group. \\
+		\hline
+		
+		Average Sector Time
+		& \texttt{AVG(sector1\_time\_ms)}, \texttt{AVG(sector2\_time\_ms)}, \texttt{AVG(sector3\_time\_ms)}
+		& Average sector time for Sector 1, Sector 2, or Sector 3. \\
+		\hline
+		
+		Best Sector Time
+		& \texttt{MIN(sector1\_time\_ms)}, \texttt{MIN(sector2\_time\_ms)}, \texttt{MIN(sector3\_time\_ms)}
+		& Fastest sector time for Sector 1, Sector 2, or Sector 3. \\
+		\hline
+		
+		Worst Sector Time
+		& \texttt{MAX(sector1\_time\_ms)}, \texttt{MAX(sector2\_time\_ms)}, \texttt{MAX(sector3\_time\_ms)}
+		& Slowest sector time for Sector 1, Sector 2, or Sector 3. \\
+		\hline
+		
+		Average Speed
+		& \texttt{AVG(speed\_i1)}, \texttt{AVG(speed\_i2)}, \texttt{AVG(speed\_fl)}, \texttt{AVG(speed\_st)}
+		& Average speed measured at the intermediate speed traps, finish line, or main speed trap. \\
+		\hline
+		
+		Maximum Speed
+		& \texttt{MAX(speed\_i1)}, \texttt{MAX(speed\_i2)}, \texttt{MAX(speed\_fl)}, \texttt{MAX(speed\_st)}
+		& Maximum speed measured at the selected speed point. \\
+		\hline
+		
+		Average Position
+		& \texttt{AVG(position)}
+		& Average position associated with the selected laps. This indicator must be interpreted
+		carefully because position is an ordinal value. \\
+		\hline
+		
+		Best Position
+		& \texttt{MIN(position)}
+		& Best position reached in the selected analytical group. Lower values indicate better positions. \\
+		\hline
+		
+		Worst Position
+		& \texttt{MAX(position)}
+		& Worst position reached in the selected analytical group. Higher values indicate worse positions. \\
+		\hline
+		
+	\end{longtable}
+	
+
+	
+	\subsection{Fact Schema (DFM)}
+	
+	
+	The Fact Schema represents the multidimensional model.
+	
+	
+	\begin{itemize}
+		\item Central fact
+		\item Connected dimensions
+		\item Hierarchies within dimensions
+	\end{itemize}
+	
+	
+	\begin{itemize}
+		\item Fact: Lap Performance
+		\item Dimensions: Driver, Team, Session, Grand Prix, Time
+		\item Measures: Lap Time, Position
+	\end{itemize}
+	
+	\subsection{Star Schema Translation}
+	
+	
+	The Star Schema is the logical implementation of the Fact Schema.
+	
+	
+	\begin{itemize}
+		\item Fact table
+		\item Dimension tables
+		\item Foreign keys
+	\end{itemize}
+	
+	
+	\begin{itemize}
+		\item Fact Table: Lap\_Fact
+		\item Dimension Tables: Driver, Team, Session, Grand Prix, Time
+	\end{itemize}
+	
+	\subsection{Conclusion}
+	
+	This workflow provides a structured approach to transform a reconciled database into a multidimensional model suitable for analytical processing.
+	
+	
+	\section{Workflow Session Result Fact}
+	
+	\subsection{Shared relations from the Lap Performance workflow}
+	
+	The \textit{Session Result} fact shares several structural relations with the previously discussed \textit{Lap Performance} fact.
+	In particular, the relations \textit{Driver}, \textit{Team}, \textit{Session}, \textit{Grand Prix}, \textit{Circuit}, and \textit{Season} remain analytically relevant also for this second fact.
+	
+	For this reason, the detailed description of their attributes, together with the corresponding pruning choices and motivations, is not repeated in this section.
+	Those considerations have already been presented in the workflow of the \textit{Lap Performance} fact and remain valid here as well.
+	
+	Therefore, in the present section, only the relations and attributes that are specific to the \textit{Session Result} fact, or that require additional discussion in this second analytical context, are reported.
+	
+
+	
+	\subsubsection{Session Result Table}
+	
+	A relevant characteristic of this relation is that it contains both qualifying results and
+	race results. For this reason, many attributes are optional depending on the type of
+	session. Some attributes are meaningful only for qualifying sessions, while others are
+	meaningful only for race sessions.
+	
+	We indicate in this table only the descriptive attributes.
+	
+	\begin{longtable}{|p{4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		Position & Final position obtained by the driver in the session. \\ \hline
+		
+		ClassifiedPosition & Official classification of the driver in the session result. It may contain an integer value for classified drivers or categorical codes in race contexts. In the current reconciled extract, it is mainly informative for Race sessions and may be empty in Qualifying rows. \\ \hline
+		
+		GridPosition & Starting position of the driver on the grid. Only for Race sessions. \\ \hline
+		
+		Q1\_ms & Best time obtained by the driver in Q1, expressed in milliseconds. Only for Qualifying sessions. \\ \hline
+		
+		Q2\_ms & Best time obtained by the driver in Q2, expressed in milliseconds. Only for Qualifying sessions. \\ \hline
+		
+		Q3\_ms & Best time obtained by the driver in Q3, expressed in milliseconds. Only for Qualifying sessions. \\ \hline
+		
+		Time\_ms & Time-related session result only for Race sessions. \\ \hline
+		
+		Status & Textual status describing how the driver finished the race. Only for Race sessions. \\ \hline
+		
+		Points & Number of championship points assigned to the driver for the Race sessions. \\ \hline
+		
+		Laps & Number of laps completed by the driver. Only in Race sessions. \\ \hline
+	\end{longtable}
+	
+	\paragraph*{Note on \texttt{Time\_ms}, \texttt{Status}, and \texttt{ClassifiedPosition}}
+	
+	These three attributes require special attention because they are less straightforward than the other session result attributes.
+	
+	\textbf{ClassifiedPosition} is a mixed attribute. In normal cases, it contains the official final classification of the driver as an integer value. However, it may also contain categorical codes such as \texttt{R} (retired), \texttt{D} (disqualified), \texttt{E} (excluded), \texttt{W} (withdrawn), \texttt{F} (failed to qualify), or \texttt{N} (not classified). For this reason, it is not a purely numeric attribute.
+	
+	\textbf{Status} is an open textual attribute. It describes how the driver finished the session or why the driver did not finish it. Possible values include examples such as \texttt{Finished}, \texttt{+ 1 Lap}, \texttt{Crash}, and \texttt{Gearbox}, but the set of possible values is not closed or fully standardized.
+	
+	\textbf{Time\_ms} is a race-related time attribute. In practice, in our dataset, it does not behave as a fully homogeneous measure for all drivers. In some cases, it appears as the total race time of the winner, while in other cases it appears as a gap relative to the leader. Therefore, the attribute is useful, but its current name and raw meaning are too ambiguous for direct use in the conceptual model.
+	
+	For this reason, the adopted solution is the following: the raw attributes are pruned. \texttt{ClassifiedPosition} and \texttt{Status} can later be transformed into cleaner derived categorical variables, while \texttt{Time\_ms} can be replaced by a more explicit derived analytical measure, for example a gap-based measure.
+	
+	
+	The presence of many null values in the \texttt{result} relation is mainly due to the fact
+	that the same relation stores two different kinds of sessions: Qualifying and Race.
+	
+
+	Therefore, these null values must not automatically be interpreted as missing or dirty
+	data. In many cases, they are semantically correct null values.
+	
+	This characteristic of the \texttt{result} relation is important for the later
+	multidimensional design.
+	
+	The \textit{Session Result} fact contains attributes whose meaning depends on the session
+	type. This does not make the fact invalid, but it requires careful modeling.
+	
+	In particular:
+	
+	\begin{itemize}
+		\item qualifying-related attributes should be interpreted only when
+		\texttt{session\_type = Q};
+		
+		\item race-related attributes should be interpreted only when
+		\texttt{session\_type = R};
+
+	\end{itemize}
+	
+	\paragraph*{Pruning Operations}
+	
+	\begin{longtable}{|p{4.4cm}|p{10.8cm}|}
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Attribute} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		ClassifiedPosition & Removed because it is a mixed attribute that combines numeric and categorical values. \\ \hline
+		
+		Status & Removed because it is an open textual attribute and not a clean categorical variable. \\ \hline
+		
+		Time\_ms & Removed because, in its raw form, it is not a fully homogeneous measure across all rows. \\ \hline
+	\end{longtable}
+	
+
+
+	\subsubsection{Grafting Operation}
+	
+	In the \textit{Session Result} workflow, the root of the attribute tree is
+	\texttt{Result\_Id}.
+	
+	In this second attribute tree, the \textit{Lap Performance} fact is not considered.
+	Therefore, \texttt{Lap\_Id} does not appear in the \textit{Session Result} attribute tree.
+	The structure starts from the result-level fact and follows the relationships that are
+	coherent with the grain of the result fact.
+	
+	Before grafting, the result fact was connected to the session branch through
+	\texttt{Session\_Id}. The \texttt{Session\_Id} node connected the result-level fact to the
+	higher-level event hierarchy represented by \texttt{GrandPrix\_Id}.
+	
+	The initial structure was:
+	
+	\begin{quote}
+		\texttt{Result\_Id} $\rightarrow$ \texttt{Session\_Id} $\rightarrow$ \texttt{GrandPrix\_Id}
+	\end{quote}
+	
+	After pruning, the only analytically relevant attribute retained from the session node was
+	\texttt{SessionType}. Since \texttt{Session\_Id} is a technical identifier and not a useful
+	aggregation level for the \textit{Session Result} fact, it was removed through grafting.
+	
+	After grafting, \texttt{SessionType} becomes a direct attribute of \texttt{Result\_Id}, while
+	\texttt{GrandPrix\_Id} becomes a direct child of \texttt{Result\_Id}.
+	
+	The resulting structure is:
+	
+	\begin{quote}
+		\texttt{Result\_Id} $\rightarrow$ \texttt{SessionType}
+	\end{quote}
+	
+	and
+	
+	\begin{quote}
+		\texttt{Result\_Id} $\rightarrow$ \texttt{GrandPrix\_Id}.
+	\end{quote}
+	
+	This operation preserves the information needed to distinguish the type of session and
+	to reach the Grand Prix, Circuit, and Season hierarchy, while removing an intermediate
+	technical node from the conceptual model.
+		
+		
+	\subsection{Derived Attributes}
+	
+	Some attributes of the \textit{Result} relation are analytically useful, but their raw form
+	is not suitable to be used directly in the conceptual model.
+	
+	This is the case of \texttt{classified\_position}, \texttt{time\_ms}, and
+	\texttt{status}. These attributes require a transformation because they may be ambiguous,
+	mixed, redundant, or too textual in their original form.
+	
+	The goal of this step is not to discard useful information, but to transform raw result
+	attributes into cleaner analytical attributes that are coherent with the grain of the
+	\textit{Session Result} fact.
+	
+
+	Therefore, the derived attributes described below are attached directly to
+	\texttt{Result\_Id}, because they describe the final result obtained by a driver in a
+	specific session.
+	
+	\begin{longtable}{|p{4.5cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+
+		\textit{ResultClassificationCategory}
+		& result.classified\_position
+		& Categorical attribute, it avoids duplicating the numeric position and describes only the classification state of the driver. \\
+		\hline
+		
+		\textit{GapToLeader\_ms}
+		& \texttt{result.time\_ms}
+		& Gap from the race leader expressed in milliseconds. The winner has value 0, while comparable classified drivers use the original gap value. Retired or non-comparable drivers may have a null value. \\
+		\hline
+		
+		\textit{ResultStatusCategory}
+		& \texttt{result.status}
+		& Categorical attribute derived from the raw textual status. It groups several textual values into stable analytical categories. \\
+		\hline
+	\end{longtable}
+	
+	
+	The raw attribute \texttt{classified\_position} is pruned in its original form because it is
+	a mixed attribute.
+	
+	In Race sessions, it may contain numeric values, but it may also contain categorical
+	codes such as retired, disqualified, excluded, withdrawn, or not classified. Moreover, when
+	it contains numeric values, it repeats the same information already represented by
+	\textit{ResultPosition}.
+	
+	For this reason, \texttt{classified\_position} is not used to create another numeric
+	position attribute. Instead, it is used to derive \textit{ResultClassificationCategory}.
+	
+	Possible values are:
+	
+	\begin{itemize}
+		\item \textit{Classified}
+		\item \textit{Retired}
+		\item \textit{Disqualified}
+		\item \textit{Excluded}
+		\item \textit{Withdrawn}
+		\item \textit{NotClassified}
+		\item \textit{FailedToQualify}
+		\item \textit{NotApplicable}
+	\end{itemize}
+	
+	The value \textit{Classified} is used when the original \texttt{classified\_position}
+	contains a regular numeric classification. The numeric value itself is not repeated,
+	because it is already represented by \textit{Position}.
+	
+	The value \textit{NotApplicable} is used for Qualifying sessions, where
+	\texttt{classified\_position} is normally not defined.
+	
+	
+	The raw attribute \texttt{time\_ms} is pruned from the formal attribute tree because its
+	meaning is not homogeneous across all rows.
+	
+	In Race sessions, the winner usually has the total race time, while the other classified
+	drivers may have the gap from the winner. In Qualifying sessions, this attribute is
+	normally null.
+	
+	For this reason, \texttt{time\_ms} is replaced by a clearer derived measure called
+	\textit{GapToLeader\_ms}.
+	
+	The transformation rule is:
+	
+	\begin{itemize}
+		\item for the race winner, \textit{GapToLeader\_ms} is set to 0;
+		\item for classified drivers with a comparable race gap, the original
+		\texttt{time\_ms} value is interpreted as the gap from the winner;
+		\item for retired, lapped, or non-comparable drivers, the value may be set to null;
+		\item for Qualifying sessions, the value is also null.
+	\end{itemize}
+	
+	This derived measure is more coherent because it always represents the same concept:
+	the temporal gap from the race leader.
+	
+	
+	The raw attribute \texttt{status} is pruned from the formal attribute tree because it is an
+	open textual field and its values are not fully standardized.
+	
+	For example, it may contain values such as \texttt{Finished}, \texttt{+1 Lap},
+	\texttt{+2 Laps}, \texttt{Retired}, \texttt{Accident}, \texttt{Collision},
+	\texttt{Gearbox}, \texttt{Brakes}, or \texttt{Electrical}.
+	
+	Keeping this raw attribute in the fact schema would introduce too many sparse textual
+	values. For this reason, the information contained in \texttt{status} is transformed into
+	a categorical attribute called \textit{ResultStatusCategory}.
+	
+	Possible values are:
+	
+	\begin{itemize}
+		\item \textit{Finished}
+		\item \textit{Lapped}
+		\item \textit{Accident}
+		\item \textit{Collision}
+		\item \textit{PowerUnitIssue}
+		\item \textit{MechanicalIssue}
+		\item \textit{Retired}
+		\item \textit{Other}
+		\item \textit{NotApplicable}
+	\end{itemize}
+	
+	The category \textit{PowerUnitIssue} is used for problems related to the engine or power
+	unit. The category \textit{MechanicalIssue} is used for other technical problems, such as
+	gearbox, brakes, hydraulics, or similar failures.
+	
+	The category \textit{Lapped} is used for values such as \texttt{+1 Lap} or
+	\texttt{+2 Laps}. This keeps the information that the driver finished behind the leader
+	without introducing a separate \textit{LapsBehind} measure.
+	
+	Rare or unclear values can be grouped under \textit{Other}. The value
+	\textit{NotApplicable} is used for Qualifying sessions, where the race status is normally
+	not defined.
+	
+
+	
+	The \textit{Weather} relation is not included as a direct branch of the formal attribute
+	tree of the \textit{Session Result} fact.
+	
+	The reason is that weather data are time-dependent at session level. One session can be
+	associated with multiple weather observations collected at different time instants.
+	Therefore, the relationship:
+	
+	\begin{quote}
+		\texttt{Session\_Id} $\rightarrow$ \texttt{Weather}
+	\end{quote}
+	
+	does not determine one unique weather record.
+	
+	However, weather information is still useful for the \textit{Session Result} fact, because
+	environmental conditions may influence the final outcome of a qualifying or race session.
+	
+	For this reason, the ETL process aggregates weather observations at session level and
+	derives attributes coherent with the grain of the \textit{Session Result} fact.
+	
+	\begin{longtable}{|p{4.2cm}|p{4.2cm}|p{6.2cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Source Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{RainFlag}
+		& \texttt{weather.rainfall}
+		& Boolean flag indicating whether rainfall occurred during the session. It is useful to distinguish dry and wet sessions. \\
+		\hline
+		
+		\textit{AvgAirTemp}
+		& \texttt{weather.air\_temp}
+		& Average air temperature during the session. It provides general environmental context for the session result. \\
+		\hline
+		
+		\textit{AvgTrackTemp}
+		& \texttt{weather.track\_temp}
+		& Average track temperature during the session. It is useful because track temperature can influence tyre behaviour and race or qualifying performance. \\
+		\hline
+		
+		\textit{AvgWindSpeed}
+		& \texttt{weather.wind\_speed}
+		& Average wind speed during the session. It provides additional context about external conditions that may influence the session outcome. \\
+		\hline
+	\end{longtable}
+	
+	These attributes are attached directly to \texttt{Result\_Id} in the edited attribute tree.
+	Although they are computed at session level, each result row belongs to exactly one
+	session. Therefore, after the ETL process, they are coherent with the grain of the
+	\textit{Session Result} fact.
+	
+
+
+	
+	The \textit{TrackStatus} relation is not included as a direct branch of the formal
+	attribute tree of the \textit{Session Result} fact.
+	
+	The reason is that track-status data are time-dependent at session level. During the same
+	session, the track can move through different states, such as all-clear, yellow flag,
+	safety car, virtual safety car, or red flag. Therefore, a session does not determine a
+	single track-status record.
+	
+	Although this information may be useful in some detailed race analyses, it is not retained
+	as a derived attribute in the current \textit{Session Result} fact.
+	
+	The reason is that the \textit{Session Result} fact focuses on the final result obtained by
+	a driver in a session, such as final position, qualifying times, grid position, points, laps
+	completed, and gap to the leader.
+	
+	Simple derived attributes such as \textit{SafetyCarPresence}, \textit{VSCPresence},
+	\textit{RedFlagPresence}, or \textit{YellowFlagCount} would only indicate whether a given
+	track-status event occurred during the session. However, they would not explain how that
+	event affected a specific driver's final result.
+	
+	For example, knowing that a Virtual Safety Car occurred during a race does not indicate
+	whether a driver gained or lost time, whether the event happened before or after a pit
+	stop, or whether it had a relevant impact on the final classification.
+	
+	For this reason, track-status-derived attributes are not included in the current
+	\textit{Session Result} fact schema. They are considered optional contextual information
+	for possible future extensions, but they are not necessary for the current analytical scope.
+
+	
+
+	
+	The following table summarizes the derived attributes introduced for the
+	\textit{Session Result} fact.
+	
+	\begin{longtable}{|p{4.8cm}|p{5.4cm}|p{5.5cm}|}
+		\hline
+		\textbf{Derived Attribute} & \textbf{Derived From}  & \textbf{Role} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Attribute} & \textbf{Derived From}  & \textbf{Role} \\
+		\hline
+		\endhead
+		
+		\textit{ResultClassificationCategory}
+		& \texttt{result.classified\_position}
+		& Classification category \\
+		\hline
+		
+		\textit{GapToLeader\_ms}
+		& \texttt{result.time\_ms}
+		& Derived measure \\
+		\hline
+		
+		\textit{ResultStatusCategory}
+		& \texttt{result.status}
+		& Status category \\
+		\hline
+		
+		\textit{RainFlag}
+		& \texttt{weather.rainfall}
+		& Filter / context attribute \\
+		\hline
+		
+		\textit{AvgAirTemp}
+		& \texttt{weather.air\_temp}
+		& Context attribute \\
+		\hline
+		
+		\textit{AvgTrackTemp}
+		& \texttt{weather.track\_temp}
+		& Context attribute \\
+		\hline
+		
+		\textit{AvgWindSpeed}
+		& \texttt{weather.wind\_speed}
+		& Context attribute \\
+		\hline
+	\end{longtable}
+	
+	
+	%================================================
+	\subsection{Preliminary Fact Schema Choices}
+	%================================================
+	
+	Based on the final edited attribute tree, the preliminary DFM structure for the
+	\textit{Session Result} fact is defined by considering the result of one driver in one
+	specific session.
+	
+	The source relation of the fact is the \textit{Result} relation. However, the conceptual
+	name of the fact is \textit{Session Result}, because the fact does not represent a generic
+	result, but the result obtained by a driver within a specific Formula 1 session.
+	
+	The grain of the fact is the following:
+	
+	\begin{quote}
+		Each primary event represents the result obtained by one driver in one specific
+		session, belonging to one specific Grand Prix and one specific Formula 1 season.
+	\end{quote}
+	
+	This grain is less detailed than the grain of the \textit{Lap Performance} fact. While
+	\textit{Lap Performance} analyzes each individual lap, \textit{Session Result} summarizes
+	the outcome of a whole session for each driver.
+	
+	Several modeling choices were considered before defining the final dimensions and
+	measures.
+	
+	First, the attributes related to driver, team, session, Grand Prix, circuit, and season
+	were retained because they define the main analytical coordinates of the fact. These
+	dimensions are also coherent with the \textit{Lap Performance} fact and support possible
+	cross-fact analyses.
+	
+	Second, raw result-status attributes were not used directly as analytical dimensions.
+	Instead, derived categorical attributes such as \textit{ResultStatusCategory} and
+	\textit{ResultClassificationCategory} were introduced. This choice makes the model more
+	interpretable and avoids using raw textual values that may be too detailed or inconsistent
+	for analytical purposes.
+	
+	Third, weather information was introduced only in aggregated form at session level.
+	Since the fact represents the result of a whole session, weather observations must be
+	summarized over the session before being attached to the fact. For this reason, attributes
+	such as \textit{RainFlag}, \textit{AvgAirTempClass}, \textit{AvgTrackTempClass}, and
+	\textit{AvgWindSpeedClass} are considered contextual dimensions.
+	
+	Finally, the numerical attributes were separated into additive and non-additive
+	measures. In particular, \textit{Points} and \textit{Laps} can be meaningfully summed,
+	while positions, qualifying times, and gap-based measures must be analyzed using
+	aggregation functions such as \texttt{AVG}, \texttt{MIN}, and \texttt{MAX}.
+	
+	%================================================
+	\subsection{Dimension Definition}
+	%================================================
+	
+	After the pruning and grafting operations, and after the introduction of the derived
+	attributes, the final edited attribute tree is used to define the dimensions of the
+	\textit{Session Result} fact.
+	
+	The following table summarizes the main dimensions selected for the
+	\textit{Session Result} fact.
+	
+	\begin{longtable}{|p{3cm}|p{6cm}|p{8cm}|}
+		\hline
+		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
+		\hline
+		\endhead
+		
+		\textit{Driver}
+		& \texttt{Driver\_Id}, \textit{FirstName}, \textit{LastName}, \textit{Abbreviation},
+		\textit{Nationality}
+		& This dimension is used to compare session results among drivers. \\
+		\hline
+		
+		\textit{Team}
+		& \texttt{Team\_Id}, \textit{TeamName}, \textit{Nationality}
+		& This dimension is used to compare the competitive performance of teams. \\
+		\hline
+		
+		\textit{Grand Prix}
+		& \texttt{GrandPrix\_Id}, \textit{EventName}, \textit{RoundNumber}, \textit{EventDate},
+		\textit{EventFormat}, \textit{SeasonYear}
+		& This dimension allows the analysis of session results by Grand Prix, season,
+		calendar order, and weekend format. \\
+		\hline
+		
+		\textit{Circuit}
+		& \texttt{Circuit\_Id}, \textit{CircuitName}, \textit{Country}, \textit{Location},
+		\textit{GlobalCircuitCategory}, \textit{Sector1Category}, \textit{Sector2Category},
+		\textit{Sector3Category}
+		& This dimension is used to interpret session results according to the technical
+		characteristics of the circuit. \\
+		\hline
+		
+		\textit{Session Type}
+		& \textit{SessionType}
+		& This dimension distinguishes qualifying sessions from race sessions.  \\
+		\hline
+		
+		\textit{Result Outcome}
+		& \textit{ResultStatusCategory}, \textit{ResultClassificationCategory}
+		& This dimension describes the final outcome of the session result. \\
+		\hline
+		
+		\textit{Weather Context}
+		& \textit{RainFlag}, \textit{AvgAirTempClass}, \textit{AvgTrackTempClass},
+		\textit{AvgWindSpeedClass}
+		& This dimension describes the average environmental context of the session using
+		categorical attributes. \\
+		\hline
+		
+	\end{longtable}
+	
+	%================================================
+	\subsection{Measure Definition}
+	%================================================
+	
+
+	The following table summarizes the main measures selected for the
+	\textit{Session Result} fact.
+	
+	\begin{longtable}{|p{8cm}|}
+		\hline
+		\textbf{Measure Attribute} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Measure Attribute} \\
+		\hline
+		\endhead
+		
+		\texttt{Position} \\
+		\hline
+		
+		\texttt{Points} \\
+		\hline
+		
+		\texttt{Laps} \\
+		\hline
+		
+		\texttt{Q1\_ms} \\
+		\hline
+		
+		\texttt{Q2\_ms} \\
+		\hline
+		
+		\texttt{Q3\_ms} \\
+		\hline
+		
+		\texttt{GapToLeader\_ms} \\
+		\hline
+		
+	\end{longtable}
+	
+	The selected measures do not all have the same aggregation behavior.
+	
+	\texttt{Points} is an additive measure. It can be meaningfully aggregated using
+	\texttt{SUM}, for example to compute the total points obtained by a driver, by a team,
+	or during a season.
+	
+	\texttt{Laps} is also additive when the analytical goal is to count the total number of
+	laps completed by a driver or a team over a set of sessions. However, it can also be
+	analyzed using \texttt{AVG}, \texttt{MIN}, and \texttt{MAX} when the goal is to study
+	race completion or reliability.
+	
+	\texttt{Position} is an ordinal measure. For this reason, it cannot be meaningfully
+	aggregated using the \texttt{SUM} operator. It can be analyzed using \texttt{MIN},
+	\texttt{MAX}, and, with caution, \texttt{AVG}. Lower values indicate better positions.
+	
+	\texttt{Q1\_ms}, \texttt{Q2\_ms}, and \texttt{Q3\_ms} are non-additive time measures.
+	They are meaningful mainly for qualifying sessions and must not be summed. They are
+	analyzed using \texttt{AVG}, \texttt{MIN}, and \texttt{MAX}.
+	
+	\texttt{GapToLeader\_ms} is a derived non-additive measure. It expresses the time gap
+	between a driver and the session leader. 
+	
+	%================================================
+	\subsection{Glossary of Measures}
+	%================================================
+	
+	The following glossary defines the analytical indicators that can be computed from the
+	measures of the \textit{Session Result} fact.
+	
+	\begin{longtable}{|p{4.5cm}|p{5.2cm}|p{6cm}|}
+		\hline
+		\textbf{Analytical Indicator} & \textbf{Formula} & \textbf{Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Analytical Indicator} & \textbf{Formula} & \textbf{Meaning} \\
+		\hline
+		\endhead
+		
+		Total Points
+		& \texttt{SUM(points)}
+		& Total number of points obtained by the selected driver, team, Grand Prix, or
+		season. \\
+		\hline
+		
+		Average Points
+		& \texttt{AVG(points)}
+		& Average points obtained in the selected analytical group. \\
+		\hline
+		
+		Total Completed Laps
+		& \texttt{SUM(laps)}
+		& Total number of laps completed in the selected analytical group. This indicator
+		can support reliability-oriented analyses. \\
+		\hline
+		
+		Average Completed Laps
+		& \texttt{AVG(laps)}
+		& Average number of laps completed by drivers or teams in the selected group. \\
+		\hline
+		
+		Best Final Position
+		& \texttt{MIN(position)}
+		& Best final position reached in the selected analytical group. Lower values indicate
+		better results. \\
+		\hline
+		
+		Worst Final Position
+		& \texttt{MAX(position)}
+		& Worst final position reached in the selected analytical group. Higher values indicate
+		worse results. \\
+		\hline
+		
+		Average Final Position
+		& \texttt{AVG(position)}
+		& Average final position in the selected analytical group. This indicator must be
+		interpreted carefully because position is an ordinal value. \\
+		\hline
+		
+		Best Q1 Time
+		& \texttt{MIN(q1\_ms)}
+		& Fastest Q1 time in the selected analytical group. This indicator is meaningful only
+		for qualifying sessions. \\
+		\hline
+		
+		Best Q2 Time
+		& \texttt{MIN(q2\_ms)}
+		& Fastest Q2 time in the selected analytical group. This indicator is meaningful only
+		for qualifying sessions. \\
+		\hline
+		
+		Best Q3 Time
+		& \texttt{MIN(q3\_ms)}
+		& Fastest Q3 time in the selected analytical group. This indicator is meaningful only
+		for qualifying sessions. \\
+		\hline
+		
+		Average Q1 Time
+		& \texttt{AVG(q1\_ms)}
+		& Average Q1 time for the selected analytical group. Null values must be ignored
+		because not all drivers or sessions have a valid Q1 time. \\
+		\hline
+		
+		Average Q2 Time
+		& \texttt{AVG(q2\_ms)}
+		& Average Q2 time for the selected analytical group. Null values must be ignored
+		because only drivers reaching Q2 have a valid value. \\
+		\hline
+		
+		Average Q3 Time
+		& \texttt{AVG(q3\_ms)}
+		& Average Q3 time for the selected analytical group. Null values must be ignored
+		because only drivers reaching Q3 have a valid value. \\
+		\hline
+		
+		Average Gap to Leader
+		& \texttt{AVG(gap\_to\_leader\_ms)}
+		& Average time gap from the leader in the selected analytical group. Lower values
+		indicate better relative performance. \\
+		\hline
+		
+		Minimum Gap to Leader
+		& \texttt{MIN(gap\_to\_leader\_ms)}
+		& Smallest gap from the leader in the selected analytical group. This indicator is
+		useful for identifying the closest performances. \\
+		\hline
+		
+		Result Count
+		& \texttt{COUNT(result\_id)}
+		& Number of session-result records in the selected analytical group. \\
+		\hline
+		
+		Points Finish Count
+		& \texttt{COUNT(result\_id) WHERE points > 0}
+		& Number of results in which the driver or team scored points. \\
+		\hline
+		
+		Podium Count
+		& \texttt{COUNT(result\_id) WHERE position <= 3}
+		& Number of podium finishes in the selected analytical group. \\
+		\hline
+		
+		Win Count
+		& \texttt{COUNT(result\_id) WHERE position = 1}
+		& Number of session wins in the selected analytical group. \\
+		\hline
+		
+	\end{longtable}
+	
+	\subsection{Fact Schema (DFM)}
+	
+	
+	The Fact Schema represents the multidimensional model.
+	
+	
+	\begin{itemize}
+		\item Central fact
+		\item Connected dimensions
+		\item Hierarchies within dimensions
+	\end{itemize}
+	
+	
+	\begin{itemize}
+		\item Fact: Lap Performance
+		\item Dimensions: Driver, Team, Session, Grand Prix, Time
+		\item Measures: Lap Time, Position
+	\end{itemize}
+	
+	\subsection{Star Schema Translation}
+	
+	
+	The Star Schema is the logical implementation of the Fact Schema.
+	
+	
+	\begin{itemize}
+		\item Fact table
+		\item Dimension tables
+		\item Foreign keys
+	\end{itemize}
+	
+	
+	\begin{itemize}
+		\item Fact Table: Lap\_Fact
+		\item Dimension Tables: Driver, Team, Session, Grand Prix, Time
+	\end{itemize}
+	
+	\subsection{Conclusion}
+	
+	This workflow provides a structured approach to transform a reconciled database into a multidimensional model suitable for analytical processing.
+	
+	
+\end{document}
