@@ -23,7 +23,7 @@ INPUT_EXTERNAL_DATA = DATA_DIR / "external"
 OUTPUT_DIR_RECONCILED = DATA_DIR / "reconciled"
 OUTPUT_DIR_RAW = DATA_DIR / "raw_api_data"
 
-LOG_DIR = PROJECT_ROOT / "logs"
+LOG_DIR = PROJECT_ROOT / "outputs" / "logs"
 
 CACHE_DIR = PROJECT_ROOT / "cache" / "fastf1_cache"
 
