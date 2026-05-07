@@ -46,6 +46,11 @@
 	
 	In this project, Data Quality Assessment is implemented as a deterministic and reproducible Python process that reads the reconciled tables from PostgreSQL, applies a set of quality checks, and produces scorecards and row-level issue files.
 	
+	\vspace{2em}
+	\textbf{Considerations}
+	
+	During the first DQA iteration, some issues were not caused by the original data source but by the re-engineering process. In particular, the DQA helped detect problems related to key uniqueness, referential consistency, data quality rules. These issues were corrected at pipeline level by modifying the re-engineering logic and rebuilding the reconciled database before running the final DQA.
+	
 	% =======================================================
 	\subsection{Role of Data Quality Assessment}
 	% =======================================================
@@ -274,9 +279,9 @@
 	\end{longtable}
 	
 
-	% =======================================================
+
 	\subsection{Table-by-Table Data Quality Plan}
-	% =======================================================
+
 	
 	This section defines the planned checks for each table of the reconciled database.
 	The actual numerical results will be inserted after running the Python assessment script.

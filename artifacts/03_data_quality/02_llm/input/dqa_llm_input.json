@@ -1,0 +1,685 @@
+{
+  "num_tables_assessed": 10,
+  "average_overall_score": 0.988732,
+  "worst_tables": [
+    {
+      "table_name": "grand_prix",
+      "overall_score": 0.929924,
+      "status": "yellow",
+      "issue_count": 30,
+      "completeness_score": 0.920455,
+      "uniqueness_score": 0.9772725,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": 0.681818,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "lap",
+      "overall_score": 0.976032,
+      "status": "green",
+      "issue_count": 6644,
+      "completeness_score": 0.9813125,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.87487675,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": 1.0,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "session",
+      "overall_score": 0.986363,
+      "status": "green",
+      "issue_count": 8,
+      "completeness_score": 1.0,
+      "uniqueness_score": 0.9772725,
+      "validity_score": 1.0,
+      "consistency_score": 0.954545,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "circuit",
+      "overall_score": 0.997436,
+      "status": "green",
+      "issue_count": 1,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.9923076,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "weather",
+      "overall_score": 0.998857,
+      "status": "green",
+      "issue_count": 511,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.994285125,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    }
+  ],
+  "best_tables": [
+    {
+      "table_name": "driver",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": 1.0,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "season",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "team",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "result",
+      "overall_score": 0.999787,
+      "status": "green",
+      "issue_count": 4,
+      "completeness_score": 0.999432,
+      "uniqueness_score": 0.999716,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "track_status",
+      "overall_score": 0.998925,
+      "status": "green",
+      "issue_count": 9,
+      "completeness_score": 1.0,
+      "uniqueness_score": 0.9946235,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    }
+  ],
+  "scorecard_by_table": [
+    {
+      "table_name": "circuit",
+      "overall_score": 0.997436,
+      "status": "green",
+      "issue_count": 1,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.9923076,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "driver",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": 1.0,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "grand_prix",
+      "overall_score": 0.929924,
+      "status": "yellow",
+      "issue_count": 30,
+      "completeness_score": 0.920455,
+      "uniqueness_score": 0.9772725,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": 0.681818,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "lap",
+      "overall_score": 0.976032,
+      "status": "green",
+      "issue_count": 6644,
+      "completeness_score": 0.9813125,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.87487675,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": 1.0,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "result",
+      "overall_score": 0.999787,
+      "status": "green",
+      "issue_count": 4,
+      "completeness_score": 0.999432,
+      "uniqueness_score": 0.999716,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "season",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "session",
+      "overall_score": 0.986363,
+      "status": "green",
+      "issue_count": 8,
+      "completeness_score": 1.0,
+      "uniqueness_score": 0.9772725,
+      "validity_score": 1.0,
+      "consistency_score": 0.954545,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "team",
+      "overall_score": 1.0,
+      "status": "green",
+      "issue_count": 0,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 1.0,
+      "consistency_score": NaN,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": NaN
+    },
+    {
+      "table_name": "track_status",
+      "overall_score": 0.998925,
+      "status": "green",
+      "issue_count": 9,
+      "completeness_score": 1.0,
+      "uniqueness_score": 0.9946235,
+      "validity_score": 1.0,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    },
+    {
+      "table_name": "weather",
+      "overall_score": 0.998857,
+      "status": "green",
+      "issue_count": 511,
+      "completeness_score": 1.0,
+      "uniqueness_score": 1.0,
+      "validity_score": 0.994285125,
+      "consistency_score": 1.0,
+      "accuracy_plausibility_score": NaN,
+      "timeliness_score": NaN,
+      "referential_integrity_score": 1.0
+    }
+  ],
+  "num_checks": 98,
+  "failed_or_warning_checks": [
+    {
+      "table_name": "grand_prix",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "check_description": "grand_prix_id, season_year, round_number, and circuit_id must be present.",
+      "passed_count": 162,
+      "failed_count": 14,
+      "total_count": 176,
+      "score": 0.920455,
+      "status": "yellow"
+    },
+    {
+      "table_name": "lap",
+      "dimension": "Validity",
+      "check_id": "lap_boolean_columns",
+      "check_description": "Lap boolean attributes must contain valid boolean values when present.",
+      "passed_count": 0,
+      "failed_count": 1,
+      "total_count": 1,
+      "score": 0.0,
+      "status": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "check_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "passed_count": 30,
+      "failed_count": 14,
+      "total_count": 44,
+      "score": 0.681818,
+      "status": "red"
+    }
+  ],
+  "check_status_by_dimension": [
+    {
+      "dimension": "Accuracy/Plausibility",
+      "status": "green",
+      "num_checks": 2
+    },
+    {
+      "dimension": "Accuracy/Plausibility",
+      "status": "red",
+      "num_checks": 1
+    },
+    {
+      "dimension": "Completeness",
+      "status": "green",
+      "num_checks": 10
+    },
+    {
+      "dimension": "Completeness",
+      "status": "yellow",
+      "num_checks": 1
+    },
+    {
+      "dimension": "Consistency",
+      "status": "green",
+      "num_checks": 8
+    },
+    {
+      "dimension": "Referential Integrity",
+      "status": "green",
+      "num_checks": 11
+    },
+    {
+      "dimension": "Uniqueness",
+      "status": "green",
+      "num_checks": 16
+    },
+    {
+      "dimension": "Validity",
+      "status": "green",
+      "num_checks": 48
+    },
+    {
+      "dimension": "Validity",
+      "status": "red",
+      "num_checks": 1
+    }
+  ],
+  "num_issues": 7207,
+  "issues_by_table": [
+    {
+      "table_name": "lap",
+      "num_issues": 6644
+    },
+    {
+      "table_name": "weather",
+      "num_issues": 511
+    },
+    {
+      "table_name": "grand_prix",
+      "num_issues": 30
+    },
+    {
+      "table_name": "track_status",
+      "num_issues": 9
+    },
+    {
+      "table_name": "session",
+      "num_issues": 8
+    },
+    {
+      "table_name": "result",
+      "num_issues": 4
+    },
+    {
+      "table_name": "circuit",
+      "num_issues": 1
+    }
+  ],
+  "issues_by_dimension": [
+    {
+      "dimension": "Completeness",
+      "num_issues": 6600
+    },
+    {
+      "dimension": "Validity",
+      "num_issues": 573
+    },
+    {
+      "dimension": "Uniqueness",
+      "num_issues": 16
+    },
+    {
+      "dimension": "Accuracy/Plausibility",
+      "num_issues": 14
+    },
+    {
+      "dimension": "Consistency",
+      "num_issues": 4
+    }
+  ],
+  "sample_issues": [
+    {
+      "table_name": "circuit",
+      "row_identifier": "circuit_id=silverstone",
+      "dimension": "Validity",
+      "check_id": "sector3_category_domain",
+      "issue_code": "INVALID_VALUE",
+      "issue_description": "sector3_category must belong to the allowed domain.",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=4",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=10",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=11",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=12",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=16",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=22",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=27",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=28",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=30",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=31",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=34",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=35",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=38",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=43",
+      "dimension": "Completeness",
+      "check_id": "grand_prix_required_structural_columns",
+      "issue_code": "MISSING_REQUIRED_VALUE",
+      "issue_description": "Missing required values in columns: ['circuit_id']",
+      "severity": "yellow"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=22",
+      "dimension": "Uniqueness",
+      "check_id": "primary_key_unique",
+      "issue_code": "DUPLICATED_KEY",
+      "issue_description": "Key ['grand_prix_id'] is null or duplicated.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=22",
+      "dimension": "Uniqueness",
+      "check_id": "primary_key_unique",
+      "issue_code": "DUPLICATED_KEY",
+      "issue_description": "Key ['grand_prix_id'] is null or duplicated.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=4",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=10",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=11",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=12",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=16",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=22",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=27",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=28",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=30",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=31",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=34",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=35",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    },
+    {
+      "table_name": "grand_prix",
+      "row_identifier": "grand_prix_id=38",
+      "dimension": "Accuracy/Plausibility",
+      "check_id": "grand_prix_circuit_match_present",
+      "issue_code": "GRAND_PRIX_CIRCUIT_MATCH_PRESENT",
+      "issue_description": "The event-to-circuit matching result must be present and referentially valid.",
+      "severity": "red"
+    }
+  ],
+  "referential_integrity_issues": [],
+  "important_constraints": [
+    "The LLM output is only explanatory.",
+    "The deterministic DQA scorecards and issue files remain the official results.",
+    "The LLM must not invent new rules that were not checked by the DQA scripts.",
+    "Cleaning decisions must be manually validated and implemented in a separate cleaning phase."
+  ]
+}

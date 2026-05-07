@@ -7,43 +7,41 @@ from typing import Any
 
 import pandas as pd
 import fastf1
+import sys
 from fastf1.ergast import Ergast
 
 
-# ============================================================
-# CONFIG
-# ============================================================
+PROJECT_ROOT = Path.cwd()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if not (PROJECT_ROOT / "pipeline").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+    )
 
-DATA_DIR = PROJECT_ROOT / "data"
+sys.path.insert(0, str(PROJECT_ROOT))
 
-INPUT_EXTERNAL_DATA = DATA_DIR / "external"
+from pipeline.utils.input_utils import read_csv
+from pipeline.utils.file_names import (
+    DATA_DIR,
+    EXTERNAL_DATA_DIR,
+    RECONCILED_DATA_DIR,
+    RAW_DATA_DIR,
+    EXTRACTION_OUTPUT_DIR,
+    CACHE_DIR
+)
 
-OUTPUT_DIR_RECONCILED = DATA_DIR / "reconciled"
-OUTPUT_DIR_RAW = DATA_DIR / "raw_api_data"
-
-LOG_DIR = PROJECT_ROOT / "outputs" / "logs"
-
-CACHE_DIR = PROJECT_ROOT / "cache" / "fastf1_cache"
 
 # ============================================================
 # HELPERS
 # ============================================================
 
 def ensure_dirs() -> None:
-    INPUT_EXTERNAL_DATA.mkdir(parents=True, exist_ok=True)
-    OUTPUT_DIR_RAW.mkdir(parents=True, exist_ok=True)
-    OUTPUT_DIR_RECONCILED.mkdir(parents=True, exist_ok=True)
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    EXTERNAL_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    RECONCILED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    EXTRACTION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-def read_csv(path: Path) -> pd.DataFrame:
-    if path.exists():
-        return pd.read_csv(path)
-
-    else : 
-        raise FileNotFoundError(f"File not found: {path}")
 
 
 def normalize_timedelta_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -71,6 +69,18 @@ def normalize_text_for_match(value: object) -> str:
     text = str(value).strip().lower()
     text = re.sub(r"\s+", " ", text)
     return text
+
+
+LOCATION_ALIASES = {
+    "monaco": "monte carlo",
+    "montecarlo": "monte carlo",
+}
+
+def normalize_location_for_match(value: object) -> str:
+    text = normalize_text_for_match(value)
+    return LOCATION_ALIASES.get(text, text)
+
+
 
 def export_dataframe(df: pd.DataFrame, name: str, output_dir : Path) -> None:
     path = output_dir / f"{name}.csv"
@@ -194,27 +204,29 @@ def enrich_laps_with_ids(
 
 
 def enrich_events_with_circuit_id(
-    event_df: pd.DataFrame,
+    grand_prix_df: pd.DataFrame,
     circuit_df: pd.DataFrame
 ) -> pd.DataFrame:
 
 
-    events = event_df.copy()
+    grand_prix = grand_prix_df.copy()
     circuits = circuit_df.copy()
 
+    print(circuit_df.columns.tolist())  
+
     # normalize join keys
-    events["Country_match"] = events["Country"].apply(normalize_text_for_match)
-    events["Location_match"] = events["Location"].apply(normalize_text_for_match)
+    grand_prix["Country_match"] = grand_prix["Country"].apply(normalize_text_for_match)
+    grand_prix["Location_match"] = grand_prix["Location"].apply(normalize_location_for_match)
 
     circuits["Country_match"] = circuits["Country"].apply(normalize_text_for_match)
-    circuits["Location_match"] = circuits["Location"].apply(normalize_text_for_match)
+    circuits["Location_match"] = circuits["Location"].apply(normalize_location_for_match)
 
     # keep only needed columns from circuit
     circuit_lookup = circuits[
         ["CircuitId", "Country_match", "Location_match"]
     ].drop_duplicates()
 
-    enriched = events.merge(
+    enriched = grand_prix.merge(
         circuit_lookup,
         on=["Country_match", "Location_match"],
         how="left",
@@ -237,17 +249,17 @@ def main() -> None:
     # enable FastF1 cache
     fastf1.Cache.enable_cache(str(CACHE_DIR))
 
-    seasons_df = read_csv(INPUT_EXTERNAL_DATA / "season.csv")
+    seasons_df = read_csv(EXTERNAL_DATA_DIR / "season.csv")
 
     
     # 1 - We load the ‘season’ table from the CSV file 
     # 2 - For each row, we extract the ‘year’ column 
-    # 3 - We save the file back to the ‘output_dir_reconciled’ directory as is 
+    # 3 - We save the file back to the ‘RECONCILED_DATA_DIR’ directory as is 
     # 4 - We use all the years listed in the ‘season’ row to retrieve data from the API
 
     YEARS = seasons_df["SeasonYear"].tolist()
 
-    circuit_df = read_csv(INPUT_EXTERNAL_DATA / "circuit.csv")
+    circuit_df = read_csv(EXTERNAL_DATA_DIR / "circuit.csv")
 
     driver_reconciled_df, team_reconciled_df, driver_raw_df, constructor_raw_df = load_ergast_masterdata(YEARS)
 
@@ -357,12 +369,12 @@ def main() -> None:
 
             round_number = int(grand_prix_row["RoundNumber"])
             event_format = str(grand_prix_row["EventFormat"])
-            grand_prix_id = int(grand_prix_row["GrandPrixId"])
+            current_grand_prix_id = int(grand_prix_row["GrandPrixId"])
             
             for session_type in SESSION_TYPES:
 
                 log_record = {
-                            "GrandPrixId": grand_prix_id,
+                            "GrandPrixId": current_grand_prix_id,
                             "SeasonYear": year,
                             "RoundNumber": round_number,
                             "EventFormat": event_format,
@@ -388,7 +400,7 @@ def main() -> None:
 
                     session_df = pd.DataFrame([{
                         "SessionId" : session_id,
-                        "GrandPrixId": grand_prix_id,
+                        "GrandPrixId": current_grand_prix_id,
                         "SessionType": session_type,
                         "SessionName": session.name,
                         "SessionDate": session.date
@@ -590,35 +602,35 @@ def main() -> None:
     # ============================================================
 
     # RAW 
-    export_dataframe(schedules_df, "schedule_raw", OUTPUT_DIR_RAW)
-    export_dataframe(driver_raw_df, "driver_raw", OUTPUT_DIR_RAW)
-    export_dataframe(constructor_raw_df, "team_raw", OUTPUT_DIR_RAW)
-    export_dataframe(session_results_raw_df,  "result_raw", OUTPUT_DIR_RAW)
-    export_dataframe(laps_raw_df, "lap_raw", OUTPUT_DIR_RAW)
-    export_dataframe(weather_raw_df, "weather_raw", OUTPUT_DIR_RAW)
-    export_dataframe(track_status_raw_df, "track_status_raw", OUTPUT_DIR_RAW)
+    export_dataframe(schedules_df, "schedule_raw", RAW_DATA_DIR)
+    export_dataframe(driver_raw_df, "driver_raw", RAW_DATA_DIR)
+    export_dataframe(constructor_raw_df, "team_raw", RAW_DATA_DIR)
+    export_dataframe(session_results_raw_df,  "result_raw", RAW_DATA_DIR)
+    export_dataframe(laps_raw_df, "lap_raw", RAW_DATA_DIR)
+    export_dataframe(weather_raw_df, "weather_raw", RAW_DATA_DIR)
+    export_dataframe(track_status_raw_df, "track_status_raw", RAW_DATA_DIR)
 
     # RECONCILED
 
     # Domain Knowlodge Tables
-    export_dataframe(seasons_df, "season", OUTPUT_DIR_RECONCILED)
-    export_dataframe(circuit_df, "circuit", OUTPUT_DIR_RECONCILED)
+    export_dataframe(seasons_df, "season", RECONCILED_DATA_DIR)
+    export_dataframe(circuit_df, "circuit", RECONCILED_DATA_DIR)
 
-    export_dataframe(grand_prix_df, "grand_prix", OUTPUT_DIR_RECONCILED)
-    export_dataframe(sessions_df, "session" , OUTPUT_DIR_RECONCILED)
+    export_dataframe(grand_prix_df, "grand_prix", RECONCILED_DATA_DIR)
+    export_dataframe(sessions_df, "session" , RECONCILED_DATA_DIR)
 
 
-    export_dataframe(driver_reconciled_df, "driver", OUTPUT_DIR_RECONCILED)
-    export_dataframe(team_reconciled_df, "team", OUTPUT_DIR_RECONCILED)
+    export_dataframe(driver_reconciled_df, "driver", RECONCILED_DATA_DIR)
+    export_dataframe(team_reconciled_df, "team", RECONCILED_DATA_DIR)
 
-    export_dataframe(session_results_reconciled_df, "result", OUTPUT_DIR_RECONCILED)
-    export_dataframe(laps_reconciled_df, "lap", OUTPUT_DIR_RECONCILED)
-    export_dataframe(weather_reconciled_df, "weather", OUTPUT_DIR_RECONCILED)
-    export_dataframe(track_status_reconciled_df, "track_status",OUTPUT_DIR_RECONCILED)
+    export_dataframe(session_results_reconciled_df, "result", RECONCILED_DATA_DIR)
+    export_dataframe(laps_reconciled_df, "lap", RECONCILED_DATA_DIR)
+    export_dataframe(weather_reconciled_df, "weather", RECONCILED_DATA_DIR)
+    export_dataframe(track_status_reconciled_df, "track_status",RECONCILED_DATA_DIR)
 
 
     # LOG 
-    export_dataframe(extraction_log_df, "extraction_log", LOG_DIR)
+    export_dataframe(extraction_log_df, "extraction_log", EXTRACTION_OUTPUT_DIR)
 
 
     print("\n=== DONE ===")

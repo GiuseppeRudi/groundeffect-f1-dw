@@ -1,0 +1,99 @@
+table_name,dimension,check_id,check_description,passed_count,failed_count,total_count,score,status
+season,Completeness,season_required_structural_columns,season_year must be present because it is the structural identifier of the season.,2,0,2,1.0,green
+season,Uniqueness,primary_key_unique,Primary key ['season_year'] must be unique and non-null.,2,0,2,1.0,green
+season,Validity,season_year_scope,season_year must be 2021 or 2022.,2,0,2,1.0,green
+season,Validity,season_start_date_parseable,season_start_date must be a valid date when present.,2,0,2,1.0,green
+season,Validity,season_end_date_parseable,season_end_date must be a valid date when present.,2,0,2,1.0,green
+season,Validity,number_of_events_positive,number_of_events must be greater than zero when present.,2,0,2,1.0,green
+season,Consistency,season_dates_order,season_start_date must be before season_end_date when both are present.,2,0,2,1.0,green
+season,Consistency,season_dates_match_year,The year component of season dates must be coherent with season_year.,2,0,2,1.0,green
+circuit,Completeness,circuit_required_analytical_columns,Circuit identifier and analytical classification columns must be present.,130,0,130,1.0,green
+circuit,Uniqueness,primary_key_unique,Primary key ['circuit_id'] must be unique and non-null.,26,0,26,1.0,green
+circuit,Validity,global_circuit_category_domain,global_circuit_category must belong to the allowed domain.,26,0,26,1.0,green
+circuit,Validity,sector1_category_domain,sector1_category must belong to the allowed domain.,26,0,26,1.0,green
+circuit,Validity,sector2_category_domain,sector2_category must belong to the allowed domain.,26,0,26,1.0,green
+circuit,Validity,sector3_category_domain,sector3_category must belong to the allowed domain.,26,0,26,1.0,green
+circuit,Validity,circuit_text_not_empty,Circuit textual attributes must not be empty strings when present.,26,0,26,1.0,green
+driver,Completeness,driver_required_identification_columns,"driver_id, abbreviation, and last_name must be present.",78,0,78,1.0,green
+driver,Uniqueness,primary_key_unique,Primary key ['driver_id'] must be unique and non-null.,26,0,26,1.0,green
+driver,Validity,driver_abbreviation_format,abbreviation must be a short uppercase alphabetic driver code.,26,0,26,1.0,green
+driver,Validity,driver_date_of_birth_parseable,date_of_birth must be a valid date when present.,26,0,26,1.0,green
+driver,Validity,driver_url_format,driver_url must have a valid URL format when present.,26,0,26,1.0,green
+driver,Validity,permanent_number_positive,permanent_number must be positive when present.,26,0,26,1.0,green
+driver,Validity,driver_text_not_empty,Driver textual attributes must not be empty strings when present.,26,0,26,1.0,green
+driver,Accuracy/Plausibility,driver_age_plausible_2021_2022,Driver age during 2021--2022 should be within a broad plausible range.,26,0,26,1.0,green
+team,Completeness,team_required_identification_columns,team_id and team_name must be present.,20,0,20,1.0,green
+team,Uniqueness,primary_key_unique,Primary key ['team_id'] must be unique and non-null.,10,0,10,1.0,green
+team,Validity,team_id_format,team_id must be a non-empty lowercase textual identifier.,10,0,10,1.0,green
+team,Validity,team_url_format,team_url must have a valid URL format when present.,10,0,10,1.0,green
+team,Validity,team_text_not_empty,team_name and nationality must not be empty strings when present.,10,0,10,1.0,green
+grand_prix,Completeness,grand_prix_required_structural_columns,"grand_prix_id, season_year, round_number, and circuit_id must be present.",176,0,176,1.0,green
+grand_prix,Uniqueness,primary_key_unique,Primary key ['grand_prix_id'] must be unique and non-null.,44,0,44,1.0,green
+grand_prix,Uniqueness,natural_key_1_unique,"Natural key ['season_year', 'round_number'] should be unique.",44,0,44,1.0,green
+grand_prix,Validity,round_number_positive,round_number must be greater than zero.,44,0,44,1.0,green
+grand_prix,Validity,event_date_parseable,event_date must be a valid date when present.,44,0,44,1.0,green
+grand_prix,Validity,event_format_domain,event_format must belong to the allowed event format domain when present.,44,0,44,1.0,green
+grand_prix,Validity,testing_events_excluded,Testing events must not be included.,44,0,44,1.0,green
+grand_prix,Validity,f1_api_support_boolean,f1_api_support must be boolean when present.,44,0,44,1.0,green
+grand_prix,Validity,grand_prix_text_not_empty,Grand Prix textual attributes must not be empty strings when present.,44,0,44,1.0,green
+grand_prix,Consistency,grand_prix_event_date_matches_season_year,event_date must be coherent with season_year when present.,44,0,44,1.0,green
+grand_prix,Accuracy/Plausibility,grand_prix_circuit_match_present,The event-to-circuit matching result must be present and referentially valid.,44,0,44,1.0,green
+grand_prix,Referential Integrity,fk_grand_prix_season_year_to_season_season_year,grand_prix.season_year must reference season.season_year.,44,0,44,1.0,green
+grand_prix,Referential Integrity,fk_grand_prix_circuit_id_to_circuit_circuit_id,grand_prix.circuit_id must reference circuit.circuit_id.,44,0,44,1.0,green
+session,Completeness,session_required_structural_columns,"session_id, grand_prix_id, and session_type must be present.",264,0,264,1.0,green
+session,Uniqueness,primary_key_unique,Primary key ['session_id'] must be unique and non-null.,88,0,88,1.0,green
+session,Uniqueness,natural_key_1_unique,"Natural key ['grand_prix_id', 'session_type'] should be unique.",88,0,88,1.0,green
+session,Validity,session_type_domain,session_type must be Q or R.,88,0,88,1.0,green
+session,Validity,session_date_parseable,session_date must be a valid date when present.,88,0,88,1.0,green
+session,Consistency,session_date_near_grand_prix_date,session_date should be coherent with the corresponding Grand Prix event_date.,88,0,88,1.0,green
+session,Referential Integrity,fk_session_grand_prix_id_to_grand_prix_grand_prix_id,session.grand_prix_id must reference grand_prix.grand_prix_id.,88,0,88,1.0,green
+result,Completeness,result_required_structural_columns,"result_id, session_id, driver_id, team_id, and position should be present.",8795,5,8800,0.999432,green
+result,Uniqueness,primary_key_unique,Primary key ['result_id'] must be unique and non-null.,1760,0,1760,1.0,green
+result,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'driver_id'] should be unique.",1759,1,1760,0.999432,green
+result,Validity,result_position_positive,position must be greater than zero when present.,1757,0,1757,1.0,green
+result,Validity,result_points_non_negative,points must be greater than or equal to zero when present.,880,0,880,1.0,green
+result,Validity,result_laps_non_negative,laps must be greater than or equal to zero when present.,880,0,880,1.0,green
+result,Validity,result_text_not_empty,classified_position and status must not be empty strings when present.,880,0,880,1.0,green
+result,Referential Integrity,fk_result_session_id_to_session_session_id,result.session_id must reference session.session_id.,1760,0,1760,1.0,green
+result,Referential Integrity,fk_result_driver_id_to_driver_driver_id,result.driver_id must reference driver.driver_id.,1759,0,1759,1.0,green
+result,Referential Integrity,fk_result_team_id_to_team_team_id,result.team_id must reference team.team_id.,1759,0,1759,1.0,green
+lap,Completeness,lap_required_structural_columns,Structural lap identifiers must be present.,306035,0,306035,1.0,green
+lap,Completeness,lap_required_analytical_columns,Main lap performance attributes are checked for analytical completeness.,294597,11438,306035,0.962625,green
+lap,Uniqueness,primary_key_unique,Primary key ['lap_id'] must be unique and non-null.,61207,0,61207,1.0,green
+lap,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'driver_id', 'lap_number'] should be unique.",61207,0,61207,1.0,green
+lap,Validity,lap_number_positive,lap_number must be greater than zero.,61207,0,61207,1.0,green
+lap,Validity,lap_time_positive,lap_time_ms must be positive when present.,55837,0,55837,1.0,green
+lap,Validity,lap_sector_times_positive,Sector times must be positive when present.,61012,0,61012,1.0,green
+lap,Validity,lap_speeds_positive,Speed attributes must be positive when present.,61066,0,61066,1.0,green
+lap,Validity,stint_positive,stint must be positive when present.,61207,0,61207,1.0,green
+lap,Validity,tyre_life_positive,tyre_life must be positive when present.,60687,0,60687,1.0,green
+lap,Validity,compound_domain,compound must belong to the expected tyre compound domain when present.,60813,60,60873,0.999014,green
+lap,Validity,lap_boolean_columns,Lap boolean attributes must contain valid boolean values when present.,0,1,1,0.0,red
+lap,Consistency,lap_sector_sum_matches_lap_time,"For normal timed laps, the sum of sector times should be coherent with lap_time_ms.",48995,0,48995,1.0,green
+lap,Consistency,lap_team_matches_result,team_id in lap should be coherent with the corresponding result row.,61207,0,61207,1.0,green
+lap,Accuracy/Plausibility,lap_basic_performance_plausibility,"Lap times, sector times, and speeds are checked only with broad plausibility ranges.",61069,0,61069,1.0,green
+lap,Referential Integrity,fk_lap_session_id_to_session_session_id,lap.session_id must reference session.session_id.,61207,0,61207,1.0,green
+lap,Referential Integrity,fk_lap_driver_id_to_driver_driver_id,lap.driver_id must reference driver.driver_id.,61207,0,61207,1.0,green
+lap,Referential Integrity,fk_lap_team_id_to_team_team_id,lap.team_id must reference team.team_id.,61207,0,61207,1.0,green
+weather,Completeness,weather_required_columns,"Weather identifier, session timeline, and main weather measures must be present.",78239,0,78239,1.0,green
+weather,Uniqueness,primary_key_unique,Primary key ['weather_id'] must be unique and non-null.,11177,0,11177,1.0,green
+weather,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'time_ms'] should be unique.",11177,0,11177,1.0,green
+weather,Validity,weather_time_non_negative,time_ms must be greater than or equal to zero.,11177,0,11177,1.0,green
+weather,Validity,air_temp_plausible_range,air_temp must be within a broad plausible physical range when present.,11177,0,11177,1.0,green
+weather,Validity,track_temp_plausible_range,track_temp must be within a broad plausible physical range when present.,11177,0,11177,1.0,green
+weather,Validity,humidity_range,humidity must be between 0 and 100 when present.,11177,0,11177,1.0,green
+weather,Validity,pressure_range,pressure must be within a realistic atmospheric range when present.,11177,0,11177,1.0,green
+weather,Validity,rainfall_boolean,rainfall must be boolean when present.,11177,0,11177,1.0,green
+weather,Validity,wind_direction_range,wind_direction must be a degree value between 0 and 360 when present.,11177,0,11177,1.0,green
+weather,Validity,wind_speed_non_negative,wind_speed must be greater than or equal to zero when present.,11177,0,11177,1.0,green
+weather,Consistency,weather_track_air_temp_difference,track_temp should be reasonably coherent with air_temp.,11177,0,11177,1.0,green
+weather,Referential Integrity,fk_weather_session_id_to_session_session_id,weather.session_id must reference session.session_id.,11177,0,11177,1.0,green
+track_status,Completeness,track_status_required_columns,"Track status identifier, session timeline, status, and message must be present.",4185,0,4185,1.0,green
+track_status,Uniqueness,primary_key_unique,Primary key ['track_status_id'] must be unique and non-null.,837,0,837,1.0,green
+track_status,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'time_ms'] should be unique.",828,9,837,0.989247,green
+track_status,Validity,track_status_time_non_negative,time_ms must be greater than or equal to zero.,837,0,837,1.0,green
+track_status,Validity,track_status_code_domain,status must belong to the documented track status code domain.,837,0,837,1.0,green
+track_status,Validity,track_status_message_domain,message must belong to the documented track status message domain.,837,0,837,1.0,green
+track_status,Validity,track_status_message_not_empty,message must not be an empty string.,837,0,837,1.0,green
+track_status,Consistency,track_status_message_mapping,The same numerical status code should always correspond to the same textual message.,837,0,837,1.0,green
+track_status,Referential Integrity,fk_track_status_session_id_to_session_session_id,track_status.session_id must reference session.session_id.,837,0,837,1.0,green

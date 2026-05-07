@@ -1,0 +1,11 @@
+table_name,overall_score,status,issue_count,completeness_score,uniqueness_score,validity_score,consistency_score,accuracy_plausibility_score,timeliness_score,referential_integrity_score
+circuit,1.0,green,0,1.0,1.0,1.0,,,,
+driver,1.0,green,0,1.0,1.0,1.0,,1.0,,
+grand_prix,1.0,green,0,1.0,1.0,1.0,1.0,1.0,,1.0
+lap,0.976032,green,6644,0.9813125,1.0,0.87487675,1.0,1.0,,1.0
+result,0.999787,green,4,0.999432,0.999716,1.0,,,,1.0
+season,1.0,green,0,1.0,1.0,1.0,1.0,,,
+session,1.0,green,0,1.0,1.0,1.0,1.0,,,1.0
+team,1.0,green,0,1.0,1.0,1.0,,,,
+track_status,0.998925,green,9,1.0,0.9946235,1.0,1.0,,,1.0
+weather,1.0,green,0,1.0,1.0,1.0,1.0,,,1.0

@@ -1,0 +1,889 @@
+\documentclass[a4paper,11pt]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% If you do not want automatic section numbering, keep this line.
+% If you want normal numbering, comment it.
+\setcounter{secnumdepth}{0}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue
+}
+
+\title{Data Cleaning Workflow for the Reconciled Formula 1 Database}
+\author{Giuseppe Rudi}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	% ============================================================
+	% INTRODUCTION
+	% ============================================================
+	
+	\section{Introduction}
+	
+	This document describes the methodological workflow adopted for the Data Cleaning phase of the Formula 1 Data Warehouse project.
+	
+	The Data Cleaning phase is performed after the construction and population of the reconciled database and after the execution of the Data Quality Assessment.
+	
+	The goal of this document is not to present the final cleaning results yet, but to define how the cleaning process will be structured, documented, and connected to the later Data Warehouse design phase.
+	
+	In this project, the Data Quality Assessment identifies possible problems in the data, while the Data Cleaning phase decides how to handle them through explicit and documented rules.
+	
+	\section{Position of Data Cleaning in the Project Workflow}
+	
+	The general project workflow is structured as follows:
+	
+	\begin{enumerate}
+		\item Raw data extraction from FastF1 and Ergast/Jolpica.
+		\item Re-engineering of raw data into a reconciled relational schema.
+		\item Population of the reconciled PostgreSQL database.
+		\item Data Quality Assessment on the reconciled database.
+		\item Data Cleaning based on explicit cleaning rules.
+		\item Conceptual design of the Data Warehouse.
+		\item Attribute tree construction and editing.
+		\item DFM Fact Schema design.
+		\item Star Schema implementation.
+		\item ETL from the cleaned reconciled database to the Data Warehouse.
+	\end{enumerate}
+	
+	The Data Cleaning phase therefore acts as a bridge between the reconciled database and the Data Warehouse implementation.
+	
+	\section{Difference Between Data Quality Assessment and Data Cleaning}
+	
+	\subsection{Data Quality Assessment}
+	
+	The Data Quality Assessment does not modify the database.
+	
+	Its goal is to inspect the data and detect possible issues according to a set of predefined rules.
+	
+	Examples of checked dimensions are:
+	
+	\begin{itemize}
+		\item completeness;
+		\item uniqueness;
+		\item validity;
+		\item consistency;
+		\item accuracy and plausibility;
+		\item timeliness;
+		\item referential integrity.
+	\end{itemize}
+	
+	The output of the Data Quality Assessment consists of scorecards and issue files.
+	
+	The most important output for the cleaning phase is:
+	
+	\begin{center}
+		\texttt{issues\_all\_tables.csv}
+	\end{center}
+	
+	This file summarizes the detected issues for the different tables of the reconciled database.
+	
+	\subsection{Data Cleaning}
+	
+	The Data Cleaning phase uses the DQA outputs as evidence, but it does not blindly execute all the detected issues as automatic corrections.
+	
+	Instead, each problem must be interpreted and connected to a documented cleaning rule.
+	
+	The cleaning phase answers the following question:
+	
+	\begin{quote}
+		Given a detected data quality issue, what should be done with the affected data?
+	\end{quote}
+	
+	Possible actions include:
+	
+	\begin{itemize}
+		\item correcting a value;
+		\item standardizing a value;
+		\item converting a value to a consistent format;
+		\item keeping the value unchanged but documenting the issue;
+		\item adding a flag;
+		\item excluding the row from the cleaned analytical dataset;
+		\item moving the row to a rejected rows table;
+		\item correcting an upstream re-engineering script and regenerating the data.
+	\end{itemize}
+	
+	\section{Difference Between Cleaning and Analytical Filtering}
+	
+	A fundamental distinction must be maintained between Data Cleaning and Analytical Filtering.
+	
+	\subsection{Data Cleaning}
+	
+	Data Cleaning handles data that are incomplete, inconsistent, invalid, duplicated, unreliable, or not suitable for further processing.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item missing identifiers;
+		\item invalid lap times;
+		\item impossible negative values;
+		\item duplicated records;
+		\item inconsistent foreign keys;
+		\item inaccurate laps;
+		\item deleted laps.
+	\end{itemize}
+	
+	\subsection{Analytical Filtering}
+	
+	Analytical Filtering does not fix wrong data.
+	
+	It selects a subset of valid data that is useful for a specific analysis or storytelling.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item keeping only Ferrari, Red Bull, and Mercedes;
+		\item keeping only dry conditions;
+		\item excluding wet sessions from a specific performance comparison;
+		\item excluding in-laps and out-laps when studying pure lap performance;
+		\item selecting only specific circuits.
+	\end{itemize}
+	
+	A wet lap is not necessarily a wrong datum. It may be a valid datum that is outside the analytical focus of the final storytelling.
+	
+	Therefore, it should not be confused with a data quality error.
+	
+	\section{Input of the Data Cleaning Script}
+	
+	The Data Cleaning script will use two main categories of input.
+	
+	\subsection{Database Input}
+	
+	The script reads the tables from the pre-cleaning reconciled schema.
+	
+	Possible schema names are:
+	
+	\begin{itemize}
+		\item \texttt{public};
+		\item \texttt{reconciled\_raw};
+		\item \texttt{reconciled\_pre\_cleaning}.
+	\end{itemize}
+	
+	In this project, the preferred solution is to preserve the original reconciled schema and write the cleaned output into a separate schema.
+	
+	\subsection{Data Quality Assessment Output}
+	
+	The script also reads the files produced by the Data Quality Assessment.
+	
+	The most important files are:
+	
+	\begin{itemize}
+		\item \texttt{issues\_all\_tables.csv};
+		\item \texttt{dq\_scorecard\_by\_table.csv};
+		\item possible detailed issue files by table or by dimension.
+	\end{itemize}
+	
+	The issue file is used to identify the detected problems.
+	
+	The scorecard file is mainly used for documentation, prioritization, and before/after comparison.
+	
+	\section{Output of the Data Cleaning Script}
+	
+	The Data Cleaning script should produce both cleaned database tables and audit outputs.
+	
+	\subsection{Cleaned Database Schema}
+	
+	The preferred output is a new PostgreSQL schema:
+	
+	\begin{center}
+		\texttt{reconciled\_clean}
+	\end{center}
+	
+	This schema contains the cleaned version of the reconciled tables.
+	
+	For example:
+	
+	\begin{itemize}
+		\item \texttt{reconciled\_clean.season};
+		\item \texttt{reconciled\_clean.grand\_prix};
+		\item \texttt{reconciled\_clean.session};
+		\item \texttt{reconciled\_clean.driver};
+		\item \texttt{reconciled\_clean.team};
+		\item \texttt{reconciled\_clean.result};
+		\item \texttt{reconciled\_clean.lap};
+		\item \texttt{reconciled\_clean.weather};
+		\item \texttt{reconciled\_clean.track\_status}.
+	\end{itemize}
+	
+	\subsection{Cleaning Metadata}
+	
+	In addition to the cleaned tables, the script should generate metadata that explain what happened during cleaning.
+	
+	Possible metadata outputs are:
+	
+	\begin{itemize}
+		\item \texttt{cleaning\_actions.csv};
+		\item \texttt{cleaning\_summary\_by\_table.csv};
+		\item \texttt{cleaning\_summary\_by\_rule.csv};
+		\item \texttt{rejected\_rows.csv};
+		\item \texttt{before\_after\_scorecard.csv}.
+	\end{itemize}
+	
+	These outputs are important because the cleaning process must be traceable and reproducible.
+	
+	\section{Why a Separate Post-Cleaning Schema Is Preferred}
+	
+	The original reconciled database should not be overwritten directly.
+	
+	The preferred professional choice is to maintain two versions of the reconciled data:
+	
+	\begin{itemize}
+		\item a pre-cleaning schema;
+		\item a post-cleaning schema.
+	\end{itemize}
+	
+	This allows the project to preserve the original data produced by the re-engineering phase and to compare them with the cleaned version.
+	
+	\begin{center}
+		\texttt{reconciled\_pre\_cleaning}
+		$\rightarrow$
+		\texttt{reconciled\_clean}
+	\end{center}
+	
+	This design supports:
+	
+	\begin{itemize}
+		\item reproducibility;
+		\item auditability;
+		\item comparison before and after cleaning;
+		\item easier debugging;
+		\item safer ETL development.
+	\end{itemize}
+	
+	\section{Types of Problems Handled by Data Cleaning}
+	
+	The problems detected by the Data Quality Assessment can belong to different categories.
+	
+	Not all categories require the same treatment.
+	
+	\subsection{Re-engineering Errors}
+	
+	Some issues may be caused by errors in the extraction or re-engineering scripts.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item wrong joins;
+		\item missing identifiers caused by an incorrect merge;
+		\item wrong primary key definition;
+		\item wrong foreign key mapping;
+		\item incorrect DQA rule.
+	\end{itemize}
+	
+	These problems should not be hidden inside the cleaning script.
+	
+	The correct solution is:
+	
+	\begin{enumerate}
+		\item correct the upstream script;
+		\item regenerate the reconciled data;
+		\item reload the database;
+		\item rerun the Data Quality Assessment.
+	\end{enumerate}
+	
+	\subsection{Automatically Correctable Errors}
+	
+	Some issues can be corrected automatically because the correction rule is deterministic and safe.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item trimming spaces in textual columns;
+		\item converting empty strings to \texttt{NULL};
+		\item standardizing boolean values;
+		\item standardizing categorical values;
+		\item converting time values to a consistent numerical unit;
+		\item removing exact duplicated rows.
+	\end{itemize}
+	
+	\subsection{Non-Reliable Rows}
+	
+	Some rows may be formally present but not reliable for analysis.
+	
+	Examples in the \texttt{lap} table:
+	
+	\begin{itemize}
+		\item deleted laps;
+		\item inaccurate laps;
+		\item laps with missing lap time;
+		\item laps with impossible sector times;
+		\item laps with inconsistent lap time and sector sum.
+	\end{itemize}
+	
+	These rows should not necessarily be deleted from the original schema.
+	
+	In the cleaned schema, they can be:
+	
+	\begin{itemize}
+		\item removed from the cleaned analytical table;
+		\item kept with a usability flag;
+		\item moved to a rejected rows output;
+		\item documented in the cleaning log.
+	\end{itemize}
+	
+	\subsection{Missing Values Not Safely Recoverable}
+	
+	Some missing values cannot be corrected without inventing information.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item missing weather observations;
+		\item missing sector times;
+		\item missing driver descriptive fields;
+		\item missing result gaps.
+	\end{itemize}
+	
+	In these cases, the cleaning script should not invent values unless a clear and documented rule exists.
+	
+	Possible actions are:
+	
+	\begin{itemize}
+		\item keep the value as \texttt{NULL};
+		\item add a missing-value flag;
+		\item exclude the row only if the missing value is essential for the intended analysis;
+		\item document the issue for manual review.
+	\end{itemize}
+	
+	\subsection{Valid Data Outside the Analytical Focus}
+	
+	Some data are valid but may not be useful for the final storytelling.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item wet laps;
+		\item laps under safety car;
+		\item pit in-laps;
+		\item out-laps;
+		\item sessions outside the final analytical focus.
+	\end{itemize}
+	
+	These are not necessarily cleaning errors.
+	
+	They should usually be handled later through analytical filtering or through flags that allow the analyst to include or exclude them.
+	
+	\section{Cleaning Rule Structure}
+	
+	Each cleaning rule should be explicitly documented.
+	
+	A possible structure is the following:
+	
+	\begin{longtable}{p{3cm}p{3cm}p{4cm}p{4cm}}
+		\toprule
+		\textbf{Rule ID} & \textbf{Table} & \textbf{Condition} & \textbf{Action} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Rule ID} & \textbf{Table} & \textbf{Condition} & \textbf{Action} \\
+		\midrule
+		\endhead
+		
+		CR\_COMMON\_001
+		& All tables
+		& Textual value contains leading or trailing spaces
+		& Apply trim operation \\
+		
+		CR\_COMMON\_002
+		& All tables
+		& Empty string in nullable column
+		& Convert empty string to \texttt{NULL} \\
+		
+		CR\_LAP\_001
+		& Lap
+		& \texttt{Deleted = true}
+		& Mark lap as not usable for performance analysis \\
+		
+		CR\_LAP\_002
+		& Lap
+		& \texttt{IsAccurate = false}
+		& Mark lap as not usable for performance analysis \\
+		
+		CR\_LAP\_003
+		& Lap
+		& \texttt{LapTime\_ms} is missing
+		& Mark lap as incomplete or reject if lap time is required \\
+		
+		CR\_WEATHER\_001
+		& Weather
+		& \texttt{WindSpeed < 0}
+		& Mark value as invalid and review \\
+		
+		CR\_TRACK\_001
+		& Track Status
+		& Missing status code
+		& Mark row as incomplete and review \\
+		
+		\bottomrule
+	\end{longtable}
+	
+	\section{Cleaning Actions}
+	
+	For each applied rule, the script should record an action.
+	
+	A possible action log structure is:
+	
+	\begin{longtable}{p{2.5cm}p{2.5cm}p{3cm}p{3cm}p{3cm}p{3cm}}
+		\toprule
+		\textbf{Rule ID} & \textbf{Table} & \textbf{Row Identifier} & \textbf{Column} & \textbf{Old Value} & \textbf{New Value / Action} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Rule ID} & \textbf{Table} & \textbf{Row Identifier} & \textbf{Column} & \textbf{Old Value} & \textbf{New Value / Action} \\
+		\midrule
+		\endhead
+		
+		CR\_LAP\_001
+		& lap
+		& [placeholder]
+		& deleted
+		& true
+		& is\_usable\_for\_performance\_analysis = false \\
+		
+		CR\_LAP\_002
+		& lap
+		& [placeholder]
+		& is\_accurate
+		& false
+		& is\_usable\_for\_performance\_analysis = false \\
+		
+		CR\_COMMON\_001
+		& driver
+		& [placeholder]
+		& first\_name
+		& `` Lewis ''
+		& ``Lewis'' \\
+		
+		\bottomrule
+	\end{longtable}
+	
+	\section{Physical Modification vs Flagging}
+	
+	Not every issue should be handled by physically deleting or overwriting data.
+	
+	In some cases, it is better to add flags that describe the usability or quality status of a row.
+	
+	\subsection{Physical Modification}
+	
+	Physical modification is appropriate when the correction is safe, deterministic, and does not change the semantic meaning of the data.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item trimming spaces;
+		\item standardizing case;
+		\item converting empty strings to \texttt{NULL};
+		\item converting boolean representations;
+		\item removing exact duplicate rows.
+	\end{itemize}
+	
+	\subsection{Flagging}
+	
+	Flagging is appropriate when the row contains information that may still be useful, but should not always be used in analytical calculations.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item deleted lap;
+		\item inaccurate lap;
+		\item pit lap;
+		\item incomplete lap;
+		\item suspicious lap;
+		\item wet-condition lap;
+		\item safety-car lap.
+	\end{itemize}
+	
+	Possible flags for the \texttt{lap} table are:
+	
+	\begin{itemize}
+		\item \texttt{is\_deleted\_lap};
+		\item \texttt{is\_inaccurate\_lap};
+		\item \texttt{is\_pit\_lap};
+		\item \texttt{is\_complete\_lap};
+		\item \texttt{is\_clean\_lap};
+		\item \texttt{is\_usable\_for\_performance\_analysis};
+		\item \texttt{cleaning\_status};
+		\item \texttt{cleaning\_reason}.
+	\end{itemize}
+	
+	\subsection{Reason for Using Flags}
+	
+	Using flags preserves information while allowing controlled analytical selection.
+	
+	Instead of permanently deleting all problematic rows, the cleaned schema can keep the row and explicitly mark whether it should be used for a specific analytical purpose.
+	
+	This makes the process more transparent and reversible.
+	
+	\section{Relationship Between Cleaning Flags and the Attribute Tree}
+	
+	The cleaned reconciled schema may contain additional attributes introduced during Data Cleaning.
+	
+	These attributes can influence the later conceptual design.
+	
+	However, not every cleaning flag should automatically become part of the final Fact Schema.
+	
+	\subsection{General Rule}
+	
+	The general rule is:
+	
+	\begin{quote}
+		A cleaning flag should be included in the attribute tree only if it has analytical meaning or if it is useful to define the valid analytical grain of the fact.
+	\end{quote}
+	
+	\subsection{Technical Flags}
+	
+	Technical flags are used only for audit and debugging.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item \texttt{cleaning\_rule\_id};
+		\item \texttt{cleaning\_timestamp};
+		\item \texttt{source\_issue\_id};
+		\item \texttt{cleaning\_batch\_id}.
+	\end{itemize}
+	
+	These attributes should not usually be included in the DFM Fact Schema.
+	
+	They belong to cleaning metadata.
+	
+	\subsection{Analytical Flags}
+	
+	Analytical flags describe the analytical usability or semantic condition of a row.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item \texttt{is\_clean\_lap};
+		\item \texttt{is\_usable\_for\_performance\_analysis};
+		\item \texttt{is\_pit\_lap};
+		\item \texttt{is\_inaccurate\_lap};
+		\item \texttt{is\_wet\_condition};
+		\item \texttt{is\_safety\_car\_lap}.
+	\end{itemize}
+	
+	These attributes may be included in the attribute tree because they can support filtering, slicing, or interpretation.
+	
+	\subsection{How to Represent These Flags in the DFM}
+	
+	In the DFM, these flags should usually not be modeled as full hierarchical dimensions.
+	
+	They can be represented as:
+	
+	\begin{itemize}
+		\item descriptive attributes of the fact;
+		\item degenerate dimensional attributes;
+		\item a small context dimension, if several related flags are grouped together.
+	\end{itemize}
+	
+	For example, for the \textit{Lap Performance} fact, the following attributes may be attached directly to the fact:
+	
+	\begin{itemize}
+		\item \texttt{is\_clean\_lap};
+		\item \texttt{is\_usable\_for\_performance\_analysis};
+		\item \texttt{cleaning\_status}.
+	\end{itemize}
+	
+	Alternatively, they can be grouped into a small dimension:
+	
+	\begin{center}
+		\texttt{Lap Quality Context}
+	\end{center}
+	
+	This dimension may contain:
+	
+	\begin{itemize}
+		\item \texttt{cleaning\_status};
+		\item \texttt{is\_clean\_lap};
+		\item \texttt{is\_pit\_lap};
+		\item \texttt{is\_inaccurate\_lap};
+		\item \texttt{is\_usable\_for\_performance\_analysis}.
+	\end{itemize}
+	
+	\subsection{Project Decision Placeholder}
+	
+	In this project, the current decision is:
+	
+	\begin{quote}
+		[Placeholder: decide whether lap quality flags are kept as descriptive attributes of the \textit{Lap Performance} fact or grouped into a separate \textit{Lap Quality Context} dimension.]
+	\end{quote}
+	
+	\section{Suggested Cleaning Strategy by Table}
+	
+	\subsection{Common Rules for All Tables}
+	
+	Common cleaning rules are applied to all tables.
+	
+	Examples:
+	
+	\begin{itemize}
+		\item trim textual columns;
+		\item convert empty strings to \texttt{NULL};
+		\item standardize boolean values;
+		\item standardize date and timestamp formats;
+		\item remove exact duplicated rows;
+		\item preserve primary key and foreign key consistency.
+	\end{itemize}
+	
+	\subsection{Driver and Team Tables}
+	
+	The \texttt{driver} and \texttt{team} tables contain master data.
+	
+	Possible cleaning operations:
+	
+	\begin{itemize}
+		\item standardize textual fields;
+		\item check missing identifiers;
+		\item check duplicate identifiers;
+		\item avoid deleting drivers or teams unless the identifier is invalid;
+		\item preserve stable master data for joins.
+	\end{itemize}
+	
+	\subsection{Grand Prix and Session Tables}
+	
+	Possible cleaning operations:
+	
+	\begin{itemize}
+		\item check missing event dates;
+		\item check valid session types;
+		\item check consistency between sessions and Grand Prix;
+		\item preserve the relationship between session and Grand Prix;
+		\item do not invent missing sessions.
+	\end{itemize}
+	
+	\subsection{Lap Table}
+	
+	The \texttt{lap} table is the most important table for the project because it is the source table for the \textit{Lap Performance} fact.
+	
+	Possible cleaning operations:
+	
+	\begin{itemize}
+		\item identify deleted laps;
+		\item identify inaccurate laps;
+		\item identify missing lap times;
+		\item identify impossible negative times;
+		\item check consistency between sector times and lap time;
+		\item standardize tyre compound values;
+		\item identify pit laps;
+		\item add usability flags for performance analysis.
+	\end{itemize}
+	
+	\subsection{Weather Table}
+	
+	Possible cleaning operations:
+	
+	\begin{itemize}
+		\item check impossible temperature values;
+		\item check negative wind speed;
+		\item standardize rainfall as boolean;
+		\item keep missing weather values as \texttt{NULL} if they cannot be safely recovered;
+		\item avoid inventing meteorological values.
+	\end{itemize}
+	
+	\subsection{Track Status Table}
+	
+	Possible cleaning operations:
+	
+	\begin{itemize}
+		\item check missing status values;
+		\item standardize status codes;
+		\item standardize message categories;
+		\item preserve time alignment with the related session;
+		\item create derived flags for safety car, virtual safety car, red flag, or yellow flag conditions if needed.
+	\end{itemize}
+	
+	\section{Rejected Rows}
+	
+	Some rows may be excluded from the cleaned analytical dataset.
+	
+	However, excluded rows should be documented.
+	
+	A possible rejected rows structure is:
+	
+	\begin{longtable}{p{2.5cm}p{3cm}p{3cm}p{4cm}p{3cm}}
+		\toprule
+		\textbf{Table} & \textbf{Row Identifier} & \textbf{Rule ID} & \textbf{Reason} & \textbf{Action} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Table} & \textbf{Row Identifier} & \textbf{Rule ID} & \textbf{Reason} & \textbf{Action} \\
+		\midrule
+		\endhead
+		
+		lap
+		& [placeholder]
+		& CR\_LAP\_001
+		& Deleted lap
+		& Excluded from clean performance subset \\
+		
+		lap
+		& [placeholder]
+		& CR\_LAP\_002
+		& Inaccurate lap
+		& Excluded from clean performance subset \\
+		
+		weather
+		& [placeholder]
+		& CR\_WEATHER\_001
+		& Invalid wind speed
+		& Marked for review \\
+		
+		\bottomrule
+	\end{longtable}
+	
+	\section{Validation After Cleaning}
+	
+	After the cleaning process, the Data Quality Assessment should be executed again on the cleaned schema.
+	
+	This allows comparison between:
+	
+	\begin{itemize}
+		\item pre-cleaning scorecards;
+		\item post-cleaning scorecards;
+		\item pre-cleaning issue counts;
+		\item post-cleaning issue counts.
+	\end{itemize}
+	
+	The goal is not necessarily to obtain a perfect score for every table.
+	
+	The goal is to show that the remaining issues are either:
+	
+	\begin{itemize}
+		\item expected;
+		\item documented;
+		\item not safely correctable;
+		\item outside the scope of automatic cleaning.
+	\end{itemize}
+	
+	\section{Before and After Comparison}
+	
+	A summary table should be produced to show the effect of the cleaning phase.
+	
+	\begin{longtable}{p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}}
+		\toprule
+		\textbf{Table} & \textbf{Issues Before} & \textbf{Issues After} & \textbf{Score Before} & \textbf{Score After} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Table} & \textbf{Issues Before} & \textbf{Issues After} & \textbf{Score Before} & \textbf{Score After} \\
+		\midrule
+		\endhead
+		
+		season
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		driver
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		team
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		lap
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		weather
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		track\_status
+		& [placeholder]
+		& [placeholder]
+		& [placeholder]
+		& [placeholder] \\
+		
+		\bottomrule
+	\end{longtable}
+	
+	\section{Connection with the ETL Toward the Data Warehouse}
+	
+	The cleaned reconciled schema becomes the input of the ETL process toward the Data Warehouse.
+	
+	The ETL should not be based on the pre-cleaning schema.
+	
+	The preferred flow is:
+	
+	\begin{center}
+		\texttt{reconciled\_pre\_cleaning}
+		$\rightarrow$
+		\texttt{Data Quality Assessment}
+		$\rightarrow$
+		\texttt{reconciled\_clean}
+		$\rightarrow$
+		\texttt{ETL}
+		$\rightarrow$
+		\texttt{data\_warehouse}
+	\end{center}
+	
+	During the ETL, the project can decide whether to:
+	
+	\begin{itemize}
+		\item load only clean and usable laps;
+		\item load all laps but preserve quality flags;
+		\item create a specific analytical subset;
+		\item create dimensions and fact tables based on the final DFM and Star Schema.
+	\end{itemize}
+	
+	\section{Open Design Decisions}
+	
+	The following decisions must be completed during the implementation phase:
+	
+	\begin{enumerate}
+		\item Which schema name should be used for the pre-cleaning data?
+		\item Which schema name should be used for the cleaned data?
+		\item Which cleaning rules should physically modify values?
+		\item Which cleaning rules should only add flags?
+		\item Which rows should be rejected?
+		\item Which flags should remain only in cleaning metadata?
+		\item Which flags should enter the attribute tree?
+		\item Which flags should be included in the DFM as descriptive attributes or context dimensions?
+		\item Should the ETL load only clean laps or all laps with quality flags?
+	\end{enumerate}
+	
+	\section{Conclusion}
+	
+	The Data Cleaning phase is designed as a controlled and documented transformation process.
+	
+	The Data Quality Assessment identifies possible problems, while the Data Cleaning phase applies explicit rules to correct, standardize, flag, reject, or document the affected data.
+	
+	The original reconciled database should be preserved, and the cleaned data should be written into a separate schema.
+	
+	This strategy supports traceability, reproducibility, and a safer transition toward the Data Warehouse.
+	
+	The most important modeling decision is that cleaning flags become part of the cleaned reconciled schema, but they are included in the DFM only when they have analytical value or support the definition of the valid analytical grain of the fact.
+	
+\end{document}

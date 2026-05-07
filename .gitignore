@@ -23,9 +23,9 @@ env/
 # ============================================================
 # FastF1 cache - NEVER upload
 # ============================================================
-fastf1_cache/
-**/fastf1_cache/
-**/fastf1_cache/**
+cache/
+**/cache/
+**/cache/**
 *.sqlite
 *.sqlite3
 *.db
