@@ -17,7 +17,7 @@ if not (PROJECT_ROOT / "database").exists() or not (PROJECT_ROOT / "pipeline").e
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from database.db_config import get_reconciled_engine, get_reconciled_schema
+from database.db_config import get_engine
 from core.dqa_rules import TABLE_RULES, QUALITY_DIMENSIONS
 from core.dqa_engine import DQAEngine
 from sqlalchemy import text
@@ -124,8 +124,7 @@ def export_general_dqa_outputs(
 
 def main() -> None:
     output_dir = Path(GENERAL_DQA_OUTPUT_DIR)
-    engine = get_reconciled_engine()
-    schema = get_reconciled_schema()
+    engine, schema = get_engine("reconciled")
 
     print("[INFO] Starting General Data Quality Assessment")
     print(f"[INFO] Schema: {schema}")

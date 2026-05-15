@@ -1,0 +1,995 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------------------
+% PACKAGES
+% ------------------------------------------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	urlcolor=blue
+}
+
+\setcounter{secnumdepth}{0}
+
+% ------------------------------------------------------------
+% CUSTOM COMMANDS
+% ------------------------------------------------------------
+\newcommand{\dashboardname}[1]{\textbf{\large #1}}
+\newcommand{\storyquestion}[1]{\begin{quote}\textit{#1}\end{quote}}
+
+% ------------------------------------------------------------
+% TITLE
+% ------------------------------------------------------------
+\title{Visualization Storytelling and Dashboard Design\\
+	for the Formula 1 Data Warehouse Project}
+\author{Giuseppe Rudi}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\tableofcontents
+	\newpage
+	
+	% ------------------------------------------------------------
+	\section{Introduction}
+	
+	This document describes the planned visualization layer of the Formula 1 Data Warehouse project.
+	
+	The goal of this document is not to define technical SQL queries or final implementation details.
+	At this stage, the final Data Warehouse and the final cleaned dataset are not yet fixed.
+	For this reason, the objective is to define the \textbf{storytelling structure}, the \textbf{main dashboards}, the \textbf{types of charts}, and the \textbf{reason why each dashboard is useful}.
+	
+	The visualization phase must not be a simple collection of static charts.
+	Instead, it must support an interactive analytical experience.
+	The user should be able to navigate the data, compare seasons, filter teams, select circuits, and move from a general overview to more detailed explanations.
+	
+	The central theme of the visualization is:
+	
+	\begin{quote}
+		\textit{How did the competitive balance among Ferrari, Red Bull, and Mercedes change from the 2021 season to the 2022 season after the regulatory change?}
+	\end{quote}
+	
+	The dashboards are designed to answer this question progressively.
+	The first dashboard gives a global overview.
+	The following dashboards explain the possible reasons behind the observed differences by considering session type, circuit characteristics, sector performance, tyre compound, and consistency.
+	
+	% ------------------------------------------------------------
+	\section{General Storytelling Idea}
+	
+	The final storytelling focuses on a specific and interpretable part of the Formula 1 domain.
+	
+	The project considers the seasons 2021 and 2022 because the 2022 Formula 1 season introduced an important regulatory change.
+	The objective is not only to show which team was faster, but also to understand how the balance between the top teams changed after this regulatory shift.
+	
+	The final analysis focuses on three top teams:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Ferrari;
+		\item Red Bull;
+		\item Mercedes.
+	\end{itemize}
+	
+	This restriction is useful because it makes the story more focused and easier to interpret.
+	Instead of comparing the entire grid, the dashboard concentrates on the teams that are most relevant for understanding the competitive balance at the front of the field.
+	
+	The analysis also focuses on:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Qualifying sessions;
+		\item Race sessions;
+		\item dry and clean conditions;
+		\item lap-level performance;
+		\item sector-level performance;
+		\item tyre compound behaviour;
+		\item circuit and sector technical characteristics.
+	\end{itemize}
+	
+	Free practice sessions are excluded because they are less comparable.
+	Teams often use free practice sessions for tests, setup work, fuel-load experiments, tyre evaluation, and different run plans.
+	For this reason, free practice does not provide the same clean basis for competitive comparison as Qualifying and Race sessions.
+	
+	The project does not use full telemetry as the main level of analysis.
+	The chosen granularity is lap-level performance enriched with sector-level measures.
+	This is a good compromise: it is detailed enough to support meaningful Formula 1 analysis, but it remains manageable for a Data Warehouse project.
+	
+	% ------------------------------------------------------------
+	\section{Visualization Design Principles}
+	
+	The dashboards are designed according to the following principles.
+	
+	\subsection{One Dashboard, One Main Question}
+	
+	Each dashboard must answer one clear analytical question.
+	This avoids confusion and prevents the dashboard from becoming a collection of unrelated charts.
+	
+	For example:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item the overview dashboard answers whether the competitive balance changed;
+		\item the session dashboard compares Qualifying and Race;
+		\item the circuit dashboard explains where each car performed better;
+		\item the sector dashboard explains where lap time was gained or lost;
+		\item the tyre dashboard explains how performance changed across compounds.
+	\end{itemize}
+	
+	\subsection{Progressive Storytelling}
+	
+	The dashboard sequence must follow a logical progression.
+	
+	The user should first understand the global result, and only later explore possible explanations.
+	For this reason, the dashboards are ordered from general to specific:
+	
+	\begin{enumerate}[leftmargin=1.2cm]
+		\item Competitive Balance Overview;
+		\item Qualifying vs Race Performance;
+		\item Circuit DNA;
+		\item Sector Battle;
+		\item Tyre Compound Behaviour;
+		\item Consistency and Reliability View.
+	\end{enumerate}
+	
+	\subsection{Interactive Analysis}
+	
+	The dashboards should allow dynamic exploration.
+	The user should not only observe predefined charts, but also interact with the data.
+	
+	The main interactive operations are:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item \textbf{Slice}: filtering by season, team, session, compound, or circuit category;
+		\item \textbf{Dice}: combining multiple filters, for example Ferrari in Race sessions on PowerSensitive circuits;
+		\item \textbf{Roll-up}: moving from Grand Prix-level detail to season-level summary;
+		\item \textbf{Drill-down}: moving from season-level performance to Grand Prix, session, circuit, or sector detail.
+	\end{itemize}
+	
+	\subsection{Formula 1 Visual Identity}
+	
+	The dashboard should visually recall the Formula 1 domain.
+	This does not mean making the dashboard overloaded or decorative.
+	It means using a clean and recognizable style.
+	
+	The recommended visual style is:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item dark background;
+		\item white or light text;
+		\item strong contrast;
+		\item team colors for Ferrari, Red Bull, and Mercedes;
+		\item compact KPI cards;
+		\item clear legends;
+		\item limited number of charts per dashboard;
+		\item visual hierarchy similar to timing screens or race-control dashboards.
+	\end{itemize}
+	
+	The dashboard should look modern, but it must remain readable.
+	The objective is not only aesthetic quality, but analytical clarity.
+	
+	% ------------------------------------------------------------
+	\section{Global Filters and Navigation}
+	
+	All dashboards should share a common set of filters.
+	This makes the experience consistent and allows the user to explore the same story from different points of view.
+	
+	\subsection{Recommended Global Filters}
+	
+	\begin{longtable}{p{4cm} p{10cm}}
+		\toprule
+		\textbf{Filter} & \textbf{Purpose} \\
+		\midrule
+		Season & Allows comparison between 2021 and 2022. \\
+		Team & Allows focus on Ferrari, Red Bull, Mercedes, or combinations of them. \\
+		Session Type & Allows comparison between Qualifying and Race. \\
+		Grand Prix & Allows the user to select a specific race weekend. \\
+		Circuit Category & Allows analysis by track profile, such as Street, PowerSensitive, AeroSensitive, or Mixed. \\
+		Tyre Compound & Allows focus on Soft, Medium, and Hard tyres. \\
+		Clean Lap Flag & Allows the dashboard to focus on comparable laps by excluding laps affected by pit stops, wet conditions, deleted laps, or non-clean track status. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Default Filter Configuration}
+	
+	The recommended default configuration is:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Season: all selected, with 2021 and 2022 visible;
+		\item Team: Ferrari, Red Bull, Mercedes;
+		\item Session Type: Qualifying and Race;
+		\item Track Condition: clean and dry laps only;
+		\item Tyre Compound: Soft, Medium, Hard;
+		\item Circuit Category: all categories.
+	\end{itemize}
+	
+	The clean lap filter is especially important.
+	The dashboard should not start from noisy or incomparable laps.
+	Wet laps, pit laps, deleted laps, or laps under non-clean track status may be valid data, but they can distort the main performance comparison.
+	For this reason, they should be excluded by default from the main storytelling, while still remaining available for secondary checks if needed.
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 1: Competitive Balance Overview}
+	
+	\dashboardname{Dashboard 1: Competitive Balance Overview}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{How did the competitive balance among Ferrari, Red Bull, and Mercedes change from 2021 to 2022?}
+	
+	\subsection{Purpose}
+	
+	This is the opening dashboard.
+	Its role is to introduce the entire story.
+	
+	The user must immediately understand:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item which teams are being compared;
+		\item which seasons are being compared;
+		\item whether the competitive gap changed between 2021 and 2022;
+		\item whether one team improved more than the others;
+		\item whether the difference is visible across the season.
+	\end{itemize}
+	
+	This dashboard must not go too deep into technical details.
+	It should work as an executive summary.
+	
+	\subsection{Why This Dashboard Is Necessary}
+	
+	The project needs one general dashboard because the main business question concerns the overall competitive balance.
+	Before explaining why a team was stronger or weaker, we need to show whether a visible change exists.
+	
+	This dashboard provides the starting point for all the following analyses.
+	If the overview shows that the teams changed relative performance between 2021 and 2022, the following dashboards explain possible reasons.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		KPI Cards & Summary cards & Show main indicators such as selected laps, best average team, average gap, and number of selected Grand Prix. \\
+		Season Comparison & Bar chart or slope chart & Compare average performance between 2021 and 2022 for the three teams. \\
+		Performance Trend & Line chart & Show how the average gap evolves across Grand Prix during the season. \\
+		Team Ranking Matrix & Heatmap & Show which team appears stronger in each season and session context. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Suggested Layout}
+	
+	\begin{verbatim}
+		------------------------------------------------------------
+		| F1 Competitive Balance: 2021 vs 2022                     |
+		| Filters: Season | Team | Session | Circuit | Compound    |
+		------------------------------------------------------------
+		| KPI 1        | KPI 2        | KPI 3        | KPI 4       |
+		------------------------------------------------------------
+		| Average Gap Trend by Grand Prix                          |
+		------------------------------------------------------------
+		| Team Comparison 2021 vs 2022 | Team Ranking Heatmap       |
+		------------------------------------------------------------
+	\end{verbatim}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	A short explanatory text can be placed at the top or on the side of the dashboard:
+	
+	\begin{quote}
+		This dashboard gives a general overview of how the competitive balance among Ferrari, Red Bull, and Mercedes changed between 2021 and 2022. The analysis focuses on clean and comparable laps in Qualifying and Race sessions.
+	\end{quote}
+	
+	Another possible explanation below the trend chart is:
+	
+	\begin{quote}
+		The trend view helps identify whether performance differences were constant across the season or concentrated in specific Grand Prix.
+	\end{quote}
+	
+	\subsection{How to Connect This Dashboard to the Next One}
+	
+	This dashboard shows the global change.
+	The next step is to understand whether the change is the same in Qualifying and Race.
+	
+	Transition sentence:
+	
+	\begin{quote}
+		After observing the global competitive balance, the next dashboard separates one-lap performance from race performance, because a car can be strong in Qualifying but less effective during the Race.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 2: Qualifying vs Race Performance}
+	
+	\dashboardname{Dashboard 2: Qualifying vs Race Performance}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{Did Ferrari, Red Bull, and Mercedes show the same relative performance in Qualifying and Race sessions?}
+	
+	\subsection{Purpose}
+	
+	This dashboard separates two different types of performance:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item \textbf{Qualifying performance}, which represents one-lap pace;
+		\item \textbf{Race performance}, which represents pace under race conditions.
+	\end{itemize}
+	
+	This distinction is important in Formula 1 because a car can be very fast over one lap but less consistent during a race.
+	Another car may be weaker in Qualifying but more competitive over longer runs.
+	
+	\subsection{Why This Dashboard Is Necessary}
+	
+	The regulatory change may have affected different performance contexts in different ways.
+	For example, one team may have improved in Qualifying but not in Race, or vice versa.
+	
+	If the project only uses an overall average, this difference may be hidden.
+	For this reason, Qualifying and Race must be compared explicitly.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		Qualifying Gap by Team & Bar chart & Compare one-lap pace between the three teams. \\
+		Race Gap by Team & Bar chart & Compare race pace between the three teams. \\
+		Qualifying vs Race Matrix & Scatterplot & Show whether teams are stronger in Qualifying or Race. \\
+		Session Trend & Line chart & Show how the gap changes across Grand Prix separately for Qualifying and Race. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Suggested Layout}
+	
+	\begin{verbatim}
+		------------------------------------------------------------
+		| One-Lap Pace vs Race Pace                                |
+		| Filters: Season | Team | Grand Prix | Circuit Category    |
+		------------------------------------------------------------
+		| Qualifying Gap by Team | Race Gap by Team                |
+		------------------------------------------------------------
+		| Qualifying vs Race Scatterplot                           |
+		------------------------------------------------------------
+		| Gap Trend by Session Type                                |
+		------------------------------------------------------------
+	\end{verbatim}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	Suggested dashboard text:
+	
+	\begin{quote}
+		This dashboard compares Qualifying and Race performance. Qualifying is used as an approximation of one-lap pace, while Race sessions help observe performance in a more complex context, where tyre behaviour, consistency, and race evolution may influence lap times.
+	\end{quote}
+	
+	Suggested chart explanation:
+	
+	\begin{quote}
+		A difference between Qualifying and Race gaps may indicate that the competitive advantage of a team depends on the session context.
+	\end{quote}
+	
+	\subsection{How to Connect This Dashboard to the Next One}
+	
+	This dashboard explains whether performance changes between session types.
+	The next question is whether performance also changes according to circuit characteristics.
+	
+	Transition sentence:
+	
+	\begin{quote}
+		After separating Qualifying and Race performance, the next dashboard investigates whether the differences among the teams depend on the technical nature of the circuit.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 3: Circuit DNA}
+	
+	\dashboardname{Dashboard 3: Circuit DNA}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{On which types of circuits did the performance differences among Ferrari, Red Bull, and Mercedes become more visible?}
+	
+	\subsection{Purpose}
+	
+	This dashboard connects performance data with circuit characteristics.
+	
+	The objective is to understand whether some teams perform better on specific types of circuits, such as:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Street circuits;
+		\item PowerSensitive circuits;
+		\item AeroSensitive circuits;
+		\item Mixed circuits.
+	\end{itemize}
+	
+	This dashboard gives the project a stronger Formula 1 identity because it does not only compare numbers.
+	It tries to interpret performance using the technical profile of each circuit.
+	
+	\subsection{Why This Dashboard Is Necessary}
+	
+	The same car does not perform equally on every circuit.
+	A car can be strong on tracks with long straights, but weaker on tracks dominated by slow corners.
+	Another car can be more competitive in high-downforce circuits.
+	
+	For this reason, the dashboard must not only ask which team was faster.
+	It must also ask where and under which circuit conditions the advantage appeared.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		Performance by Circuit Category & Grouped bar chart & Compare teams across Street, PowerSensitive, AeroSensitive, and Mixed circuits. \\
+		Team-Circuit Matrix & Heatmap & Show which team performs better in each circuit category. \\
+		Selected Circuit Card & KPI/text panel & Describe the selected circuit, its country, its category, and available sessions. \\
+		Circuit Detail Trend & Line chart & Show performance across Grand Prix within the selected circuit category. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Suggested Layout}
+	
+	\begin{verbatim}
+		------------------------------------------------------------
+		| Circuit DNA: Where Did Each Car Perform Better?           |
+		| Filters: Season | Session | Team | Compound               |
+		------------------------------------------------------------
+		| Performance by Circuit Category                           |
+		------------------------------------------------------------
+		| Team x Circuit Category Heatmap                           |
+		------------------------------------------------------------
+		| Selected Circuit Detail | Circuit-Level Trend             |
+		------------------------------------------------------------
+	\end{verbatim}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	Suggested dashboard text:
+	
+	\begin{quote}
+		This dashboard analyzes performance through the technical identity of each circuit. The objective is to understand whether the competitive differences among Ferrari, Red Bull, and Mercedes are more visible on specific circuit profiles.
+	\end{quote}
+	
+	Suggested chart explanation:
+	
+	\begin{quote}
+		Circuit categories help move the analysis from the question ``who was faster?'' to the question ``why and where was a team faster?''.
+	\end{quote}
+	
+	\subsection{How to Connect This Dashboard to the Next One}
+	
+	This dashboard explains performance at the circuit level.
+	The next dashboard goes deeper and analyzes the lap sectors.
+	
+	Transition sentence:
+	
+	\begin{quote}
+		After identifying the circuit profiles where performance differences are stronger, the next dashboard investigates where inside the lap those differences are generated.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 4: Sector Battle}
+	
+	\dashboardname{Dashboard 4: Sector Battle}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{Did the competitive gaps emerge more clearly in specific sectors of the lap?}
+	
+	\subsection{Purpose}
+	
+	This dashboard moves from circuit-level analysis to sector-level analysis.
+	
+	Instead of considering only the total lap time, the dashboard decomposes performance into:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Sector 1;
+		\item Sector 2;
+		\item Sector 3.
+	\end{itemize}
+	
+	This is important because two teams may have similar total lap times but very different sector behaviour.
+	One team may gain time in a power-dominated sector, while another may recover time in slow corners or technical sections.
+	
+	\subsection{Why This Dashboard Is Necessary}
+	
+	The project explicitly stops at lap and sector granularity.
+	Therefore, sector analysis is one of the most important parts of the visualization.
+	
+	It allows the dashboard to explain performance without using full telemetry.
+	This is a good balance between technical depth and Data Warehouse manageability.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		Sector Gap by Team & Bar chart & Compare team performance in Sector 1, Sector 2, and Sector 3. \\
+		Sector Contribution & Stacked bar chart & Show how much each sector contributes to the total lap gap. \\
+		Team-Sector Heatmap & Heatmap & Identify in which sectors each team is stronger or weaker. \\
+		Circuit Sector Profile & Text/KPI panel & Show the technical category of each sector for the selected circuit. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Suggested Layout}
+	
+	\begin{verbatim}
+		------------------------------------------------------------
+		| Sector Battle: Where Is Lap Time Gained?                  |
+		| Filters: Season | Team | Session | Circuit | Compound     |
+		------------------------------------------------------------
+		| Circuit Sector Profile                                    |
+		------------------------------------------------------------
+		| Sector Gap by Team | Sector Contribution to Lap Gap        |
+		------------------------------------------------------------
+		| Team x Sector Heatmap                                     |
+		------------------------------------------------------------
+	\end{verbatim}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	Suggested dashboard text:
+	
+	\begin{quote}
+		This dashboard decomposes lap performance into the three sectors of the circuit. The goal is to understand whether the advantage of a team is concentrated in a specific part of the lap or distributed across the entire circuit.
+	\end{quote}
+	
+	Suggested explanation for the sector profile:
+	
+	\begin{quote}
+		The sector category gives a technical interpretation to the numerical gap. For example, a gap in a Power sector may suggest an advantage in acceleration or top speed, while a gap in a SlowCorners sector may suggest differences in traction and mechanical balance.
+	\end{quote}
+	
+	\subsection{How to Connect This Dashboard to the Next One}
+	
+	This dashboard explains where lap time is gained or lost.
+	The next dashboard adds another relevant Formula 1 factor: tyre compound.
+	
+	Transition sentence:
+	
+	\begin{quote}
+		After analyzing where lap time is gained inside the circuit, the next dashboard investigates whether the same performance differences remain stable across tyre compounds.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 5: Tyre Compound Behaviour}
+	
+	\dashboardname{Dashboard 5: Tyre Compound Behaviour}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{How did Ferrari, Red Bull, and Mercedes performance vary according to tyre compound?}
+	
+	\subsection{Purpose}
+	
+	This dashboard analyzes the behaviour of the teams under different tyre compounds:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Soft;
+		\item Medium;
+		\item Hard.
+	\end{itemize}
+	
+	The objective is to understand whether one team is especially strong or weak on a specific compound.
+	
+	\subsection{Why This Dashboard Is Necessary}
+	
+	Tyres are central in Formula 1 performance.
+	A car may be very competitive on Soft tyres but less stable on Medium or Hard tyres.
+	Another car may have better race consistency on harder compounds.
+	
+	This dashboard helps explain performance differences that cannot be fully understood from lap time alone.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		Compound Performance Distribution & Box plot & Show the distribution of lap times or gaps for each compound. \\
+		Team-Compound Heatmap & Heatmap & Identify which team performs better on each compound. \\
+		Lap Evolution by Stint & Line chart & Show how lap performance evolves during a stint. \\
+		Compound Summary Cards & KPI cards & Show selected compound, average gap, number of clean laps, and best team. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Suggested Layout}
+	
+	\begin{verbatim}
+		------------------------------------------------------------
+		| Performance by Tyre Compound                             |
+		| Filters: Season | Team | Session | Circuit Category       |
+		------------------------------------------------------------
+		| KPI Cards by Compound                                    |
+		------------------------------------------------------------
+		| Box Plot: Lap Time / Gap Distribution by Compound        |
+		------------------------------------------------------------
+		| Team x Compound Heatmap | Lap Evolution by Stint         |
+		------------------------------------------------------------
+	\end{verbatim}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	Suggested dashboard text:
+	
+	\begin{quote}
+		This dashboard compares team performance under different tyre compounds. The analysis focuses on clean laps in order to reduce the influence of pit stops, traffic, wet conditions, and abnormal race situations.
+	\end{quote}
+	
+	Suggested chart explanation:
+	
+	\begin{quote}
+		The box plot is useful because tyre performance is not represented only by an average value. The distribution shows variability, consistency, and possible differences between compounds.
+	\end{quote}
+	
+	\subsection{Important Limitation}
+	
+	This dashboard should not become a full race strategy analysis.
+	The objective is not to reconstruct complete pit stop strategies or race simulations.
+	The objective is to compare clean lap performance by compound.
+	
+	For this reason, the dashboard should avoid excessive tactical interpretation unless the final data clearly support it.
+	
+	\subsection{How to Connect This Dashboard to the Next One}
+	
+	This dashboard explains the role of tyre compounds.
+	The next optional dashboard checks whether the comparison is affected by consistency and reliability aspects.
+	
+	Transition sentence:
+	
+	\begin{quote}
+		After comparing performance by tyre compound, the final dashboard verifies whether the observed differences are also related to consistency, reliability, or the availability of clean laps.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Dashboard 6: Consistency and Reliability View}
+	
+	\dashboardname{Dashboard 6: Consistency and Reliability View}
+	
+	\subsection{Main Question}
+	
+	\storyquestion{Did consistency and reliability contribute to the competitive differences between the teams?}
+	
+	\subsection{Purpose}
+	
+	This dashboard is optional, but useful.
+	It does not focus only on maximum speed.
+	It checks whether teams were also consistent and reliable in the selected analytical context.
+	
+	Possible aspects include:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item lap time variability;
+		\item number of clean laps;
+		\item deleted or inaccurate laps;
+		\item classified results;
+		\item incomplete or problematic sessions.
+	\end{itemize}
+	
+	\subsection{Why This Dashboard Is Useful}
+	
+	A team can be fast but inconsistent.
+	Another team can be slightly slower but more stable.
+	In Formula 1, consistency can be as important as peak performance, especially in race sessions.
+	
+	This dashboard also helps show that the project is careful about data quality and analytical comparability.
+	
+	\subsection{Recommended Charts}
+	
+	\begin{longtable}{p{4cm} p{4cm} p{6cm}}
+		\toprule
+		\textbf{Chart} & \textbf{Type} & \textbf{Purpose} \\
+		\midrule
+		Lap Time Variability & Box plot & Show how stable or unstable lap performance is. \\
+		Clean Laps Count & Bar chart & Show how many laps are usable for analysis by team and session. \\
+		Issue Summary & KPI cards & Show excluded laps, wet laps, deleted laps, or inaccurate laps. \\
+		Result Status Summary & Bar chart & Show status or classification information when relevant. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Text to Add in the Dashboard}
+	
+	Suggested dashboard text:
+	
+	\begin{quote}
+		This dashboard checks the consistency of the selected analytical subset. It helps distinguish between pure performance differences and situations where the available data may be affected by non-clean laps, deleted laps, inaccurate laps, or incomplete sessions.
+	\end{quote}
+	
+	\subsection{How to Use This Dashboard in the Story}
+	
+	This dashboard should not be the central dashboard.
+	It should be used near the end of the presentation to support the reliability of the analysis.
+	
+	Possible presentation sentence:
+	
+	\begin{quote}
+		Before concluding, we check whether the comparison is based on a sufficiently clean and consistent subset of laps.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Connection Between Dashboards}
+	
+	The dashboards should not be independent pages.
+	They must form a single narrative sequence.
+	
+	The recommended story flow is the following:
+	
+	\begin{enumerate}[leftmargin=1.2cm]
+		\item Start with the global competitive balance.
+		\item Separate Qualifying and Race performance.
+		\item Explain differences using circuit characteristics.
+		\item Decompose lap performance by sector.
+		\item Analyze tyre compound behaviour.
+		\item Check consistency and reliability.
+	\end{enumerate}
+	
+	\subsection{Narrative Flow}
+	
+	\begin{longtable}{p{4cm} p{10cm}}
+		\toprule
+		\textbf{Dashboard} & \textbf{Narrative Role} \\
+		\midrule
+		Competitive Balance Overview & Shows whether the competitive balance changed from 2021 to 2022. \\
+		Qualifying vs Race & Explains whether the change depends on session type. \\
+		Circuit DNA & Explains whether the change depends on circuit characteristics. \\
+		Sector Battle & Explains where inside the lap the advantage is created. \\
+		Tyre Compound Behaviour & Explains whether performance depends on tyre compound. \\
+		Consistency and Reliability & Checks whether the comparison is supported by clean and reliable data. \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Main Connecting Message}
+	
+	The entire dashboard system can be summarized with the following message:
+	
+	\begin{quote}
+		The 2022 regulation change did not simply change which team was faster. It changed how, where, and under which conditions each team was competitive.
+	\end{quote}
+	
+	This sentence can be used in the introduction or conclusion of the final presentation.
+	
+	% ------------------------------------------------------------
+	\section{Recommended Tableau Story Structure}
+	
+	If Tableau Stories are used, each story point can correspond to one dashboard.
+	
+	\subsection{Story Point 1: The Main Change}
+	
+	\textbf{Dashboard:} Competitive Balance Overview
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		We first observe the global change in competitive balance between 2021 and 2022.
+	\end{quote}
+	
+	\subsection{Story Point 2: One-Lap Pace vs Race Pace}
+	
+	\textbf{Dashboard:} Qualifying vs Race Performance
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		The next step is to understand whether this change is visible in both Qualifying and Race sessions.
+	\end{quote}
+	
+	\subsection{Story Point 3: Track Profile Matters}
+	
+	\textbf{Dashboard:} Circuit DNA
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		Circuit characteristics help explain why some teams perform better in specific contexts.
+	\end{quote}
+	
+	\subsection{Story Point 4: Where the Lap Time Is Built}
+	
+	\textbf{Dashboard:} Sector Battle
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		Sector-level analysis shows where each team gains or loses time inside the lap.
+	\end{quote}
+	
+	\subsection{Story Point 5: The Role of Tyres}
+	
+	\textbf{Dashboard:} Tyre Compound Behaviour
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		Tyre compounds add another layer of interpretation to the comparison of team performance.
+	\end{quote}
+	
+	\subsection{Story Point 6: Final Validation}
+	
+	\textbf{Dashboard:} Consistency and Reliability View
+	
+	\textbf{Message:}
+	
+	\begin{quote}
+		The final step checks whether the selected analytical subset is clean and reliable enough to support the conclusions.
+	\end{quote}
+	
+	% ------------------------------------------------------------
+	\section{Chart Selection Rationale}
+	
+	This section explains why the selected chart types are appropriate.
+	
+	\subsection{KPI Cards}
+	
+	KPI cards are used to show important summary values immediately.
+	They are useful in the first dashboard because the user needs a quick overview before looking at detailed charts.
+	
+	Examples of KPI cards are:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item selected season;
+		\item number of clean laps;
+		\item best average team;
+		\item average performance gap;
+		\item number of selected Grand Prix.
+	\end{itemize}
+	
+	\subsection{Bar Charts}
+	
+	Bar charts are useful for direct comparisons.
+	They are appropriate when comparing teams, seasons, session types, compounds, or circuit categories.
+	
+	They should be used when the goal is to answer questions such as:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Which team has the lowest average lap time?
+		\item Which team has the smallest gap?
+		\item Which circuit category produces the largest differences?
+	\end{itemize}
+	
+	\subsection{Line Charts}
+	
+	Line charts are useful for showing evolution.
+	They should be used when the dashboard needs to show how performance changes across Grand Prix or across the season.
+	
+	They are especially useful in Formula 1 because performance is not fixed.
+	Teams develop cars during the season, and track characteristics change from one Grand Prix to another.
+	
+	\subsection{Heatmaps}
+	
+	Heatmaps are useful for compact multidimensional comparison.
+	They are appropriate when comparing two categorical dimensions at the same time.
+	
+	Examples:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item team versus circuit category;
+		\item team versus sector;
+		\item team versus tyre compound;
+		\item season versus team.
+	\end{itemize}
+	
+	Heatmaps are visually strong and help the user identify patterns quickly.
+	
+	\subsection{Scatterplots}
+	
+	Scatterplots are useful when comparing two measures or two analytical contexts.
+	For example, they can compare Qualifying performance against Race performance.
+	
+	A scatterplot can show whether a team is balanced across contexts or stronger in only one of them.
+	
+	\subsection{Box Plots}
+	
+	Box plots are useful when the distribution matters.
+	They are especially useful for lap time analysis because an average alone can hide variability.
+	
+	A box plot can show:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item median performance;
+		\item variability;
+		\item outliers;
+		\item consistency;
+		\item difference between compounds or teams.
+	\end{itemize}
+	
+	% ------------------------------------------------------------
+	\section{What to Avoid}
+	
+	The dashboard should avoid the following problems.
+	
+	\subsection{Too Many Charts}
+	
+	Each dashboard should contain a limited number of charts.
+	A good dashboard is not the one with the largest number of visualizations, but the one where every chart has a clear purpose.
+	
+	\subsection{Too Many Filters}
+	
+	Too many filters can confuse the user.
+	The filters should be powerful but limited to the most important analytical dimensions.
+	
+	\subsection{Static-Only Visualizations}
+	
+	The project requires dynamic analysis.
+	For this reason, charts should be connected through filters and interactions.
+	
+	\subsection{Too Much Telemetry}
+	
+	The project does not focus on full telemetry.
+	Telemetry-based charts can be visually attractive, but they may move the project away from the chosen Data Warehouse granularity.
+	If telemetry charts are used, they should be treated only as optional supporting visualizations, not as the core of the dashboard.
+	
+	\subsection{Unclear Storytelling}
+	
+	Each dashboard must have a short explanation.
+	The user should always understand:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item what the dashboard shows;
+		\item why it is useful;
+		\item how it connects to the main question.
+	\end{itemize}
+	
+	% ------------------------------------------------------------
+	\section{Final Dashboard Set}
+	
+	The final recommended dashboard set is:
+	
+	\begin{enumerate}[leftmargin=1.2cm]
+		\item \textbf{Competitive Balance Overview}
+		
+		A general overview of the change in competitive balance between 2021 and 2022.
+		
+		\item \textbf{Qualifying vs Race Performance}
+		
+		A comparison between one-lap pace and race pace.
+		
+		\item \textbf{Circuit DNA}
+		
+		An explanation of performance differences through circuit categories.
+		
+		\item \textbf{Sector Battle}
+		
+		A sector-level analysis showing where lap time is gained or lost.
+		
+		\item \textbf{Tyre Compound Behaviour}
+		
+		A comparison of team performance under Soft, Medium, and Hard tyres.
+		
+		\item \textbf{Consistency and Reliability View}
+		
+		An optional validation dashboard focused on consistency and data reliability.
+	\end{enumerate}
+	
+	% ------------------------------------------------------------
+	\section{Conclusion}
+	
+	The visualization layer is designed to transform the Data Warehouse into an interpretable Formula 1 story.
+	
+	The dashboard system does not only show numerical results.
+	It guides the user through a sequence of analytical questions:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item Did the competitive balance change?
+		\item Was the change the same in Qualifying and Race?
+		\item Did circuit characteristics influence the gaps?
+		\item In which sectors was lap time gained or lost?
+		\item Did tyre compounds change the interpretation?
+		\item Is the comparison based on clean and reliable data?
+	\end{itemize}
+	
+	The final storytelling can be summarized as follows:
+	
+	\begin{quote}
+		\textit{The 2022 regulation change did not only change the ranking of the top teams. It changed the conditions under which Ferrari, Red Bull, and Mercedes were competitive. By combining season, session, circuit, sector, and tyre analysis, the dashboard explains not only what happened, but also where and why the performance differences emerged.}
+	\end{quote}
+	
+\end{document}

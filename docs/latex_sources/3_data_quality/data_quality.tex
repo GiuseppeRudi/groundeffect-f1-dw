@@ -288,10 +288,16 @@
 	
 
 	\subsubsection{Season Table}
-
+	
 	Although the \texttt{season} table was manually created from domain knowledge and
 	contains only two records, it is still included in the Data Quality Assessment.
-	The goal is to verify that the manually introduced domain table is complete.
+	The goal is to verify that this manually introduced domain table is complete, unique,
+	and semantically coherent with the Formula 1 domain.
+	
+	
+	The restriction to the 2021--2022 seasons is not considered a validity rule. Other
+	Formula 1 seasons are valid domain values, but they are outside the analytical scope of
+	this project.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -305,7 +311,7 @@
 		\endhead
 		
 		Completeness
-		& \texttt{season\_year} must be present because it is the structural identifier of the season \\
+		& \texttt{season\_year} must be present because it is the structural identifier of the season. \\
 		\midrule
 		
 		Uniqueness
@@ -313,27 +319,40 @@
 		\midrule
 		
 		Validity
-		& \texttt{season\_year} must belong to the selected analytical scope, namely \texttt{2021} or \texttt{2022}. If present, \texttt{season\_start\_date} and \texttt{season\_end\_date} must be valid dates, and \texttt{number\_of\_events} must be greater than zero. \\
+		& \texttt{season\_year} must belong to the Formula 1 historical domain, starting from 1950.
+		If present, \texttt{number\_of\_events} must be greater than zero. \\
 		\midrule
 		
 		Consistency
-		& If both dates are present, \texttt{season\_start\_date} must be before \texttt{season\_end\_date}. Moreover, the year component of the season dates must be coherent with \texttt{season\_year}. \\
+		& If both dates are present, \texttt{season\_start\_date} must be before
+		\texttt{season\_end\_date}. Moreover, the year component of the season dates must be coherent with
+		\texttt{season\_year}. \\
 		\midrule
 		
-		Accuracy
-		& Not implemented since the \texttt{season} table is a manually introduced domain table, its accuracy is documented through source provenance during the re-engineering phase. \\
+		Accuracy/Plausibility
+		& Full accuracy of championship-level attributes, such as champion driver or champion team,
+		is not implemented as an automatic check in the DQA script. Since the table is manually introduced,
+		its accuracy is documented through source provenance during the re-engineering phase. \\
 		\midrule
 		
 		Timeliness
-		& Not applicable as a freshness check, because the table represents closed historical seasons. Temporal coherence is already evaluated through validity and consistency checks on \texttt{season\_year} and date attributes. \\
+		& Not applicable as a freshness check, because the table represents closed historical seasons.
+		Temporal coherence is already evaluated through consistency checks on the date attributes. \\
+
+
 		\bottomrule
 	\end{longtable}
-
 	
 
 	\subsubsection{Circuit Table}
 	
-	It is partly based on domain knowledge and includes derived categorical attributes such as circuit and sector categories.
+	The \texttt{circuit} table is partly based on domain knowledge and includes
+	derived categorical attributes such as the global circuit category and the sector
+	categories.
+	
+	This table is used to support the analytical interpretation of performance across
+	different circuit types. For this reason, the Data Quality Assessment focuses on
+	the completeness and validity of the circuit classification attributes.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -350,36 +369,44 @@
 		& \texttt{circuit\_id}, \texttt{global\_circuit\_category},
 		\texttt{sector1\_category}, \texttt{sector2\_category}, and
 		\texttt{sector3\_category} must be present. These attributes are required
-		because they identify the circuit and support the analytical classification used
-		in the project. \\
+		because they identify the circuit and provide the analytical classification
+		used in the project. Other descriptive attributes, such as
+		\texttt{circuit\_name}, \texttt{country}, \texttt{location}, and
+		\texttt{seasons\_present}, are not treated as required columns in the general
+		DQA because they are not essential for the analytical classification. \\
 		\midrule
 		
 		Uniqueness
-		& \texttt{circuit\_id} must be unique, since it is the primary key of the table \\
+		& \texttt{circuit\_id} must be unique, since it is the primary key of the table. \\
 		\midrule
 		
 		Validity
 		& \texttt{global\_circuit\_category} must belong to the allowed global circuit
-		domain. \texttt{sector1\_category}, \texttt{sector2\_category}, and
-		\texttt{sector3\_category} must belong to the allowed sector category domain. \\
+		category domain. \texttt{sector1\_category}, \texttt{sector2\_category}, and
+		\texttt{sector3\_category} must belong to the allowed sector category domain.
+		These checks are applied only when the values are present, because missing
+		required values are already handled by the completeness checks. \\
 		\midrule
 		
 		Consistency
-		& Textual attributes such as \texttt{circuit\_name}, \texttt{country}, and
-		\texttt{location} are checked for empty strings, duplicated variants, and
-		inconsistent formatting. A geographical consistency check between
-		\texttt{country} and \texttt{location} is not implemented automatically because
-		it would require an external geographical reference source. \\
+		& No automatic consistency checks are implemented for this table. Textual
+		standardization, such as trimming and empty-string handling, is managed by
+		general cleaning rules. Geographical consistency between \texttt{country} and
+		\texttt{location} is not checked automatically because it would require an
+		external geographical reference source and is outside the scope of the general
+		DQA script. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& Not implemented as a fully automatic check. Their plausibility is documented through the manual
-		classification process. \\
+		& Not implemented as a fully automatic check. The plausibility of the circuit
+		and sector classifications is documented through the manual classification
+		process and source provenance used during the re-engineering phase. \\
 		\midrule
 		
 		Timeliness
-		& Not applicable as a freshness check. Possible future circuit layout changes are outside the scope of this
-		assessment. \\
+		& Not applicable as a freshness check. Possible future circuit layout changes
+		are outside the scope of this assessment, which is limited to the selected
+		historical seasons. \\
 		\bottomrule
 	\end{longtable}
 	
@@ -393,11 +420,15 @@
 	\end{itemize}
 
 
-
 	\subsubsection{Driver Table}
 	
 	The \texttt{driver} table contains stable driver master data obtained from the
-	Ergast/Jolpica source through the FastF1 interface. 
+	Ergast/Jolpica source through the FastF1 interface. It is used as a reference
+	table to identify drivers in result-level and lap-level data.
+	
+	Since this table is a master table, the Data Quality Assessment focuses mainly on
+	structural completeness, key uniqueness, and a small set of domain checks on
+	descriptive attributes.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -412,8 +443,13 @@
 		
 		Completeness
 		& \texttt{driver\_id}, \texttt{abbreviation}, and \texttt{last\_name}
-		must be present. These attributes are required to identify and describe each
-		driver in the reconciled database and in the later analytical model. \\
+		must be present. \texttt{driver\_id} is required to identify the driver and
+		to support joins with results and laps. \texttt{abbreviation} and
+		\texttt{last\_name} are required because they provide readable labels for
+		reports and visual analyses. Other descriptive attributes, such as
+		\texttt{first\_name}, \texttt{date\_of\_birth}, \texttt{nationality},
+		\texttt{permanent\_number}, and \texttt{driver\_url}, are not treated as
+		required structural columns in the general DQA. \\
 		\midrule
 		
 		Uniqueness
@@ -421,35 +457,44 @@
 		\midrule
 		
 		Validity
-		& If present, \texttt{date\_of\_birth} must be a valid date and
-		\texttt{driver\_url} must have a valid URL format. If present,
-		\texttt{permanent\_number} must be a positive numeric value.
-		\texttt{abbreviation} must follow the expected driver-code format, namely
-		a short uppercase alphabetic code. \\
+		& \texttt{abbreviation} must follow the expected driver-code format, namely
+		a three-letter uppercase alphabetic code. If present,
+		\texttt{permanent\_number} must be between 1 and 99. If present,
+		\texttt{driver\_url} must have a valid URL format. Date parsing for
+		\texttt{date\_of\_birth} is not checked here, because type validation is
+		handled during the typed PostgreSQL loading phase. \\
 		\midrule
 		
 		Consistency
-		& Textual attributes such as \texttt{first\_name}, \texttt{last\_name},
-		\texttt{nationality}, and \texttt{abbreviation} are checked for empty
-		strings and inconsistent formatting.  \\
+		& No specific consistency checks are implemented for this table. Textual
+		standardization, such as trimming and empty-string handling, is managed by
+		general cleaning rules applied to textual attributes. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& Not implemented as a fully automatic truth check.  Plausibility can be assessed by flagging
-		abnormal values, such as implausible driver ages during the selected
-		2021--2022 seasons. \\
+		& Not implemented as a fully automatic truth check. If
+		\texttt{date\_of\_birth} is present, it can be used to flag implausible driver
+		ages during the selected 2021--2022 seasons. This is treated as a broad
+		plausibility check, not as strict validity, because unusual ages would require
+		domain interpretation rather than automatic correction. \\
 		\midrule
 		
 		Timeliness
-		& Not applicable as a freshness check.  \\
+		& Not applicable as a freshness check, because the table contains historical
+		driver reference data for the selected seasons. \\
 		\bottomrule
 	\end{longtable}
 
+	
 	\subsubsection{Team Table}
 	
 	The \texttt{team} table contains constructor/team master data obtained from the
 	Ergast/Jolpica source through the FastF1 interface. It is used as a reference table
-	to identify teams in results and lap-level data.
+	to identify teams in result-level and lap-level data.
+	
+	Basic textual standardization, such as trimming spaces and converting
+	empty strings into null values, is handled by general cleaning rules and is not repeated
+	as a specific validity check for this table.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -463,46 +508,51 @@
 		\endhead
 		
 		Completeness
-		& \texttt{team\_id} and \texttt{team\_name} must be present. 
-		\texttt{team\_id} is required because it is the structural identifier used
-		in joins, while \texttt{team\_name} is required as the readable business
-		label used in reports and visual analyses.  \\
+		& \texttt{team\_id} and \texttt{team\_name} must be present.
+		\texttt{team\_id} is required because it identifies the team in joins, while
+		\texttt{team\_name} is required as the readable business label used in reports
+		and visual analyses. \\
 		\midrule
 		
 		Uniqueness
-		& \texttt{team\_id} must be unique, since it is the primary key of the table \\
+		& \texttt{team\_id} must be unique, since it is the primary key of the table. \\
 		\midrule
 		
 		Validity
-		& \texttt{team\_id} must follow the expected identifier format, namely a
-		non-empty lowercase textual code. If present, \texttt{team\_url} must have
-		a valid URL format. Textual attributes such as \texttt{team\_name} and
-		\texttt{nationality} must not be empty strings after trimming. \\
+		& If present, \texttt{team\_url} must have a valid URL format.
+		The format of \texttt{team\_id} is not checked as a separate validity rule,
+		because it is inherited from the source identifier and is already controlled
+		through completeness and uniqueness checks. \\
 		\midrule
 		
 		Consistency
-		& In the final reconciled
-		table, textual attributes are checked for duplicated variants, extra spaces,
-		and inconsistent formatting. \\
+		& No specific consistency checks are implemented for this table.
+		Basic textual normalization, such as trimming and empty-string handling, is
+		managed through general cleaning rules applied to all textual attributes. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& Team names and nationalities can be manually
-		verified through source provenance if needed. \\
+		& Not implemented as an automatic truth check. Team names and nationalities are
+		documented through source provenance from Ergast/Jolpica during the
+		re-engineering phase. \\
 		\midrule
 		
 		Timeliness
-		& Not applicable as a freshness check.  \\
+		& Not applicable as a freshness check, because the table contains historical
+		reference data for the selected seasons. \\
 		\bottomrule
 	\end{longtable}
 
-
-
+	
 	\subsubsection{Grand Prix Table}
 	
 	The \texttt{grand\_prix} table represents a Formula 1 Grand Prix event in a
 	specific season. Each Grand Prix belongs to one season and is associated with
-	one circuit. 
+	one circuit.
+	
+	This table is derived from the re-engineered FastF1 event schedule. During the
+	re-engineering phase, each event was enriched with \texttt{circuit\_id} in order to
+	connect the Grand Prix to the corresponding circuit.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -517,9 +567,12 @@
 		
 		Completeness
 		& \texttt{grand\_prix\_id}, \texttt{season\_year},
-		\texttt{round\_number}, and \texttt{circuit\_id} must be present.
+		\texttt{round\_number}, \texttt{event\_name},
+		\texttt{event\_format}, and \texttt{circuit\_id} must be present.
 		These attributes are required to identify the Grand Prix, connect it to the
-		corresponding season, and associate it with the circuit where it takes place. \\
+		corresponding season, preserve its order within the season, provide a readable
+		event label, distinguish the event format, and associate the event with the
+		circuit where it takes place. \\
 		\midrule
 		
 		Uniqueness
@@ -530,101 +583,191 @@
 		\midrule
 		
 		Validity
-		& \texttt{round\_number} must be greater than zero. If present,
-		\texttt{event\_date} must be a valid date. If present,
-		\texttt{event\_format} must belong to the allowed event format domain,
-		such as \texttt{conventional} or \texttt{sprint}. Testing events must not be
-		included in the reconciled Grand Prix table. If present,
-		\texttt{f1\_api\_support} must be a boolean value. \\
+		& \texttt{round\_number} must be greater than zero.
+		\texttt{event\_format} must belong to the allowed Grand Prix event format
+		domain, such as \texttt{conventional} or \texttt{sprint}. \\
 		\midrule
 		
 		Consistency
 		& If \texttt{event\_date} is present, it must be coherent with
-		\texttt{season\_year}. Textual attributes such as \texttt{event\_name},
-		\texttt{official\_event\_name}, \texttt{country}, and \texttt{location}
-		are checked for empty strings, duplicated variants, and inconsistent
-		formatting. \\
+		\texttt{season\_year}. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& Not implemented as a fully automatic truth check for all event attributes.
-		For this table, the main plausibility control concerns the matching between each
-		Grand Prix and its circuit. Since \texttt{circuit\_id} is introduced during the
-		re-engineering phase by matching \texttt{country} and \texttt{location} with the
-		\texttt{circuit} table, the correctness of this association must be validated.
-		Rows with missing or ambiguous matches are flagged for manual review. \\
+		& Not implemented. The association between each
+		Grand Prix and its circuit is produced during the re-engineering phase through
+		a deterministic matching rule based on \texttt{country} and \texttt{location}.
+		For this reason, the DQA does not repeat the matching logic. It only verifies
+		that the resulting \texttt{circuit\_id} is present and referentially valid. \\
+		\midrule
 		
 		Timeliness
-		& Temporal checks are limited to
-		the validity and consistency of \texttt{event\_date} with the selected
-		2021--2022 project scope. \\
+		& Not applicable as a freshness check. \\
 		\midrule
 		
 		Referential Integrity
 		& \texttt{season\_year} must exist in the \texttt{season} table and
-		\texttt{circuit\_id} must exist in the \texttt{circuit} table. \\
+		\texttt{circuit\_id} must exist in the \texttt{circuit} table.\\
 		\bottomrule
 	\end{longtable}
 	
-
-	\subsubsection{Session Table}
-
 	
-	The \texttt{session} table represents a Qualifying or Race session belonging to a specific Grand Prix.
-	Free practice sessions are outside the analytical scope of the project.
+	\subsubsection{Session Table}
+	
+	The \texttt{session} table represents a Qualifying or Race session belonging to
+	a specific Grand Prix. Free practice sessions are outside the analytical scope of
+	the project and are excluded during the re-engineering phase.
+	
+	Each session is connected to one Grand Prix through \texttt{grand\_prix\_id}. The
+	attribute \texttt{session\_type} identifies the type of session considered in the
+	project, namely Qualifying or Race.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
 		\textbf{Dimension} & \textbf{Checks} \\
 		\midrule
 		\endfirsthead
+		
 		\toprule
 		\textbf{Dimension} & \textbf{Checks} \\
 		\midrule
 		\endhead
-		Completeness & \texttt{session\_id}, \texttt{grand\_prix\_id}, \texttt{session\_type} must be present. \\
+		
+		Completeness
+		& \texttt{session\_id}, \texttt{grand\_prix\_id}, and
+		\texttt{session\_type} must be present. These attributes are required to
+		identify the session, connect it to the corresponding Grand Prix, and define
+		the type of session analyzed in the project. \\
 		\midrule
-		Uniqueness & \texttt{session\_id} must be unique. The natural key \texttt{grand\_prix\_id + session\_type} should also be unique. \\
+		
+		Uniqueness
+		& \texttt{session\_id} must be unique, since it is the surrogate primary key
+		of the table. The natural key \texttt{grand\_prix\_id + session\_type} should
+		also be unique, because the same Grand Prix should contain at most one
+		session of each selected type in the reconciled schema. \\
 		\midrule
-		Validity & \texttt{session\_type} must be either \texttt{Q} or \texttt{R}. \\
+		
+		Validity
+		& \texttt{session\_type} must belong to the allowed session domain for this
+		project, namely \texttt{Q} for Qualifying or \texttt{R} for Race. \\
 		\midrule
-		Consistency & \texttt{session\_date} should be coherent with the corresponding Grand Prix date. \\
+		
+		Consistency
+		& If \texttt{session\_date} is present, it must be temporally coherent with
+		the corresponding Grand Prix \texttt{event\_date}. Since \texttt{event\_date}
+		represents the main date of the Grand Prix event, a Qualifying or Race session
+		should normally occur on the same day or shortly before it. In practice, the
+		check allows \texttt{session\_date} to fall between \texttt{event\_date} minus
+		two days and \texttt{event\_date}. This also covers sprint weekends, where
+		Qualifying may occur earlier than in a conventional weekend. \\
 		\midrule
-		Referential Integrity & \texttt{grand\_prix\_id} must exist in the \texttt{grand\_prix} table. \\
+		
+		Accuracy/Plausibility
+		& Not implemented as an automatic truth check.  \\
+		\midrule
+		
+		Timeliness
+		& Not applicable as a freshness check. \\
+		\midrule
+		
+		Referential Integrity
+		& \texttt{grand\_prix\_id} must exist in the \texttt{grand\_prix} table. This
+		check is important before adding explicit SQL foreign key constraints to the
+		reconciled database. \\
 		\bottomrule
 	\end{longtable}
-	
+
 
 	\subsubsection{Result Table}
-
-
-	This table is structurally important because it is used to connect drivers and teams to sessions and also supports the enrichment of lap data.
+	
+	The \texttt{result} table represents the result obtained by one driver in one
+	specific session. It is structurally important because it connects drivers and
+	teams to sessions and also supports the enrichment of lap-level data.
+	
+	This table contains both qualifying-related attributes, such as \texttt{q1\_ms},
+	\texttt{q2\_ms}, and \texttt{q3\_ms}, and race-related attributes, such as
+	\texttt{classified\_position}, \texttt{status}, \texttt{points}, and \texttt{laps}.
+	For this reason, completeness checks must distinguish between structural columns
+	and session-dependent analytical columns.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
 		\textbf{Dimension} & \textbf{Checks} \\
 		\midrule
 		\endfirsthead
+		
 		\toprule
 		\textbf{Dimension} & \textbf{Checks} \\
 		\midrule
 		\endhead
-		Completeness & \texttt{result\_id}, \texttt{session\_id}, \texttt{driver\_id}, \texttt{team\_id}, and \texttt{position} should be present. \\
+		
+		Completeness
+		& \texttt{result\_id}, \texttt{session\_id}, \texttt{driver\_id},
+		\texttt{team\_id}, and \texttt{position} must be present because they
+		identify the result, connect it to the corresponding session, driver, and
+		team, and provide the final ranking position within the session.
+		
+		For race sessions, \texttt{classified\_position}, \texttt{status},
+		\texttt{points}, and \texttt{laps} are also checked as required
+		race-result context attributes. By contrast, \texttt{q1\_ms},
+		\texttt{q2\_ms}, and \texttt{q3\_ms} are not treated as generally required
+		attributes, because their null values may be expected depending on qualifying
+		progression or non-participation. \\
 		\midrule
-		Uniqueness & \texttt{result\_id} must be unique. The natural key \texttt{session\_id + driver\_id} should also be unique. \\
+		
+		Uniqueness
+		& \texttt{result\_id} must be unique, since it is the surrogate primary key
+		of the table. The natural key \texttt{session\_id + driver\_id} should also
+		be unique, because the same driver should have at most one result in a
+		specific session. \\
 		\midrule
-		Validity & \texttt{position} must be greater than zero when present. \texttt{points} must be greater than or equal to zero. \\
+		
+		Validity
+		& \texttt{position} must be greater than zero when present.
+		\texttt{points} and \texttt{laps} must be greater than or equal to zero
+		when present. If present, \texttt{grid\_position} must also be greater than
+		or equal to zero. \\
 		\midrule
-		Consistency & \texttt{classified\_position}, \texttt{status}, \texttt{time\_ms}, and \texttt{laps} should be checked for coherent interpretation. \\
+		
+		Consistency
+		& Qualifying time attributes must be interpreted according to the qualifying
+		progression. For example, if \texttt{q3\_ms} is present, then the driver is
+		expected to have also reached the previous qualifying phases; similarly, if
+		\texttt{q2\_ms} is present, \texttt{q1\_ms} should normally be present. \\
 		\midrule
-		Referential Integrity & \texttt{session\_id}, \texttt{driver\_id}, and \texttt{team\_id} must reference existing rows in \texttt{session}, \texttt{driver}, and \texttt{team}. \\
+		
+		Accuracy/Plausibility
+		& Not implemented as an automatic truth check. \\
+		\midrule
+		
+		Timeliness
+		& Not applicable as a freshness check. \\
+		\midrule
+		
+		Referential Integrity
+		& \texttt{session\_id}, \texttt{driver\_id}, and \texttt{team\_id} must
+		reference existing rows in \texttt{session}, \texttt{driver}, and
+		\texttt{team}. These checks are important before adding explicit SQL foreign
+		key constraints to the reconciled database. \\
 		\bottomrule
 	\end{longtable}
 	
 
 	\subsubsection{Lap Table}
 	
-	Each row represents one lap performed by one driver in one specific session.
+	Each row of the \texttt{lap} table represents one lap performed by one driver in
+	one specific session. 
+	
+	For this reason, the Data
+	Quality Assessment distinguishes between structural completeness and analytical
+	missing values.
+	
+	Not all missing analytical values are automatically considered data quality errors.
+	For example, \texttt{lap\_time\_ms} or sector times may be missing when a lap is
+	not completed, when the driver enters or exits the pit lane, when the lap is deleted
+	or inaccurate, or when special racing conditions occur. Therefore, detailed missing
+	value interpretation for performance attributes is handled in the focused missing
+	values analysis.
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -639,20 +782,16 @@
 		
 		Completeness
 		& \texttt{lap\_id}, \texttt{session\_id}, \texttt{driver\_id},
-		\texttt{team\_id}, and \texttt{lap\_number} must be present because they
-		identify the lap and connect it to the driver, team, and session context.
-		For analytical completeness, the main performance attributes
-		\texttt{lap\_time\_ms}, \texttt{sector1\_time\_ms},
-		\texttt{sector2\_time\_ms}, \texttt{sector3\_time\_ms}, and
-		\texttt{compound} are also checked, because they are required to compare lap
-		and sector performance. \\
+		\texttt{team\_id}, \texttt{lap\_number}, and \texttt{time\_ms}
+		must be present. These attributes identify the lap, connect it to the
+		corresponding session, driver, and team, and place it on the session timeline. \\
 		\midrule
 		
 		Uniqueness
 		& \texttt{lap\_id} must be unique, since it is the surrogate primary key of
 		the table. The natural key \texttt{session\_id + driver\_id + lap\_number}
-		should also be unique, because the same driver cannot have two different
-		laps with the same lap number inside the same session. \\
+		should also be unique, because the same driver cannot have two different laps
+		with the same lap number inside the same session. \\
 		\midrule
 		
 		Validity
@@ -660,42 +799,32 @@
 		\texttt{lap\_time\_ms} and sector times must be positive values.
 		Speed attributes such as \texttt{speed\_i1}, \texttt{speed\_i2},
 		\texttt{speed\_fl}, and \texttt{speed\_st} must be positive when present.
-		\texttt{stint} and \texttt{tyre\_life} must be non-negative or positive
-		according to their domain. \texttt{compound} must belong to the expected tyre
-		compound domain, and boolean attributes such as \texttt{fresh\_tyre},
-		\texttt{is\_personal\_best}, \texttt{deleted},
-		\texttt{fastf1\_generated}, and \texttt{is\_accurate} must contain valid
-		boolean values. \\
+		If present, \texttt{stint} and \texttt{tyre\_life} must be positive values.
+		\texttt{compound} must belong to the expected tyre compound domain. \\
 		\midrule
 		
 		Consistency
-		& For normal timed laps, the sum of
+		& For timed laps with complete sector information, the sum of
 		\texttt{sector1\_time\_ms}, \texttt{sector2\_time\_ms}, and
 		\texttt{sector3\_time\_ms} should be coherent with
 		\texttt{lap\_time\_ms}, allowing a small tolerance for rounding or source
-		precision. Session-time attributes should be coherent with the lap timeline.
-		Pit-related attributes must be interpreted consistently: the presence of
-		\texttt{pit\_out\_time\_ms} or \texttt{pit\_in\_time\_ms} indicates a
-		special lap and may explain missing or abnormal lap and sector times.
-		Deleted or inaccurate laps are not automatically removed, but they are flagged for the
-		later cleaning phase. \\
+		precision. This rule appear only when the all three sectors are present. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& 
-		Plausibility is assessed by flagging suspicious values, such as extremely
-		low or high lap times, sector times, and speed values. These values are not
-		automatically considered wrong, because Formula 1 laps can be affected by
-		pit stops, Safety Car periods, rain, red flags, deleted laps, or other special
-		racing situations. \\
+		& Broad performance plausibility is not implemented as a general DQA rule for
+		this table, because suspicious lap times, sector times, or speed values may
+		depend on pit stops, Safety Car periods, Virtual Safety Car periods, red flags,
+		rain, deleted laps, inaccurate laps, or other special racing situations.
+		
+		For this reason, suspicious numerical values are analyzed separately in the
+		focused outlier detection phase, where they are flagged for review rather than
+		automatically considered wrong. \\
 		\midrule
 		
 		Timeliness
-		& Temporal quality is evaluated through
-		the coherence of relative time attributes such as \texttt{time\_ms},
-		\texttt{lap\_start\_time\_ms}, and sector session times within each
-		session. If \texttt{lap\_start\_date} is present, it should be coherent with
-		the corresponding session or Grand Prix date. \\
+		& Temporal quality is evaluated through the presence of \texttt{time\_ms} and
+		the coherence of relative time attributes within the session timeline. \\
 		\midrule
 		
 		Referential Integrity
@@ -705,11 +834,11 @@
 		\bottomrule
 	\end{longtable}
 
-
 	\subsubsection{Weather Table}
 	
-	Each row represents one weather observation
+	Each row of the \texttt{weather} table represents one weather observation
 	associated with a session and identified by a relative session time.
+	
 	
 	\begin{longtable}{p{3.5cm}p{11cm}}
 		\toprule
@@ -727,37 +856,39 @@
 		\texttt{air\_temp}, \texttt{track\_temp}, \texttt{rainfall}, and
 		\texttt{wind\_speed} must be present. The first three attributes are required
 		to identify each weather observation, connect it to the corresponding session,
-		and place it on the session timeline. \\
+		and place it on the session timeline. The remaining attributes are the main
+		weather measures used to describe the environmental context of the session. \\
 		\midrule
 		
 		Uniqueness
 		& \texttt{weather\_id} must be unique, since it is the surrogate primary key
 		of the table. The natural key \texttt{session\_id + time\_ms} should also be
-		unique, because a session should not contain two different weather
-		observations with the same timestamp. \\
+		unique, because a session should not contain two different weather observations
+		with the same timestamp. \\
 		\midrule
 		
 		Validity
-		& Numerical weather attributes must belong to plausible physical ranges.
-		If present, \texttt{air\_temp} and \texttt{track\_temp} must be plausible
-		temperature values, \texttt{humidity} must be between 0 and 100,
-		\texttt{pressure} must be positive and within a realistic atmospheric range,
-		\texttt{rainfall} must be boolean, \texttt{wind\_direction} must be a valid
-		degree value, and \texttt{wind\_speed} must be greater than or equal to zero. \\
+		& \texttt{time\_ms} must be greater than or equal to zero. Numerical weather
+		attributes must belong to broad physical domain ranges. If present,
+		\texttt{air\_temp} and \texttt{track\_temp} must be within broad Formula 1
+		weather ranges, \texttt{humidity} must be between 0 and 100,
+		\texttt{pressure} must be within a broad realistic atmospheric range,
+		\texttt{wind\_direction} must be between 0 and 360 degrees, and
+		\texttt{wind\_speed} must be greater than or equal to zero. \\
 		\midrule
 		
 		Consistency
-		& \texttt{time\_ms} represents elapsed time from the beginning of the session,
-		therefore it must be non-negative and should progress coherently within each
-		\texttt{session\_id}. Weather variables are also checked for internal
-		plausibility: for example, \texttt{track\_temp} should be reasonably coherent
-		with \texttt{air\_temp}, and combinations such as very low humidity with
-		\texttt{rainfall = true} should be flagged as suspicious rather than
-		automatically treated as errors. \\
+		& \texttt{time\_ms} represents elapsed time from the beginning of the session
+		and must therefore be coherent with the session timeline. Weather variables are
+		also checked for internal coherence. In particular, \texttt{track\_temp} should
+		be reasonably coherent with \texttt{air\_temp} at maximum 50 degree. A large difference between the
+		two values is flagged as suspicious, but not automatically treated as an error,
+		because track temperature can be significantly higher than air temperature in
+		hot conditions. \\
 		\midrule
 		
 		Accuracy/Plausibility
-		& Not implemented as a truth check against an external meteorological source. Extreme but possible weather values are flagged for review. \\
+		& Not implemented as a truth check against an external meteorological source. \\
 		\midrule
 		
 		Timeliness
@@ -766,10 +897,10 @@
 		
 		Referential Integrity
 		& \texttt{session\_id} must reference an existing row in the \texttt{session}
-		table. \\
+		table.  \\
 		\bottomrule
 	\end{longtable}
-
+	
 	\subsubsection{Track Status Table}
 	
 	The \texttt{track\_status} table contains time-varying track condition messages
@@ -814,7 +945,7 @@
 		& \texttt{time\_ms} must be greater than or equal to zero.
 		\texttt{status} must belong to the documented set of track status codes,
 		and \texttt{message} must belong to the documented set of track status
-		messages. Both attributes must not be empty strings after trimming. \\
+		messages. \\
 		\midrule
 		
 		Consistency

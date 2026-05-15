@@ -23,10 +23,5 @@ LLM_INPUT_JSON = "dqa_llm_input.json"
 # the instruction + json file go in the prompt 
 LLM_PROMPT_TXT = "dqa_interpretation_prompt.txt"
 
-# the output divided in thre different md files 
-STAKEHOLDER_SUMMARY_MD = "stakeholder_summary.md"
-TECHNICAL_SUMMARY_MD = "technical_summary.md"
-CLEANING_PRIORITIES_MD = "cleaning_priorities.md"
-
 # the union of all the md files
 FULL_LLM_OUTPUT_MD = "full_llm_output.md"

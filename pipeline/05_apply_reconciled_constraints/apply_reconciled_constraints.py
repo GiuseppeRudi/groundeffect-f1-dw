@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_reconciled"
+DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project"
 
 SQL_FILE = (
     PROJECT_ROOT

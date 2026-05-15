@@ -3,8 +3,19 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import sys
 import pandas as pd
-from sqlalchemy import create_engine
+
+PROJECT_ROOT = Path.cwd()
+
+if not (PROJECT_ROOT / "pipeline").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+    )
+
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from database.db_config import get_engine
 
 
 # ============================================================
@@ -19,7 +30,6 @@ SQL_DIR = PROJECT_ROOT / "database" / "reconciled" / "schema"
 DROP_SQL_FILE = SQL_DIR / "00_drop_reconciled_tables.sql"
 CREATE_SQL_FILE = SQL_DIR / "01_create_reconciled_tables.sql"
 
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_reconciled"
 
 DROP_EXISTING_TABLES = True
 
@@ -88,7 +98,7 @@ def execute_sql_file(conn, sql_path: Path) -> None:
 # ============================================================
 
 def main() -> None:
-    engine = create_engine(DATABASE_URL)
+    engine, schema = get_engine("reconciled")
 
     load_order = [
         "season",

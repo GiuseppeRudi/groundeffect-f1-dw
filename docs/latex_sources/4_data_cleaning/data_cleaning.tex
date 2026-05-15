@@ -3,7 +3,6 @@
 % ============================================================
 % PACKAGES
 % ============================================================
-
 \usepackage[margin=2cm]{geometry}
 \usepackage{graphicx}
 \usepackage{float}
@@ -13,9 +12,8 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{multicol}
 
-% If you do not want automatic section numbering, keep this line.
-% If you want normal numbering, comment it.
 \setcounter{secnumdepth}{0}
 
 \hypersetup{
@@ -33,857 +31,1122 @@
 	\maketitle
 	
 	% ============================================================
-	% INTRODUCTION
+	\section{Introduction}
 	% ============================================================
 	
-	\section{Introduction}
+	This document describes the Data Cleaning workflow adopted for the Formula 1 Data Warehouse project.
 	
-	This document describes the methodological workflow adopted for the Data Cleaning phase of the Formula 1 Data Warehouse project.
+	The goal of the Data Cleaning phase is not to blindly modify every value that is reported as problematic.
+	Instead, the goal is to apply a small set of explicit, deterministic, and documented cleaning policies.
 	
-	The Data Cleaning phase is performed after the construction and population of the reconciled database and after the execution of the Data Quality Assessment.
+	In this project, the Data Quality Assessment identifies possible data quality issues.
+	The Missing Values script interprets missing values in the most important analytical tables.
+	The Outlier Detection script flags suspicious numerical values.
+	The Data Cleaning phase uses these outputs as evidence and decides what should be done with the affected rows or values.
 	
-	The goal of this document is not to present the final cleaning results yet, but to define how the cleaning process will be structured, documented, and connected to the later Data Warehouse design phase.
+	The cleaning approach is conservative.
+	Values are modified only when the correction is deterministic.
+	Rows are removed only when they are structurally unusable or cannot support the analytical grain required by the later Data Warehouse.
+	In many cases, the row is preserved and enriched with quality flags.
 	
-	In this project, the Data Quality Assessment identifies possible problems in the data, while the Data Cleaning phase decides how to handle them through explicit and documented rules.
+	% ============================================================
+	\section{Position in the Project Pipeline}
+	% ============================================================
 	
-	\section{Position of Data Cleaning in the Project Workflow}
+	The Data Cleaning phase is placed after the quality assessment steps and before the ETL toward the Data Warehouse.
 	
-	The general project workflow is structured as follows:
+	\begin{center}
+		\begin{tabular}{c}
+			Raw and external sources \\
+			$\downarrow$ \\
+			Extraction and re-engineering \\
+			$\downarrow$ \\
+			\texttt{reconciled} schema \\
+			$\downarrow$ \\
+			General Data Quality Assessment \\
+			$\downarrow$ \\
+			Focused Missing Values and Outlier Detection \\
+			$\downarrow$ \\
+			\textbf{Data Cleaning} \\
+			$\downarrow$ \\
+			\texttt{reconciled\_clean} schema \\
+			$\downarrow$ \\
+			ETL toward the Data Warehouse \\
+			$\downarrow$ \\
+			Star schema and OLAP analysis
+		\end{tabular}
+	\end{center}
 	
-	\begin{enumerate}
-		\item Raw data extraction from FastF1 and Ergast/Jolpica.
-		\item Re-engineering of raw data into a reconciled relational schema.
-		\item Population of the reconciled PostgreSQL database.
-		\item Data Quality Assessment on the reconciled database.
-		\item Data Cleaning based on explicit cleaning rules.
-		\item Conceptual design of the Data Warehouse.
-		\item Attribute tree construction and editing.
-		\item DFM Fact Schema design.
-		\item Star Schema implementation.
-		\item ETL from the cleaned reconciled database to the Data Warehouse.
-	\end{enumerate}
+	The original reconciled data are not overwritten.
+	The cleaned output is written into a separate schema named:
 	
-	The Data Cleaning phase therefore acts as a bridge between the reconciled database and the Data Warehouse implementation.
+	\begin{center}
+		\texttt{reconciled\_clean}
+	\end{center}
 	
-	\section{Difference Between Data Quality Assessment and Data Cleaning}
+	This separation makes the cleaning phase reproducible and inspectable.
+	It also allows a before/after comparison between the pre-cleaning and post-cleaning versions of the data.
 	
-	\subsection{Data Quality Assessment}
+	% ============================================================
+	\section{Difference Between DQA, Focused Analysis, Cleaning, and Analytical Filtering}
+	% ============================================================
 	
-	The Data Quality Assessment does not modify the database.
+	Several phases are involved in the preparation of the data.
+	Each phase has a different role.
 	
-	Its goal is to inspect the data and detect possible issues according to a set of predefined rules.
+	\subsection{General Data Quality Assessment}
 	
-	Examples of checked dimensions are:
+	The General Data Quality Assessment does not modify the database.
+	It checks the reconciled tables according to general quality dimensions:
 	
-	\begin{itemize}
-		\item completeness;
-		\item uniqueness;
-		\item validity;
-		\item consistency;
-		\item accuracy and plausibility;
-		\item timeliness;
-		\item referential integrity.
+	\begin{itemize}[leftmargin=1.2cm]
+		\item completeness of required attributes;
+		\item uniqueness of primary keys and natural keys;
+		\item validity of numerical ranges and categorical domains;
+		\item consistency between related attributes;
+		\item referential integrity between tables.
 	\end{itemize}
 	
-	The output of the Data Quality Assessment consists of scorecards and issue files.
+
 	
-	The most important output for the cleaning phase is:
+	\subsection{Focused Missing Values and Outlier Detection}
+	
+	The focused scripts are applied only to the most important analytical tables:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item \texttt{lap};
+		\item \texttt{result}.
+	\end{itemize}
+	
+	This phase is separated from the General DQA because missing values and outliers in Formula 1 data require domain interpretation.
+	
+	For example, a missing \texttt{q3\_ms} value may be expected if a driver did not reach Q3.
+	Similarly, an extreme lap time may be caused by race context rather than by a data error.
+	
+	\subsection{Data Cleaning}
+	
+	Data Cleaning uses the outputs of the previous phases and applies documented policies.
+	
+	The cleaning phase answers the following question:
+	
+	\begin{quote}
+		Given a detected issue, what should be done with the affected row or value?
+	\end{quote}
+	
+	Some issues lead to standardization.
+	Some issues lead to row exclusion.
+	Some issues only lead to a quality flag.
+
+	
+	\subsection{Analytical Filtering}
+	
+	Analytical filtering is different from cleaning.
+	
+	Data Cleaning handles data that are incomplete, inconsistent, invalid, duplicated, or structurally unusable.
+	Analytical Filtering selects valid rows for a specific analysis.
+	
+	Examples of analytical filtering are:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item keeping only dry sessions;
+		\item selecting only Race sessions;
+		\item comparing only selected teams;
+	\end{itemize}
+	
+	Therefore, not every row excluded from a visualization is a bad row.
+	It may simply be outside the scope of a specific analysis.
+	
+	% ============================================================
+	\section{Input of the Data Cleaning Phase}
+	% ============================================================
+	
+	The Data Cleaning phase uses three main categories of input.
+	
+	\subsection{Database Input}
+	
+	The script reads the pre-cleaning reconciled tables from:
+	
+	\begin{center}
+		\texttt{reconciled}
+	\end{center}
+	
+	This schema contains the re-engineered tables before cleaning.
+	
+	\subsection{General DQA Outputs}
+	
+	The main input produced by the General DQA is:
 	
 	\begin{center}
 		\texttt{issues\_all\_tables.csv}
 	\end{center}
 	
-	This file summarizes the detected issues for the different tables of the reconciled database.
+	This file contains row-level issues detected by the General DQA.
 	
-	\subsection{Data Cleaning}
 	
-	The Data Cleaning phase uses the DQA outputs as evidence, but it does not blindly execute all the detected issues as automatic corrections.
+	The cleaning script uses the pair \texttt{check\_id} and \texttt{issue\_code} to select the corresponding cleaning policy.
 	
-	Instead, each problem must be interpreted and connected to a documented cleaning rule.
+	\subsection{Focused Missing Value Outputs}
 	
-	The cleaning phase answers the following question:
+	The main focused missing value output is:
 	
-	\begin{quote}
-		Given a detected data quality issue, what should be done with the affected data?
-	\end{quote}
+	\begin{center}
+		\texttt{focused\_missing\_row\_flags.csv}
+	\end{center}
 	
-	Possible actions include:
+	This file contains one row for each relevant missing value detected in the \texttt{lap} and \texttt{result} tables.
 	
-	\begin{itemize}
-		\item correcting a value;
-		\item standardizing a value;
-		\item converting a value to a consistent format;
-		\item keeping the value unchanged but documenting the issue;
-		\item adding a flag;
-		\item excluding the row from the cleaned analytical dataset;
-		\item moving the row to a rejected rows table;
-		\item correcting an upstream re-engineering script and regenerating the data.
+
+	The cleaning script does use \texttt{missing\_information\_area}  to decide the action.
+	
+	\subsection{Focused Outlier Outputs}
+	
+	The main outlier detection output is:
+	
+	\begin{center}
+		\texttt{lap\_outlier\_flags.csv}
+	\end{center}
+	
+	This file contains row-level outlier flags for selected numerical lap metrics.
+
+	
+	Outlier values are not automatically considered wrong.
+	They are used to add flags and, only in specific cases, to exclude rows from the later analytical fact.
+	
+	% ============================================================
+	\section{Output of the Data Cleaning Phase}
+	% ============================================================
+	
+	The Data Cleaning phase produces two types of output:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item cleaned database tables;
+		\item audit and traceability files.
 	\end{itemize}
-	
-	\section{Difference Between Cleaning and Analytical Filtering}
-	
-	A fundamental distinction must be maintained between Data Cleaning and Analytical Filtering.
-	
-	\subsection{Data Cleaning}
-	
-	Data Cleaning handles data that are incomplete, inconsistent, invalid, duplicated, unreliable, or not suitable for further processing.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item missing identifiers;
-		\item invalid lap times;
-		\item impossible negative values;
-		\item duplicated records;
-		\item inconsistent foreign keys;
-		\item inaccurate laps;
-		\item deleted laps.
-	\end{itemize}
-	
-	\subsection{Analytical Filtering}
-	
-	Analytical Filtering does not fix wrong data.
-	
-	It selects a subset of valid data that is useful for a specific analysis or storytelling.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item keeping only Ferrari, Red Bull, and Mercedes;
-		\item keeping only dry conditions;
-		\item excluding wet sessions from a specific performance comparison;
-		\item excluding in-laps and out-laps when studying pure lap performance;
-		\item selecting only specific circuits.
-	\end{itemize}
-	
-	A wet lap is not necessarily a wrong datum. It may be a valid datum that is outside the analytical focus of the final storytelling.
-	
-	Therefore, it should not be confused with a data quality error.
-	
-	\section{Input of the Data Cleaning Script}
-	
-	The Data Cleaning script will use two main categories of input.
-	
-	\subsection{Database Input}
-	
-	The script reads the tables from the pre-cleaning reconciled schema.
-	
-	Possible schema names are:
-	
-	\begin{itemize}
-		\item \texttt{public};
-		\item \texttt{reconciled\_raw};
-		\item \texttt{reconciled\_pre\_cleaning}.
-	\end{itemize}
-	
-	In this project, the preferred solution is to preserve the original reconciled schema and write the cleaned output into a separate schema.
-	
-	\subsection{Data Quality Assessment Output}
-	
-	The script also reads the files produced by the Data Quality Assessment.
-	
-	The most important files are:
-	
-	\begin{itemize}
-		\item \texttt{issues\_all\_tables.csv};
-		\item \texttt{dq\_scorecard\_by\_table.csv};
-		\item possible detailed issue files by table or by dimension.
-	\end{itemize}
-	
-	The issue file is used to identify the detected problems.
-	
-	The scorecard file is mainly used for documentation, prioritization, and before/after comparison.
-	
-	\section{Output of the Data Cleaning Script}
-	
-	The Data Cleaning script should produce both cleaned database tables and audit outputs.
 	
 	\subsection{Cleaned Database Schema}
 	
-	The preferred output is a new PostgreSQL schema:
+	The cleaned tables are written into:
 	
 	\begin{center}
 		\texttt{reconciled\_clean}
 	\end{center}
 	
-	This schema contains the cleaned version of the reconciled tables.
+	The schema contains the cleaned version of the reconciled tables.
+	For the most important analytical tables, additional quality columns may be added.
 	
-	For example:
 	
-	\begin{itemize}
-		\item \texttt{reconciled\_clean.season};
-		\item \texttt{reconciled\_clean.grand\_prix};
-		\item \texttt{reconciled\_clean.session};
-		\item \texttt{reconciled\_clean.driver};
-		\item \texttt{reconciled\_clean.team};
-		\item \texttt{reconciled\_clean.result};
-		\item \texttt{reconciled\_clean.lap};
-		\item \texttt{reconciled\_clean.weather};
-		\item \texttt{reconciled\_clean.track\_status}.
-	\end{itemize}
+	\subsection{Audit Outputs}
 	
-	\subsection{Cleaning Metadata}
+	The cleaning phase also produces audit files.
 	
-	In addition to the cleaned tables, the script should generate metadata that explain what happened during cleaning.
-	
-	Possible metadata outputs are:
-	
-	\begin{itemize}
-		\item \texttt{cleaning\_actions.csv};
-		\item \texttt{cleaning\_summary\_by\_table.csv};
-		\item \texttt{cleaning\_summary\_by\_rule.csv};
-		\item \texttt{rejected\_rows.csv};
-		\item \texttt{before\_after\_scorecard.csv}.
-	\end{itemize}
-	
-	These outputs are important because the cleaning process must be traceable and reproducible.
-	
-	\section{Why a Separate Post-Cleaning Schema Is Preferred}
-	
-	The original reconciled database should not be overwritten directly.
-	
-	The preferred professional choice is to maintain two versions of the reconciled data:
-	
-	\begin{itemize}
-		\item a pre-cleaning schema;
-		\item a post-cleaning schema.
-	\end{itemize}
-	
-	This allows the project to preserve the original data produced by the re-engineering phase and to compare them with the cleaned version.
-	
-	\begin{center}
-		\texttt{reconciled\_pre\_cleaning}
-		$\rightarrow$
-		\texttt{reconciled\_clean}
-	\end{center}
-	
-	This design supports:
-	
-	\begin{itemize}
-		\item reproducibility;
-		\item auditability;
-		\item comparison before and after cleaning;
-		\item easier debugging;
-		\item safer ETL development.
-	\end{itemize}
-	
-	\section{Types of Problems Handled by Data Cleaning}
-	
-	The problems detected by the Data Quality Assessment can belong to different categories.
-	
-	Not all categories require the same treatment.
-	
-	\subsection{Re-engineering Errors}
-	
-	Some issues may be caused by errors in the extraction or re-engineering scripts.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item wrong joins;
-		\item missing identifiers caused by an incorrect merge;
-		\item wrong primary key definition;
-		\item wrong foreign key mapping;
-		\item incorrect DQA rule.
-	\end{itemize}
-	
-	These problems should not be hidden inside the cleaning script.
-	
-	The correct solution is:
-	
-	\begin{enumerate}
-		\item correct the upstream script;
-		\item regenerate the reconciled data;
-		\item reload the database;
-		\item rerun the Data Quality Assessment.
-	\end{enumerate}
-	
-	\subsection{Automatically Correctable Errors}
-	
-	Some issues can be corrected automatically because the correction rule is deterministic and safe.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item trimming spaces in textual columns;
-		\item converting empty strings to \texttt{NULL};
-		\item standardizing boolean values;
-		\item standardizing categorical values;
-		\item converting time values to a consistent numerical unit;
-		\item removing exact duplicated rows.
-	\end{itemize}
-	
-	\subsection{Non-Reliable Rows}
-	
-	Some rows may be formally present but not reliable for analysis.
-	
-	Examples in the \texttt{lap} table:
-	
-	\begin{itemize}
-		\item deleted laps;
-		\item inaccurate laps;
-		\item laps with missing lap time;
-		\item laps with impossible sector times;
-		\item laps with inconsistent lap time and sector sum.
-	\end{itemize}
-	
-	These rows should not necessarily be deleted from the original schema.
-	
-	In the cleaned schema, they can be:
-	
-	\begin{itemize}
-		\item removed from the cleaned analytical table;
-		\item kept with a usability flag;
-		\item moved to a rejected rows output;
-		\item documented in the cleaning log.
-	\end{itemize}
-	
-	\subsection{Missing Values Not Safely Recoverable}
-	
-	Some missing values cannot be corrected without inventing information.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item missing weather observations;
-		\item missing sector times;
-		\item missing driver descriptive fields;
-		\item missing result gaps.
-	\end{itemize}
-	
-	In these cases, the cleaning script should not invent values unless a clear and documented rule exists.
-	
-	Possible actions are:
-	
-	\begin{itemize}
-		\item keep the value as \texttt{NULL};
-		\item add a missing-value flag;
-		\item exclude the row only if the missing value is essential for the intended analysis;
-		\item document the issue for manual review.
-	\end{itemize}
-	
-	\subsection{Valid Data Outside the Analytical Focus}
-	
-	Some data are valid but may not be useful for the final storytelling.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item wet laps;
-		\item laps under safety car;
-		\item pit in-laps;
-		\item out-laps;
-		\item sessions outside the final analytical focus.
-	\end{itemize}
-	
-	These are not necessarily cleaning errors.
-	
-	They should usually be handled later through analytical filtering or through flags that allow the analyst to include or exclude them.
-	
-	\section{Cleaning Rule Structure}
-	
-	Each cleaning rule should be explicitly documented.
-	
-	A possible structure is the following:
-	
-	\begin{longtable}{p{3cm}p{3cm}p{4cm}p{4cm}}
+	\begin{longtable}{p{5.5cm}p{9cm}}
 		\toprule
-		\textbf{Rule ID} & \textbf{Table} & \textbf{Condition} & \textbf{Action} \\
+		\textbf{Output File} & \textbf{Purpose} \\
 		\midrule
 		\endfirsthead
 		
 		\toprule
-		\textbf{Rule ID} & \textbf{Table} & \textbf{Condition} & \textbf{Action} \\
+		\textbf{Output File} & \textbf{Purpose} \\
 		\midrule
 		\endhead
 		
-		CR\_COMMON\_001
-		& All tables
-		& Textual value contains leading or trailing spaces
-		& Apply trim operation \\
+		\texttt{cleaning\_action\_log.csv}
+		& Records every cleaning action, standardization, flag or exclusion. \\
+		\midrule
 		
-		CR\_COMMON\_002
-		& All tables
-		& Empty string in nullable column
-		& Convert empty string to \texttt{NULL} \\
+		\texttt{cleaning\_summary\_by\_table.csv}
+		& Aggregates the number of actions applied to each table. \\
+		\midrule
 		
-		CR\_LAP\_001
-		& Lap
-		& \texttt{Deleted = true}
-		& Mark lap as not usable for performance analysis \\
+		\texttt{cleaning\_summary\_by\_policy.csv}
+		& Aggregates the number of actions applied by cleaning policy. \\
+		\midrule
 		
-		CR\_LAP\_002
-		& Lap
-		& \texttt{IsAccurate = false}
-		& Mark lap as not usable for performance analysis \\
+		\texttt{rejected\_rows.csv}
+		& Stores rows that are removed from the cleaned schema because they are structurally unusable. \\
+		\midrule
 		
-		CR\_LAP\_003
-		& Lap
-		& \texttt{LapTime\_ms} is missing
-		& Mark lap as incomplete or reject if lap time is required \\
-		
-		CR\_WEATHER\_001
-		& Weather
-		& \texttt{WindSpeed < 0}
-		& Mark value as invalid and review \\
-		
-		CR\_TRACK\_001
-		& Track Status
-		& Missing status code
-		& Mark row as incomplete and review \\
-		
+		\texttt{before\_after\_scorecard.csv}
+		& Compares DQA scores and issue counts before and after cleaning. \\
 		\bottomrule
 	\end{longtable}
 	
-	\section{Cleaning Actions}
+	% ============================================================
+	\section{General Cleaning Rules}
+	% ============================================================
 	
-	For each applied rule, the script should record an action.
+	General cleaning rules are applied before processing the DQA issue files.
+	They are independent from the current DQA results.
 	
-	A possible action log structure is:
+	In this project, general cleaning is intentionally simple.
+	Since the dataset is obtained from structured APIs and loaded with explicit PostgreSQL types, the cleaning phase does not repeat generic parsing or typing rules.
 	
-	\begin{longtable}{p{2.5cm}p{2.5cm}p{3cm}p{3cm}p{3cm}p{3cm}}
+	The general rules are:
+	
+	\begin{longtable}{p{4cm}p{7cm}p{4cm}}
 		\toprule
-		\textbf{Rule ID} & \textbf{Table} & \textbf{Row Identifier} & \textbf{Column} & \textbf{Old Value} & \textbf{New Value / Action} \\
+		\textbf{Rule ID} & \textbf{Condition} & \textbf{Action} \\
 		\midrule
 		\endfirsthead
 		
 		\toprule
-		\textbf{Rule ID} & \textbf{Table} & \textbf{Row Identifier} & \textbf{Column} & \textbf{Old Value} & \textbf{New Value / Action} \\
+		\textbf{Rule ID} & \textbf{Condition} & \textbf{Action} \\
 		\midrule
 		\endhead
 		
-		CR\_LAP\_001
-		& lap
-		& [placeholder]
-		& deleted
-		& true
-		& is\_usable\_for\_performance\_analysis = false \\
+		\texttt{CR\_COMMON\_1}
+		& Textual values contain leading or trailing spaces.
+		& Trim textual values. \\
+		\midrule
 		
-		CR\_LAP\_002
-		& lap
-		& [placeholder]
-		& is\_accurate
-		& false
-		& is\_usable\_for\_performance\_analysis = false \\
-		
-		CR\_COMMON\_001
-		& driver
-		& [placeholder]
-		& first\_name
-		& `` Lewis ''
-		& ``Lewis'' \\
-		
+		\texttt{CR\_COMMON\_2}
+		& Empty strings are found in textual columns after trimming.
+		& Convert empty strings into \texttt{NULL}. \\
 		\bottomrule
 	\end{longtable}
 	
-	\section{Physical Modification vs Flagging}
+	These rules are considered safe because they do not change the semantic meaning of the data.
+	They only standardize textual representation before applying more specific cleaning policies.
 	
-	Not every issue should be handled by physically deleting or overwriting data.
+	% ============================================================
+	\section{Cleaning Action Types}
+	% ============================================================
 	
-	In some cases, it is better to add flags that describe the usability or quality status of a row.
+	Each cleaning decision is associated with one action type.
 	
-	\subsection{Physical Modification}
+	In this project, the cleaning workflow uses four simple actions:
 	
-	Physical modification is appropriate when the correction is safe, deterministic, and does not change the semantic meaning of the data.
 	
-	Examples:
+	\begin{longtable}{p{4cm}p{10cm}}
+		\toprule
+		\textbf{Action Type} & \textbf{Meaning} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Action Type} & \textbf{Meaning} \\
+		\midrule
+		\endhead
+		
+		\texttt{STANDARDIZE}
+		& The value is converted into a deterministic standard representation.
+		This action is used only when the correction is safe and does not require guessing.
+		Examples are trimming textual values, normalizing known categorical variants, or reconstructing a track status message from a documented status-code mapping. \\
+		\midrule
+		
+		\texttt{SET\_NULL}
+		& The value is replaced with \texttt{NULL} because it is invalid, suspicious, or not reliable, but the row itself can still be preserved.
+		This is preferred over artificial placeholder values, because placeholders may pollute numerical calculations, categorical domains, and later OLAP analysis. \\
+		\midrule
+		
+		\texttt{DROP\_ROW}
+		& The row is removed from the cleaned schema.
+		This action is used when the row is structurally unusable, when it cannot preserve the correct grain or relationships, or when a core analytical value is missing or strongly unreliable. \\
+		\midrule
+		
+		\texttt{ADD\_FLAG}
+		& The row is preserved, but a quality flag or missing information area is attached to it.
+		This action is used when the row can still be useful for some analyses, but not for all analyses. \\
+		\bottomrule
+	\end{longtable}
 	
-	\begin{itemize}
-		\item trimming spaces;
-		\item standardizing case;
-		\item converting empty strings to \texttt{NULL};
-		\item converting boolean representations;
-		\item removing exact duplicate rows.
-	\end{itemize}
+	The cleaned database does not use artificial placeholder values such as
+	\texttt{-1}, \texttt{9999}, or textual values such as \texttt{UNKNOWN}
+	inside typed analytical columns.
 	
-	\subsection{Flagging}
+	When a value is invalid and cannot be repaired deterministically, the preferred
+	action is \texttt{SET\_NULL}. This choice avoids introducing artificial values
+	that could distort later statistical analysis, aggregations, or Data Warehouse
+	measures.
 	
-	Flagging is appropriate when the row contains information that may still be useful, but should not always be used in analytical calculations.
+	For descriptive attributes that are not central to the analytical purpose, setting
+	the invalid value to \texttt{NULL} is sufficient.
 	
-	Examples:
+	For analytically relevant attributes, instead, the script does not only set the
+	invalid value to \texttt{NULL}. It also adds a corresponding flag that records
+	which analytical information area has been affected.
 	
-	\begin{itemize}
-		\item deleted lap;
-		\item inaccurate lap;
-		\item pit lap;
-		\item incomplete lap;
-		\item suspicious lap;
-		\item wet-condition lap;
-		\item safety-car lap.
-	\end{itemize}
+	For example, if an invalid sector time is found, the value is set to
+	\texttt{NULL} and the row is marked with \texttt{SECTOR\_INFORMATION}.
+	This distinction is important because the cleaned schema must not hide the loss
+	of analytical information. The \texttt{NULL} value removes the unreliable value,
+	while the missing information flag explains which type of analysis may be affected.
+	The audit log records why the value was changed to \texttt{NULL}.
 	
-	Possible flags for the \texttt{lap} table are:
 	
-	\begin{itemize}
-		\item \texttt{is\_deleted\_lap};
-		\item \texttt{is\_inaccurate\_lap};
-		\item \texttt{is\_pit\_lap};
-		\item \texttt{is\_complete\_lap};
-		\item \texttt{is\_clean\_lap};
-		\item \texttt{is\_usable\_for\_performance\_analysis};
-		\item \texttt{cleaning\_status};
-		\item \texttt{cleaning\_reason}.
-	\end{itemize}
 	
-	\subsection{Reason for Using Flags}
+	% ============================================================
+	\section{DQA Actions by Table}
+	% ============================================================
 	
-	Using flags preserves information while allowing controlled analytical selection.
+	The following tables summarize the direct connection between each DQA check and the cleaning action applied by the script.
 	
-	Instead of permanently deleting all problematic rows, the cleaned schema can keep the row and explicitly mark whether it should be used for a specific analytical purpose.
+
+	In some cases, the action is conditional because the script first tries a deterministic standardization and drops or flags the row only if the value cannot be repaired safely.
 	
-	This makes the process more transparent and reversible.
+	% ------------------------------------------------------------
+	\subsection{Season Table}
+	% ------------------------------------------------------------
 	
-	\section{Relationship Between Cleaning Flags and the Attribute Tree}
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		season\_required\_structural\_columns
+		& \texttt{DROP\_ROW}
+		& The season cannot be identified without its structural key. \\
+		\midrule
+		
+		\texttt{season\_year\_formula1\_domain}
+		& \texttt{DROP\_ROW}
+		& \texttt{season\_year} is the key of the table. If it is outside the Formula 1 domain, the row is not reliable. \\
+		\midrule
+		
+		\texttt{number\_of\_events\_positive}
+		& \texttt{SET\_NULL}
+		& The value is descriptive and not central for the analytical grain. An invalid value is removed instead of flagged. \\
+		\midrule
+		
+		\texttt{season\_dates\_order}, \texttt{season\_dates\_match\_year}
+		& \texttt{SET\_NULL}
+		& Inconsistent season dates are not used as core analytical identifiers. They are set to \texttt{NULL} instead of using placeholders. \\
+		\bottomrule
+	\end{longtable}
 	
-	The cleaned reconciled schema may contain additional attributes introduced during Data Cleaning.
+	% ------------------------------------------------------------
+	\subsection{Circuit Table}
+	% ------------------------------------------------------------
 	
-	These attributes can influence the later conceptual design.
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		circuit\_required\_analytical\_columns
+		& \texttt{DROP\_ROW}
+		& The circuit classification is part of the analytical purpose of the table. \\
+		\midrule
+		
+		\texttt{global\_circuit\_category\_domain}
+		& \texttt{STANDARDIZE} / \texttt{DROP\_ROW}
+		& Known formatting variants are standardized. If the value cannot be mapped to the allowed domain, the row is dropped. \\
+		\midrule
+		
+		\texttt{sector1\_category\_domain}, \texttt{sector2\_category\_domain}, \texttt{sector3\_category\_domain}
+		& \texttt{STANDARDIZE} / \texttt{DROP\_ROW}
+		& Sector categories are analytically important. Unknown values make the circuit classification unusable. \\
+		\bottomrule
+	\end{longtable}
 	
-	However, not every cleaning flag should automatically become part of the final Fact Schema.
+	% ------------------------------------------------------------
+	\subsection{Driver Table}
+	% ------------------------------------------------------------
 	
-	\subsection{General Rule}
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		{\small driver\_required\_identification\_columns}
+		& \texttt{DROP\_ROW}
+		& A driver without required identification data cannot be reliably referenced. \\
+		\midrule
+		
+		\texttt{driver\_abbreviation\_format}
+		& \texttt{SET\_NULL}
+		& The abbreviation is useful for display, but an invalid abbreviation should not invalidate the whole driver row. \\
+		\midrule
+		
+		\texttt{driver\_url\_format}
+		& \texttt{SET\_NULL}
+		& The URL is descriptive. If invalid, it is removed from the clean value. \\
+		\midrule
+		
+		\texttt{permanent\_number\_range}
+		& \texttt{SET\_NULL}
+		& The permanent number is descriptive for this project. Invalid values are set to \texttt{NULL}. \\
+		\midrule
+		
+		\texttt{driver\_age\_plausible\_2021\_2022}
+		& \texttt{SET\_NULL}
+		& If the derived age is implausible, the birth date is not trusted and is set to \texttt{NULL}. \\
+		\bottomrule
+	\end{longtable}
 	
-	The general rule is:
+	% ------------------------------------------------------------
+	\subsection{Team Table}
+	% ------------------------------------------------------------
 	
-	\begin{quote}
-		A cleaning flag should be included in the attribute tree only if it has analytical meaning or if it is useful to define the valid analytical grain of the fact.
-	\end{quote}
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\small{team\_required\_identification\_columns}
+		& \texttt{DROP\_ROW}
+		& A team without required identification data cannot be reliably referenced. \\
+		\midrule
+		
+		\texttt{team\_url\_format}
+		& \texttt{SET\_NULL}
+		& The URL is descriptive and does not justify dropping the team row. \\
+		\bottomrule
+	\end{longtable}
 	
-	\subsection{Technical Flags}
+	% ------------------------------------------------------------
+	\subsection{Grand Prix Table}
+	% ------------------------------------------------------------
 	
-	Technical flags are used only for audit and debugging.
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\small{grand\_prix\_required\_structural\_columns}
+		& \texttt{DROP\_ROW}
+		& The Grand Prix cannot preserve its grain without required structural attributes. \\
+		\midrule
+		
+		\texttt{round\_number\_positive}
+		& \texttt{DROP\_ROW}
+		& \texttt{round\_number} is part of the natural key with \texttt{season\_year}. If it is invalid, the event order and grain are unreliable. \\
+		\midrule
+		
+		\texttt{event\_format\_domain}
+		& \texttt{STANDARDIZE} / \texttt{DROP\_ROW}
+		& Known variants can be standardized. Unknown event formats are not reliable for the project scope. \\
+		\midrule
+		
+		\footnotesize{grand\_prix\_event\_date\_matches\_season\_year}
+		& \texttt{SET\_NULL}
+		& The date is useful but not the main identifier. If inconsistent with the season, it is set to \texttt{NULL}. \\
+		\bottomrule
+	\end{longtable}
 	
-	Examples:
+	% ------------------------------------------------------------
+	\subsection{Session Table}
+	% ------------------------------------------------------------
 	
-	\begin{itemize}
-		\item \texttt{cleaning\_rule\_id};
-		\item \texttt{cleaning\_timestamp};
-		\item \texttt{source\_issue\_id};
-		\item \texttt{cleaning\_batch\_id}.
-	\end{itemize}
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\small{session\_required\_structural\_columns}
+		& \texttt{DROP\_ROW}
+		& A session without structural identifiers cannot be used as a parent for results, laps, weather, or track status. \\
+		\midrule
+		
+		\texttt{session\_type\_domain}
+		& \texttt{STANDARDIZE} / \texttt{DROP\_ROW}
+		& Known variants can be standardized. Unknown session types are outside the analytical scope. \\
+		\midrule
+		
+		\small{session\_date\_near\_grand\_prix\_date}
+		& \texttt{SET\_NULL}
+		& The session date is contextual. If it is not coherent with the Grand Prix date, it is removed from the cleaned value. \\
+		\bottomrule
+	\end{longtable}
 	
-	These attributes should not usually be included in the DFM Fact Schema.
+	% ------------------------------------------------------------
+	\subsection{Result Table}
+	% ------------------------------------------------------------
 	
-	They belong to cleaning metadata.
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\small{result\_required\_structural\_columns}
+		& \texttt{DROP\_ROW}
+		& The result row cannot be linked to the correct session, driver, team, or position. \\
+		\midrule
+
+		
+		\texttt{result\_position\_positive}
+		& \texttt{DROP\_ROW}
+		& \texttt{position} is classification information. If invalid, the result row cannot be used reliably. \\
+		\midrule
+		
+		\texttt{result\_points\_non\_negative}
+		& \texttt{SET\_NULL}
+		& Points are useful for some analyses, but invalid points do not invalidate the whole result row. \\
+		\midrule
+		
+		\texttt{result\_laps\_non\_negative}
+		& \texttt{SET\_NULL}
+		& Invalid lap count is removed from the cleaned value, but the classification row can remain usable. \\
+		\midrule
+		
+		\small{result\_grid\_position\_non\_negative}
+		& \texttt{SET\_NULL}
+		& Starting-grid information is contextual. Invalid values are set to \texttt{NULL}. \\
+		\bottomrule
+	\end{longtable}
 	
-	\subsection{Analytical Flags}
-	
-	Analytical flags describe the analytical usability or semantic condition of a row.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item \texttt{is\_clean\_lap};
-		\item \texttt{is\_usable\_for\_performance\_analysis};
-		\item \texttt{is\_pit\_lap};
-		\item \texttt{is\_inaccurate\_lap};
-		\item \texttt{is\_wet\_condition};
-		\item \texttt{is\_safety\_car\_lap}.
-	\end{itemize}
-	
-	These attributes may be included in the attribute tree because they can support filtering, slicing, or interpretation.
-	
-	\subsection{How to Represent These Flags in the DFM}
-	
-	In the DFM, these flags should usually not be modeled as full hierarchical dimensions.
-	
-	They can be represented as:
-	
-	\begin{itemize}
-		\item descriptive attributes of the fact;
-		\item degenerate dimensional attributes;
-		\item a small context dimension, if several related flags are grouped together.
-	\end{itemize}
-	
-	For example, for the \textit{Lap Performance} fact, the following attributes may be attached directly to the fact:
-	
-	\begin{itemize}
-		\item \texttt{is\_clean\_lap};
-		\item \texttt{is\_usable\_for\_performance\_analysis};
-		\item \texttt{cleaning\_status}.
-	\end{itemize}
-	
-	Alternatively, they can be grouped into a small dimension:
-	
-	\begin{center}
-		\texttt{Lap Quality Context}
-	\end{center}
-	
-	This dimension may contain:
-	
-	\begin{itemize}
-		\item \texttt{cleaning\_status};
-		\item \texttt{is\_clean\_lap};
-		\item \texttt{is\_pit\_lap};
-		\item \texttt{is\_inaccurate\_lap};
-		\item \texttt{is\_usable\_for\_performance\_analysis}.
-	\end{itemize}
-	
-	\subsection{Project Decision Placeholder}
-	
-	In this project, the current decision is:
-	
-	\begin{quote}
-		[Placeholder: decide whether lap quality flags are kept as descriptive attributes of the \textit{Lap Performance} fact or grouped into a separate \textit{Lap Quality Context} dimension.]
-	\end{quote}
-	
-	\section{Suggested Cleaning Strategy by Table}
-	
-	\subsection{Common Rules for All Tables}
-	
-	Common cleaning rules are applied to all tables.
-	
-	Examples:
-	
-	\begin{itemize}
-		\item trim textual columns;
-		\item convert empty strings to \texttt{NULL};
-		\item standardize boolean values;
-		\item standardize date and timestamp formats;
-		\item remove exact duplicated rows;
-		\item preserve primary key and foreign key consistency.
-	\end{itemize}
-	
-	\subsection{Driver and Team Tables}
-	
-	The \texttt{driver} and \texttt{team} tables contain master data.
-	
-	Possible cleaning operations:
-	
-	\begin{itemize}
-		\item standardize textual fields;
-		\item check missing identifiers;
-		\item check duplicate identifiers;
-		\item avoid deleting drivers or teams unless the identifier is invalid;
-		\item preserve stable master data for joins.
-	\end{itemize}
-	
-	\subsection{Grand Prix and Session Tables}
-	
-	Possible cleaning operations:
-	
-	\begin{itemize}
-		\item check missing event dates;
-		\item check valid session types;
-		\item check consistency between sessions and Grand Prix;
-		\item preserve the relationship between session and Grand Prix;
-		\item do not invent missing sessions.
-	\end{itemize}
-	
+	% ------------------------------------------------------------
 	\subsection{Lap Table}
+	% ------------------------------------------------------------
 	
-	The \texttt{lap} table is the most important table for the project because it is the source table for the \textit{Lap Performance} fact.
-	
-	Possible cleaning operations:
-	
-	\begin{itemize}
-		\item identify deleted laps;
-		\item identify inaccurate laps;
-		\item identify missing lap times;
-		\item identify impossible negative times;
-		\item check consistency between sector times and lap time;
-		\item standardize tyre compound values;
-		\item identify pit laps;
-		\item add usability flags for performance analysis.
-	\end{itemize}
-	
-	\subsection{Weather Table}
-	
-	Possible cleaning operations:
-	
-	\begin{itemize}
-		\item check impossible temperature values;
-		\item check negative wind speed;
-		\item standardize rainfall as boolean;
-		\item keep missing weather values as \texttt{NULL} if they cannot be safely recovered;
-		\item avoid inventing meteorological values.
-	\end{itemize}
-	
-	\subsection{Track Status Table}
-	
-	Possible cleaning operations:
-	
-	\begin{itemize}
-		\item check missing status values;
-		\item standardize status codes;
-		\item standardize message categories;
-		\item preserve time alignment with the related session;
-		\item create derived flags for safety car, virtual safety car, red flag, or yellow flag conditions if needed.
-	\end{itemize}
-	
-	\section{Rejected Rows}
-	
-	Some rows may be excluded from the cleaned analytical dataset.
-	
-	However, excluded rows should be documented.
-	
-	A possible rejected rows structure is:
-	
-	\begin{longtable}{p{2.5cm}p{3cm}p{3cm}p{4cm}p{3cm}}
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
 		\toprule
-		\textbf{Table} & \textbf{Row Identifier} & \textbf{Rule ID} & \textbf{Reason} & \textbf{Action} \\
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
 		\midrule
 		\endfirsthead
 		
 		\toprule
-		\textbf{Table} & \textbf{Row Identifier} & \textbf{Rule ID} & \textbf{Reason} & \textbf{Action} \\
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
 		\midrule
 		\endhead
 		
-		lap
-		& [placeholder]
-		& CR\_LAP\_001
-		& Deleted lap
-		& Excluded from clean performance subset \\
+		\texttt{lap\_required\_structural\_columns}
+		& \texttt{DROP\_ROW}
+		& A lap without structural identifiers or timeline information cannot preserve the lap grain. \\
+		\midrule
 		
-		lap
-		& [placeholder]
-		& CR\_LAP\_002
-		& Inaccurate lap
-		& Excluded from clean performance subset \\
+		\texttt{lap\_number\_positive}
+		& \texttt{DROP\_ROW}
+		& \texttt{lap\_number} is part of the natural key. If invalid, the lap grain is unreliable. \\
+		\midrule
 		
-		weather
-		& [placeholder]
-		& CR\_WEATHER\_001
-		& Invalid wind speed
-		& Marked for review \\
+		\texttt{lap\_time\_positive}
+		& \texttt{DROP\_ROW}
+		& \texttt{lap\_time\_ms} is the core lap performance measure. Invalid values make the lap unusable for the main fact. \\
+		\midrule
 		
+		\texttt{lap\_sector\_times\_positive}
+		& \texttt{SET\_NULL} + \texttt{ADD\_FLAG}
+		& Invalid sector values are removed, and the row is flagged as incomplete for sector analysis. \\
+		\midrule
+		
+		\texttt{lap\_speeds\_positive}
+		& \texttt{SET\_NULL} + \texttt{ADD\_FLAG}
+		& Invalid speed values are removed, and the row is flagged as incomplete for speed analysis. \\
+		\midrule
+		
+		\texttt{stint\_positive}, \texttt{tyre\_life\_positive}
+		& \texttt{SET\_NULL} + \texttt{ADD\_FLAG}
+		& Invalid tyre-context values are removed, and tyre information is marked as incomplete. \\
+		\midrule
+		
+		\texttt{compound\_domain}
+		& \texttt{STANDARDIZE} / \texttt{SET\_NULL} + \texttt{ADD\_FLAG}
+		& Known variants are standardized. Unknown compounds are set to \texttt{NULL} and flagged. \\
+		\midrule
+		
+		\texttt{lap\_sector\_sum\_matches\_lap\_time}
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but timing coherence is marked as suspicious. \\
 		\bottomrule
 	\end{longtable}
 	
-	\section{Validation After Cleaning}
+	% ------------------------------------------------------------
+	\subsection{Weather Table}
+	% ------------------------------------------------------------
 	
-	After the cleaning process, the Data Quality Assessment should be executed again on the cleaned schema.
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\texttt{weather\_required\_columns}
+		& \texttt{DROP\_ROW}
+		& A weather observation without identifier, session, time, or core measures is not usable. \\
+		\midrule
+		
+		\texttt{weather\_time\_non\_negative}
+		& \texttt{DROP\_ROW}
+		& \texttt{time\_ms} is part of the natural key with \texttt{session\_id}. If invalid, the weather observation cannot be placed on the session timeline. \\
+		\midrule
+		
+		Weather range checks
+		& \texttt{SET\_NULL}
+		& Invalid weather values are removed from the cleaned value. The weather row can still contain other useful observations. \\
+		\midrule
+		
+		\small{weather\_track\_air\_temp\_difference}
+		& \texttt{SET\_NULL}
+		& If the track-air temperature relation is not plausible, the less stable contextual value is removed. \\
+		\bottomrule
+	\end{longtable}
 	
-	This allows comparison between:
+	% ------------------------------------------------------------
+	\subsection{Track Status Table}
+	% ------------------------------------------------------------
 	
-	\begin{itemize}
-		\item pre-cleaning scorecards;
-		\item post-cleaning scorecards;
+	\begin{longtable}{p{6cm}p{2.5cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\texttt{track\_status\_required\_columns}
+		& \texttt{DROP\_ROW}
+		& A track status record without status, message, time, or session context is not usable. \\
+		\midrule
+		
+		\texttt{track\_status\_time\_non\_negative}
+		& \texttt{DROP\_ROW}
+		& \texttt{time\_ms} is part of the natural key with \texttt{session\_id}. If invalid, the record cannot be placed on the session timeline. \\
+		\midrule
+		
+		\texttt{track\_status\_code\_domain}
+		& \texttt{DROP\_ROW}
+		& Unknown status codes cannot be interpreted reliably. \\
+		\midrule
+		
+		\texttt{track\_status\_message\_domain}
+		& \texttt{STANDARDIZE} / \texttt{SET\_NULL}
+		& Known variants can be standardized. Unknown messages are set to \texttt{NULL} if the code remains valid. \\
+		\midrule
+		
+		\texttt{track\_status\_message\_mapping}
+		& \texttt{STANDARDIZE}
+		& The message can be reconstructed deterministically from the status code. \\
+		\bottomrule
+	\end{longtable}
+	
+	% ------------------------------------------------------------
+	\subsection{Checks Applied to All Tables}
+	% ------------------------------------------------------------
+	
+	\begin{longtable}{p{5.6cm}p{3cm}p{6.4cm}}
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{DQA Check} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		Primary key uniqueness checks
+		& \texttt{DROP\_ROW}
+		& Rows with null or conflicting primary keys cannot preserve the table grain. \\
+		\midrule
+		
+		Natural key uniqueness checks
+		& \texttt{DROP\_ROW}
+		& Conflicting duplicated natural keys make the row grain ambiguous. \\
+		\midrule
+		
+		Foreign key checks
+		& \texttt{DROP\_ROW}
+		& Rows with broken references are removed because their relationships cannot be trusted. \\
+		\bottomrule
+	\end{longtable}
+	
+	% ============================================================
+	\section{Missing-value-driven Cleaning Actions}
+	% ============================================================
+	
+	The focused missing value script produces row-level flags for the \texttt{lap} and \texttt{result} tables.
+	
+	The cleaning script uses these flags directly.
+	No additional policy identifier is needed.
+	
+	For each focused missing value flag, the script checks:
+	
+	\begin{center}
+		\texttt{table\_name + row\_identifier + column\_name + missing\_class + missing\_information\_area}
+	\end{center}
+	
+	Then it applies either \texttt{DROP\_ROW} or \texttt{ADD\_FLAG}.
+	
+	Expected nulls with \texttt{missing\_information\_area = NONE} are not treated as cleaning problems.
+	They are useful for documentation, but they do not require a transformation of the cleaned table.
+	
+	\subsection{Missing Value Actions for the Lap Table}
+	
+	\begin{longtable}{p{4cm}p{4cm}p{3cm}p{4cm}}
+		\toprule
+		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\texttt{LAP\_TIME\_INFORMATION}
+		& \texttt{lap\_time\_ms} is missing
+		& \texttt{DROP\_ROW}
+		& The row cannot support the main lap performance analysis without the lap time. \\
+		\midrule
+		
+		\texttt{TYRE\_INFORMATION}
+		& \texttt{compound} or \texttt{tyre\_life} is missing
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but tyre-based analysis must know that tyre information is incomplete. \\
+		\midrule
+		
+		\texttt{SECTOR\_INFORMATION}
+		& One or more sector times are missing
+		& \texttt{ADD\_FLAG}
+		& The row may still be usable for total lap time analysis, but not for complete sector analysis. \\
+		\midrule
+		
+		\texttt{SPEED\_INFORMATION}
+		& One or more speed values are missing
+		& \texttt{ADD\_FLAG}
+		& The row may still be usable for lap time analysis, but not for speed-based analysis. \\
+		\midrule
+		
+		\texttt{TRACK\_STATUS\_INFORMATION}
+		& \texttt{track\_status} is missing or not interpretable
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but clean-lap filtering and track-context analysis are limited. \\
+		\midrule
+		
+		\texttt{WEATHER\_INFORMATION}
+		& Lap-level weather context is missing
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but weather-based comparison cannot safely use it. \\
+		\midrule
+		
+		\texttt{PIT\_INFORMATION}
+		& Pit interpretation is incomplete
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but special-lap interpretation is limited. \\
+		\midrule
+		
+		\texttt{NONE}
+		& Expected null
+		& No cleaning transformation
+		& The missing value is expected and does not remove useful analytical information. \\
+		\bottomrule
+	\end{longtable}
+	
+	When the action is \texttt{ADD\_FLAG}, the value of \texttt{missing\_information\_area} is added to the row-level quality metadata of the cleaned \texttt{lap} table.
+	
+	For example, if a lap has a missing \texttt{sector2\_time\_ms}, the row is preserved and the cleaned table records that the row has missing \texttt{SECTOR\_INFORMATION}.
+	
+	\subsection{Missing Value Actions for the Result Table}
+	
+	\begin{longtable}{p{5cm}p{4cm}p{2.5cm}p{4cm}}
+		\toprule
+		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\texttt{CLASSIFICATION\_INFORMATION}
+		& position or classified\_position is missing when required
+		& \texttt{DROP\_ROW}
+		& The result cannot support the Session Result fact without classification information. \\
+		\midrule
+		
+		\texttt{QUALIFYING\_INFORMATION}
+		& Required qualifying time is missing
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but qualifying performance analysis must know that qualifying information is incomplete. \\
+		\midrule
+		
+		\texttt{RACE\_CONTEXT\_INFORMATION}
+		& Race context attributes are missing
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but race-context analysis is limited. \\
+		\midrule
+		
+		\texttt{NONE}
+		& Expected null
+		& No cleaning transformation
+		& The missing value is expected in the current session context. \\
+		\bottomrule
+	\end{longtable}
+	
+	This means that missing classification information is handled more strictly than other missing result information.
+	If classification information is missing, the row is removed from the cleaned result table.
+	If qualifying or race context information is missing, the row is preserved with a flag.
+	
+	% ============================================================
+	\section{Outlier-driven Cleaning Actions}
+	% ============================================================
+	
+	The focused outlier detection script is applied only to the \texttt{lap} table.
+	
+	The script detects outliers for the following lap-level metrics:
+	
+	\begin{table}[H]
+		\centering
+		\small
+		\begin{tabular}{p{5cm}p{8cm}}
+			\toprule
+			\textbf{Metric Group} & \textbf{Attributes} \\
+			\midrule
+			
+			Lap and sector times
+			& \texttt{lap\_time\_ms}, \texttt{sector1\_time\_ms},
+			\texttt{sector2\_time\_ms}, \texttt{sector3\_time\_ms} \\
+			\midrule
+			
+			Speed metrics
+			& \texttt{speed\_i1}, \texttt{speed\_i2},
+			\texttt{speed\_fl}, \texttt{speed\_st} \\
+			
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	`
+	
+	The cleaning script does not automatically replace outlier values.
+	The action depends on the metric and on the consensus score.
+	
+	\begin{longtable}{p{4cm}p{3cm}p{3cm}p{5cm}}
+		\toprule
+		\textbf{Metric} & \textbf{Consensus Score} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Metric} & \textbf{Consensus Score} & \textbf{Action} & \textbf{Reason} \\
+		\midrule
+		\endhead
+		
+		\texttt{lap\_time\_ms}
+		& 2
+		& \texttt{DROP\_ROW}
+		& The lap time is the core measure of lap performance. If both statistical methods flag it, the row is considered too unreliable for the cleaned analytical database. \\
+		\midrule
+		
+		\texttt{lap\_time\_ms}
+		& 1
+		& No cleaning transformation
+		& A weak lap time anomaly is not enough to remove or flag the row during cleaning. The outlier report remains available for inspection. \\
+		\midrule
+		
+		Sector time metrics
+		& 1 or 2
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but sector-based analysis should know that sector information may be unreliable. \\
+		\midrule
+		
+		Speed metrics
+		& 1 or 2
+		& \texttt{ADD\_FLAG}
+		& The row is preserved, but speed-based analysis should know that speed information may be unreliable. \\
+		\bottomrule
+	\end{longtable}
+	
+	This rule keeps the cleaning process simple.
+	
+	A strong outlier in \texttt{lap\_time\_ms} removes the row because the main analytical measure is unreliable.
+	
+	Outliers in sector or speed metrics do not remove the row.
+	They only add flags, because the same lap may still be useful for total lap time analysis.
+	
+	For example, if \texttt{speed\_i1} is detected as an outlier, the cleaned \texttt{lap} row can still be loaded for lap time analysis, but it should be excluded from speed-based visualizations.
+	
+
+	
+	% ============================================================
+	\section{Audit Log and Traceability}
+	% ============================================================
+	
+	Every cleaning action must be documented.
+	
+	The main audit output is:
+	
+	\begin{center}
+		\texttt{cleaning\_action\_log.csv}
+	\end{center}
+	
+	The audit log records only the information needed to understand what triggered the cleaning action and what the script did.
+	
+	A structure is:
+	
+	\begin{longtable}{p{4.5cm}p{10cm}}
+		\toprule
+		\textbf{Column} & \textbf{Meaning} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Column} & \textbf{Meaning} \\
+		\midrule
+		\endhead
+		
+		\texttt{source}
+		& Origin of the action. Possible values are \texttt{general\_cleaning}, \texttt{general\_dqa}, \texttt{missing\_values}, and \texttt{outlier\_detection}. \\
+		\midrule
+		
+		\texttt{table\_name}
+		& Table affected by the cleaning action. \\
+		\midrule
+		
+		\texttt{row\_identifier}
+		& Identifier of the affected row. For example, \texttt{lap\_id=...} or \texttt{result\_id=...}. \\
+		\midrule
+		
+		\texttt{target\_column}
+		& Column affected by the action, when the action concerns a specific attribute. \\
+		\midrule
+		
+		\texttt{check\_id}
+		& DQA check that generated the issue, when the action comes from the General DQA. \\
+		\midrule
+		
+		\texttt{issue\_code}
+		& Type of issue detected by the General DQA, when applicable. \\
+		\midrule
+		
+		\texttt{missing\_class}
+		& Missing value class, when the action comes from the focused missing value script. Possible values are \texttt{EXPLAINED\_NULL} and \texttt{SUSPICIOUS\_NULL}. \\
+		\midrule
+		
+		\texttt{missing\_information\_area}
+		& Type of analytical information missing from the row, when the action comes from the focused missing value script. \\
+		\midrule
+		
+		\texttt{outlier\_metric}
+		& Metric detected as an outlier, when the action comes from the outlier detection script. \\
+		\midrule
+		
+		\texttt{outlier\_consensus\_score}
+		& Number of outlier methods that flagged the value. This is used only for outlier-driven cleaning actions. \\
+		\midrule
+		
+		\texttt{cleaning\_action}
+		& Action applied by the cleaning script. Possible values are \texttt{STANDARDIZE}, \texttt{SET\_NULL}, \texttt{ADD\_FLAG}, and \texttt{DROP\_ROW}. \\
+		\midrule
+		
+		\texttt{old\_value}
+		& Value before cleaning, only when a value is modified. \\
+		\midrule
+		
+		\texttt{new\_value}
+		& Value after cleaning, only when a value is modified. \\
+		\midrule
+		
+		\texttt{reason}
+		& Short explanation of why the action was applied. \\
+		\bottomrule
+	\end{longtable}
+	
+	This audit log supports traceability and reproducibility.
+	
+	The log does not contain a separate \texttt{policy\_id} or \texttt{action\_type}, because the cleaning decision is already represented directly by the column \texttt{cleaning\_action}.
+	
+	
+	
+	% ============================================================
+	\subsection{Rejected Rows}
+	% ============================================================
+	
+	Rows are physically removed from the cleaned schema only when they cannot be safely used or repaired.
+	
+
+	Rejected rows are written to:
+	
+	\begin{center}
+		\texttt{rejected\_rows.csv}
+	\end{center}
+	
+	This file preserves the rejected data for inspection.
+	
+	The cleaned schema contains only the rows that are considered usable after the cleaning rules have been applied.
+	Rows with partial but still useful information are not rejected. Instead, they are preserved with additional flags, such as missing information areas or outlier indicators.
+	
+	% ============================================================
+	\subsection{Validation After Cleaning}
+	% ============================================================
+	
+	After the cleaning process, the General Data Quality Assessment should be executed again on the \texttt{reconciled\_clean} schema.
+	
+	This allows a comparison between:
+	
+	\begin{itemize}[leftmargin=1.2cm]
 		\item pre-cleaning issue counts;
-		\item post-cleaning issue counts.
+		\item post-cleaning issue counts;
+		\item pre-cleaning quality scores;
+		\item post-cleaning quality scores.
 	\end{itemize}
 	
 	The goal is not necessarily to obtain a perfect score for every table.
 	
-	The goal is to show that the remaining issues are either:
+	The goal is to show that the remaining issues are:
 	
-	\begin{itemize}
+	\begin{itemize}[leftmargin=1.2cm]
 		\item expected;
 		\item documented;
 		\item not safely correctable;
+		\item preserved with flags;
 		\item outside the scope of automatic cleaning.
 	\end{itemize}
 	
-	\section{Before and After Comparison}
-	
-	A summary table should be produced to show the effect of the cleaning phase.
-	
-	\begin{longtable}{p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}}
-		\toprule
-		\textbf{Table} & \textbf{Issues Before} & \textbf{Issues After} & \textbf{Score Before} & \textbf{Score After} \\
-		\midrule
-		\endfirsthead
-		
-		\toprule
-		\textbf{Table} & \textbf{Issues Before} & \textbf{Issues After} & \textbf{Score Before} & \textbf{Score After} \\
-		\midrule
-		\endhead
-		
-		season
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		driver
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		team
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		lap
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		weather
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		track\_status
-		& [placeholder]
-		& [placeholder]
-		& [placeholder]
-		& [placeholder] \\
-		
-		\bottomrule
-	\end{longtable}
-	
-	\section{Connection with the ETL Toward the Data Warehouse}
-	
-	The cleaned reconciled schema becomes the input of the ETL process toward the Data Warehouse.
-	
-	The ETL should not be based on the pre-cleaning schema.
-	
-	The preferred flow is:
-	
-	\begin{center}
-		\texttt{reconciled\_pre\_cleaning}
-		$\rightarrow$
-		\texttt{Data Quality Assessment}
-		$\rightarrow$
-		\texttt{reconciled\_clean}
-		$\rightarrow$
-		\texttt{ETL}
-		$\rightarrow$
-		\texttt{data\_warehouse}
-	\end{center}
-	
-	During the ETL, the project can decide whether to:
-	
-	\begin{itemize}
-		\item load only clean and usable laps;
-		\item load all laps but preserve quality flags;
-		\item create a specific analytical subset;
-		\item create dimensions and fact tables based on the final DFM and Star Schema.
-	\end{itemize}
-	
-	\section{Open Design Decisions}
-	
-	The following decisions must be completed during the implementation phase:
-	
-	\begin{enumerate}
-		\item Which schema name should be used for the pre-cleaning data?
-		\item Which schema name should be used for the cleaned data?
-		\item Which cleaning rules should physically modify values?
-		\item Which cleaning rules should only add flags?
-		\item Which rows should be rejected?
-		\item Which flags should remain only in cleaning metadata?
-		\item Which flags should enter the attribute tree?
-		\item Which flags should be included in the DFM as descriptive attributes or context dimensions?
-		\item Should the ETL load only clean laps or all laps with quality flags?
-	\end{enumerate}
-	
+
+
+	% ============================================================
 	\section{Conclusion}
+	% ============================================================
 	
 	The Data Cleaning phase is designed as a controlled and documented transformation process.
 	
-	The Data Quality Assessment identifies possible problems, while the Data Cleaning phase applies explicit rules to correct, standardize, flag, reject, or document the affected data.
+	The General DQA identifies structural and semantic issues.
+	The focused Missing Values script explains missing values and identifies missing information areas.
+	The Outlier Detection script flags suspicious numerical values.
+	The Data Cleaning phase combines these outputs and applies explicit policies.
 	
-	The original reconciled database should be preserved, and the cleaned data should be written into a separate schema.
-	
-	This strategy supports traceability, reproducibility, and a safer transition toward the Data Warehouse.
-	
-	The most important modeling decision is that cleaning flags become part of the cleaned reconciled schema, but they are included in the DFM only when they have analytical value or support the definition of the valid analytical grain of the fact.
+
 	
 \end{document}

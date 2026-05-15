@@ -80,8 +80,7 @@ Before running the loading scripts, make sure PostgreSQL is installed and that t
 Example:
 
 ```sql
-CREATE DATABASE f1_reconciled;
-CREATE DATABASE f1_dw;
+CREATE DATABASE f1_project;
 ```
 
 The database connection string must be configured inside the Python scripts.
@@ -89,7 +88,7 @@ The database connection string must be configured inside the Python scripts.
 Example:
 
 ```python
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_reconciled"
+DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project"
 ```
 
 Update username, password, host, port and database name according to your local setup.
@@ -162,7 +161,7 @@ data/reconciled_csv/
 Output:
 
 ```text
-PostgreSQL database: f1_reconciled
+PostgreSQL database: f1_project
 ```
 
 ---

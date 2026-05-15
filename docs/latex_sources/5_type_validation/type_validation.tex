@@ -1,0 +1,107 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\setcounter{secnumdepth}{0}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue
+}
+
+\title{Decision on Type Validation and Typed Loading}
+\author{Giuseppe Rudi}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+
+	
+	During the design of the Data Quality Assessment and Data Cleaning workflow, two possible strategies were considered.
+	
+	The first strategy was to load all re-engineered CSV files into a staging PostgreSQL schema where every column was stored as text.
+	This solution would allow the DQA to explicitly test whether each value can be converted into the expected type, such as date, boolean, integer, or floating-point number.
+	
+	However, this strategy is more suitable for uncontrolled CSV sources, where all values are initially textual and the project must infer and validate the correct data type of each column.
+	
+	This is not the main situation of the present project.
+	
+	In this project, the main data source is the FastF1 Python API.
+	FastF1 does not provide uncontrolled textual CSV files as the primary input.
+	Instead, it returns structured Pandas DataFrames, where columns already have an expected computational type or a structured representation.
+	
+	During the re-engineering phase, the project selects the relevant attributes, adds structural identifiers, converts time-related attributes into integer milliseconds, and exports coherent reconciled CSV files.
+	
+	For this reason, the project adopts a typed loading strategy.
+	
+	The re-engineered CSV files are loaded into PostgreSQL tables with explicit data types.
+	This choice is not used as a replacement for data quality assessment.
+	Rather, it reflects the fact that basic type interpretation has already been handled upstream by the API and by the controlled Python re-engineering pipeline.
+	
+	Therefore, the post-load DQA does not focus on pure type parseability checks such as:
+	
+	\begin{itemize}
+		\item whether a timestamp column can be parsed as a timestamp;
+		\item whether a boolean column can be parsed as a boolean;
+		\item whether a numerical column can be parsed as a number.
+	\end{itemize}
+	
+	These checks would be more relevant if the project started from uncontrolled textual files.
+	In this project, they would add complexity without providing significant analytical value.
+	
+	Instead, the DQA focuses on the quality problems that are still possible and relevant after typed loading.
+	
+	A value may have the correct technical type but still be invalid, inconsistent, suspicious, or analytically unusable.
+	
+	For example:
+	
+	\begin{itemize}
+		\item a speed value can be numerical but negative or unrealistic;
+		\item a lap time can be numerical but equal to zero or inconsistent with sector times;
+		\item two dates can be valid timestamps but logically inconsistent with each other;
+		\item a tyre compound can be textual but outside the expected Formula 1 compound domain;
+		\item a row can have valid types but missing identifiers;
+		\item two rows can be individually valid but duplicated according to a natural key;
+		\item a foreign key can refer to a non-existing parent row;
+		\item a lap can be valid as data but not suitable for clean performance analysis.
+	\end{itemize}
+	
+	For this reason, the project distinguishes between two levels of validity:
+	
+	\begin{itemize}
+		\item \textbf{type-level validity}, which concerns whether a value can be represented with the expected technical type;
+		\item \textbf{domain-level and semantic validity}, which concerns whether a value is meaningful, coherent, and usable in the Formula 1 analytical domain.
+	\end{itemize}
+	
+	The first level is mostly handled by the source API, the re-engineering script, and the typed loading process.
+	The second level is the main focus of the Data Quality Assessment and Data Cleaning phases.
+	
+	Examples of post-load DQA checks are:
+	
+	\begin{itemize}
+		\item missing required identifiers;
+		\item duplicated primary or natural keys;
+		\item invalid categorical domains;
+		\item impossible or unrealistic numerical values;
+		\item inconsistencies between related attributes;
+		\item mismatches between related tables;
+		\item suspicious or unreliable laps;
+		\item referential integrity problems.
+	\end{itemize}
+	
+	This decision keeps the DQA and Data Cleaning phases focused on the problems that are most relevant for the construction of the Data Warehouse.
+	
+	In particular, the project does not attempt to duplicate basic type inference already provided by the API and by the re-engineering pipeline.
+	Instead, it evaluates whether the typed and loaded values are complete, consistent, realistic, referentially correct, and analytically useful.
+	
+\end{document}

@@ -19,7 +19,6 @@ if not (PROJECT_ROOT / "artifacts").exists():
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
-
 from pipeline.utils.output_utils import ensure_dirs, write_json, write_text
 
 from pipeline.utils.input_utils import read_csv, safe_records

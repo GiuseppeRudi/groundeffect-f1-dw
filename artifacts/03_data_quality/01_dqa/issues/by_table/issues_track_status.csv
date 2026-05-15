@@ -1,10 +1,10 @@
 table_name,row_identifier,dimension,check_id,issue_code,issue_description,severity
-track_status,track_status_id=131,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=132,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=144,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=145,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=499,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=500,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=501,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=725,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
-track_status,track_status_id=726,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is null or duplicated.",red
+track_status,track_status_id=131,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=132,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=144,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=145,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=499,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=500,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=501,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=725,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
+track_status,track_status_id=726,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
