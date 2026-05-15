@@ -1305,11 +1305,88 @@
 	\textit{DriverAgeClass} should be attached to the \texttt{Driver\_Id} branch,
 	because it describes the driver rather than the lap itself.
 	
+	% ------------------------------------------------------------
+	\subsubsection{Derived Quality Attributes from Data Cleaning}
+	% ------------------------------------------------------------
+	
+	Some additional lap-level attributes are introduced after the Data Cleaning phase.
+	
+	These attributes are not part of the original reconciled schema and they are not included in
+	the initial General Attribute Tree. They are derived from the outputs of the focused
+	Missing Values analysis, the Outlier Detection script, and the Data Cleaning workflow.
+	
+	Their purpose is not to describe a Formula 1 sporting property directly, but to describe the
+	analytical usability of each lap.
+	
+	For this reason, they are considered \textit{derived quality attributes}.
+	
+	The Data Cleaning script creates one boolean flag for each relevant analytical information
+	area. A value equal to \texttt{true} means that the corresponding information area is missing,
+	incomplete, or unreliable for that lap. A value equal to \texttt{false} means that no issue was
+	detected for that information area.
+	
+
+	
+	These attributes are attached to \texttt{Lap\_Id}, because each flag describes the quality
+	condition of one specific lap row.
+	
+	\begin{longtable}{|p{5.2cm}|p{8.8cm}|}
+		\hline
+		\textbf{Derived Quality Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Quality Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{HasSectorInformationIssue}
+		&
+		Indicates that one or more sector-time attributes are missing, invalid, inconsistent, or detected as unreliable. The lap should not be used for complete sector analysis.
+		\\
+		\hline
+		
+		\textit{HasSpeedInformationIssue}
+		&
+		Indicates that one or more speed attributes are missing, invalid, or detected as unreliable. The lap should not be used for speed-based analysis.
+		\\
+		\hline
+		
+		\textit{HasTyreInformationIssue}
+		&
+		Indicates that tyre-related information, such as compound, stint, or tyre life, is missing or unreliable. The lap should be used carefully in tyre-based comparisons.
+		\\
+		\hline
+		
+		\textit{HasWeatherInformationIssue}
+		&
+		Indicates that lap-level weather context is missing or unreliable. The lap should not be used for weather-based comparison without caution.
+		\\
+		\hline
+		
+		\textit{HasTrackStatusInformationIssue}
+		&
+		Indicates that track-status information is missing or not interpretable. This affects clean-lap filtering and track-condition analysis.
+		\\
+		\hline
+		
+		\textit{HasPitInformationIssue}
+		&
+		Indicates that pit-related information is incomplete. This affects the interpretation of normal laps, in-laps, out-laps, and pit-affected laps.
+		\\
+		\hline
+		
+	\end{longtable}
+	
+
+	
+
 	
 	The following table summarizes the derived attributes considered for the
 	\textit{Lap Performance} fact.
 	
-	\begin{longtable}{|p{4.2cm}|p{4cm}|p{3.2cm}|}
+	\begin{longtable}{|p{5.5cm}|p{4cm}|p{3.2cm}|}
 		\hline
 		\textbf{Derived Attribute} & \textbf{Derived From} & \textbf{Attached To} \\
 		\hline
@@ -1351,12 +1428,42 @@
 		\hline
 		
 		\textit{TyreLifeClass}
-		& \texttt{tyre\,life}
+		& \texttt{tyre\_life}
 		& \texttt{Lap\_Id} \\
 		\hline
-	
+		
 		\textit{LapType}
 		& \texttt{pit\_out\_time\_ms}, \texttt{pit\_in\_time\_ms}
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasSectorInformationIssue}
+		& Data Cleaning
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasSpeedInformationIssue}
+		& Data Cleaning
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasTyreInformationIssue}
+		& Data Cleaning
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasWeatherInformationIssue}
+		& Data Cleaning
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasTrackStatusInformationIssue}
+		& Data Cleaning
+		& \texttt{Lap\_Id} \\
+		\hline
+		
+		\textit{HasPitInformationIssue}
+		& Data Cleaning
 		& \texttt{Lap\_Id} \\
 		\hline
 		
@@ -1440,6 +1547,15 @@
 		attributes. \\
 		\hline
 		
+		\textit{Lap Data Quality}
+		& \textit{HasSectorInformationIssue}, \textit{HasSpeedInformationIssue},
+		\textit{HasTyreInformationIssue}, \textit{HasWeatherInformationIssue},
+		\textit{HasTrackStatusInformationIssue}, \textit{HasPitInformationIssue}
+		& This dimension groups the boolean quality flags derived during the Data Cleaning phase.
+		It is used to filter laps according to the type of information that is missing or unreliable.
+		For example, laps with \textit{HasSpeedInformationIssue} equal to true should not be used for speed-based analysis. \\
+		\hline
+		
 		
 		\textit{Lap Type}
 		& \textit{LapType}
@@ -1453,7 +1569,32 @@
 		
 	\end{longtable}
 	
+	The \textit{Lap Data Quality} dimension is introduced as a technical quality dimension.
+	It does not describe the sporting context of the lap, but the reliability and completeness
+	of the information available for that lap.
 	
+	The attributes of this dimension are boolean flags derived during the Data Cleaning phase.
+	They indicate whether a specific analytical area is affected by missing, invalid, or
+	outlier information.
+	
+	This dimension can be interpreted as a \textit{junk dimension} in the Star Schema.
+	A junk dimension groups together several low-cardinality technical flags that are useful
+	for filtering and data selection, but that do not justify the creation of many separate
+	dimensions.
+
+	Some dimensions, such as \textit{Tyre Context} and \textit{Weather Context}, are created by
+	grouping several related attributes into a single analytical dimension.
+	
+	This choice is motivated by the fact that these attributes describe the same contextual
+	aspect of the lap. \textit{Tyre Context} describes the tyre condition, while
+	\textit{Weather Context} describes the environmental condition.
+	
+	Therefore, they are not direct copies of single entities in the reconciled schema, but
+	semantic dimensions created after pruning, grafting, and derived-attribute definition.
+	This makes the dimensional model clearer and more useful for OLAP queries, because related
+	attributes are analyzed together instead of being scattered across the fact table or split
+	into many small dimensions.
+	``
 	
 	%================================================
 	\subsection{Measure Definition}
@@ -1594,48 +1735,6 @@
 	\end{longtable}
 	
 
-	
-	\subsection{Fact Schema (DFM)}
-	
-	
-	The Fact Schema represents the multidimensional model.
-	
-	
-	\begin{itemize}
-		\item Central fact
-		\item Connected dimensions
-		\item Hierarchies within dimensions
-	\end{itemize}
-	
-	
-	\begin{itemize}
-		\item Fact: Lap Performance
-		\item Dimensions: Driver, Team, Session, Grand Prix, Time
-		\item Measures: Lap Time, Position
-	\end{itemize}
-	
-	\subsection{Star Schema Translation}
-	
-	
-	The Star Schema is the logical implementation of the Fact Schema.
-	
-	
-	\begin{itemize}
-		\item Fact table
-		\item Dimension tables
-		\item Foreign keys
-	\end{itemize}
-	
-	
-	\begin{itemize}
-		\item Fact Table: Lap\_Fact
-		\item Dimension Tables: Driver, Team, Session, Grand Prix, Time
-	\end{itemize}
-	
-	\subsection{Conclusion}
-	
-	This workflow provides a structured approach to transform a reconciled database into a multidimensional model suitable for analytical processing.
-	
 	
 	\section{Workflow Session Result Fact}
 	
@@ -2025,12 +2124,66 @@
 	for possible future extensions, but they are not necessary for the current analytical scope.
 
 	
-
+	% ------------------------------------------------------------
+	\subsubsection{Data-Cleaning-Derived Quality Attributes}
+	% ------------------------------------------------------------
+	
+	After the Data Cleaning phase, some additional boolean attributes are introduced for the
+	\textit{Session Result} fact.
+	
+	These attributes are not taken directly from the original \textit{Result} relation.
+	They are derived from the focused missing value analysis and from some cleaning decisions
+	applied to the \texttt{result} table.
+	
+	Their purpose is not to measure performance.
+	Instead, they describe whether some analytical information associated with a result row is
+	missing, incomplete, or unreliable.
+	
+	For this reason, they are treated as quality descriptors of the result row.
+	
+	The information area \texttt{CLASSIFICATION\_INFORMATION} is handled differently.
+	If classification information is missing when required, the corresponding result row is
+	removed during cleaning, because it cannot support the grain of the \textit{Session Result}
+	fact.
+	
+	Therefore, no boolean flag is created for classification information in the cleaned
+	\texttt{result} table.
+	
+	The retained data-cleaning-derived attributes are:
+	
+	\begin{longtable}{|p{5.5cm}|p{10.3cm}|}
+		\hline
+		\textbf{Derived Quality Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Derived Quality Attribute} & \textbf{Analytical Meaning} \\
+		\hline
+		\endhead
+		
+		\textit{HasQualifyingInformationIssue}
+		&
+		Indicates that qualifying-related information is missing, incomplete, or suspicious.
+		The row should not be used for complete qualifying time analysis without filtering.
+		\\
+		\hline
+		
+		\textit{HasRaceContextInformationIssue}
+		&
+		Indicates that some race-context information is missing, invalid, or unreliable.
+		The row may still be useful for classification analysis, but not for all race-context
+		analyses.
+		\\
+		\hline
+		
+	\end{longtable}
+	
 	
 	The following table summarizes the derived attributes introduced for the
 	\textit{Session Result} fact.
 	
-	\begin{longtable}{|p{4.8cm}|p{5.4cm}|p{5.5cm}|}
+	\begin{longtable}{|p{5.5cm}|p{5.4cm}|p{5.5cm}|}
 		\hline
 		\textbf{Derived Attribute} & \textbf{Derived From}  & \textbf{Role} \\
 		\hline
@@ -2075,56 +2228,19 @@
 		& \texttt{weather.wind\_speed}
 		& Context attribute \\
 		\hline
+		
+		\textit{HasQualifyingInformationIssue}
+		& Data Cleaning output on \texttt{result}
+		& Quality flag / Result Quality descriptor \\
+		\hline
+		
+		\textit{HasRaceContextInformationIssue}
+		& Data Cleaning output on \texttt{result}
+		& Quality flag / Result Quality descriptor \\
+		\hline
 	\end{longtable}
 	
 	
-	%================================================
-	\subsection{Preliminary Fact Schema Choices}
-	%================================================
-	
-	Based on the final edited attribute tree, the preliminary DFM structure for the
-	\textit{Session Result} fact is defined by considering the result of one driver in one
-	specific session.
-	
-	The source relation of the fact is the \textit{Result} relation. However, the conceptual
-	name of the fact is \textit{Session Result}, because the fact does not represent a generic
-	result, but the result obtained by a driver within a specific Formula 1 session.
-	
-	The grain of the fact is the following:
-	
-	\begin{quote}
-		Each primary event represents the result obtained by one driver in one specific
-		session, belonging to one specific Grand Prix and one specific Formula 1 season.
-	\end{quote}
-	
-	This grain is less detailed than the grain of the \textit{Lap Performance} fact. While
-	\textit{Lap Performance} analyzes each individual lap, \textit{Session Result} summarizes
-	the outcome of a whole session for each driver.
-	
-	Several modeling choices were considered before defining the final dimensions and
-	measures.
-	
-	First, the attributes related to driver, team, session, Grand Prix, circuit, and season
-	were retained because they define the main analytical coordinates of the fact. These
-	dimensions are also coherent with the \textit{Lap Performance} fact and support possible
-	cross-fact analyses.
-	
-	Second, raw result-status attributes were not used directly as analytical dimensions.
-	Instead, derived categorical attributes such as \textit{ResultStatusCategory} and
-	\textit{ResultClassificationCategory} were introduced. This choice makes the model more
-	interpretable and avoids using raw textual values that may be too detailed or inconsistent
-	for analytical purposes.
-	
-	Third, weather information was introduced only in aggregated form at session level.
-	Since the fact represents the result of a whole session, weather observations must be
-	summarized over the session before being attached to the fact. For this reason, attributes
-	such as \textit{RainFlag}, \textit{AvgAirTempClass}, \textit{AvgTrackTempClass}, and
-	\textit{AvgWindSpeedClass} are considered contextual dimensions.
-	
-	Finally, the numerical attributes were separated into additive and non-additive
-	measures. In particular, \textit{Points} and \textit{Laps} can be meaningfully summed,
-	while positions, qualifying times, and gap-based measures must be analyzed using
-	aggregation functions such as \texttt{AVG}, \texttt{MIN}, and \texttt{MAX}.
 	
 	%================================================
 	\subsection{Dimension Definition}
@@ -2137,7 +2253,7 @@
 	The following table summarizes the main dimensions selected for the
 	\textit{Session Result} fact.
 	
-	\begin{longtable}{|p{3cm}|p{6cm}|p{8cm}|}
+	\begin{longtable}{|p{3.5cm}|p{6cm}|p{7.5cm}|}
 		\hline
 		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
 		\hline
@@ -2191,7 +2307,25 @@
 		categorical attributes. \\
 		\hline
 		
+		\textit{Result Data Quality}
+		& \textit{HasQualifyingInformationIssue},
+		\textit{HasRaceContextInformationIssue}
+		& This technical junk dimension groups boolean quality flags derived from the
+		Data Cleaning phase. It is used to filter result rows according to the
+		reliability of qualifying and race-context information. \\
+		\hline
+		
 	\end{longtable}
+	
+	
+	In addition to the main business dimensions, the model includes a technical
+	\textit{Result Data Quality} dimension.
+	
+	This dimension is a junk dimension because it groups low-cardinality boolean
+	quality flags derived from the Data Cleaning phase. These flags are not measures
+	and they do not represent a real business entity. They are included to support
+	OLAP filtering and to avoid using result rows in analyses for which some
+	important information is missing or unreliable.
 	
 	%================================================
 	\subsection{Measure Definition}
@@ -2385,46 +2519,7 @@
 		
 	\end{longtable}
 	
-	\subsection{Fact Schema (DFM)}
 	
-	
-	The Fact Schema represents the multidimensional model.
-	
-	
-	\begin{itemize}
-		\item Central fact
-		\item Connected dimensions
-		\item Hierarchies within dimensions
-	\end{itemize}
-	
-	
-	\begin{itemize}
-		\item Fact: Lap Performance
-		\item Dimensions: Driver, Team, Session, Grand Prix, Time
-		\item Measures: Lap Time, Position
-	\end{itemize}
-	
-	\subsection{Star Schema Translation}
-	
-	
-	The Star Schema is the logical implementation of the Fact Schema.
-	
-	
-	\begin{itemize}
-		\item Fact table
-		\item Dimension tables
-		\item Foreign keys
-	\end{itemize}
-	
-	
-	\begin{itemize}
-		\item Fact Table: Lap\_Fact
-		\item Dimension Tables: Driver, Team, Session, Grand Prix, Time
-	\end{itemize}
-	
-	\subsection{Conclusion}
-	
-	This workflow provides a structured approach to transform a reconciled database into a multidimensional model suitable for analytical processing.
 	
 	
 \end{document}

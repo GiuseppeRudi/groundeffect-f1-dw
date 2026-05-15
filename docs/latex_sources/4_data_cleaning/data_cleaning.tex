@@ -795,7 +795,8 @@
 	\section{Missing-value-driven Cleaning Actions}
 	% ============================================================
 	
-	The focused missing value script produces row-level flags for the \texttt{lap} and \texttt{result} tables.
+	The focused missing value script produces row-level flags for the \texttt{lap}
+	and \texttt{result} tables.
 	
 	The cleaning script uses these flags directly.
 	No additional policy identifier is needed.
@@ -808,12 +809,93 @@
 	
 	Then it applies either \texttt{DROP\_ROW} or \texttt{ADD\_FLAG}.
 	
-	Expected nulls with \texttt{missing\_information\_area = NONE} are not treated as cleaning problems.
-	They are useful for documentation, but they do not require a transformation of the cleaned table.
+	However, in the cleaned schema, \texttt{ADD\_FLAG} does not mean that all missing
+	information areas are stored inside a single textual attribute.
 	
+	The cleaned schema uses one boolean flag for each relevant
+	information area.
+	
+	The meaning of these flags is:
+	
+	\begin{center}
+		\textit{true means that the row has a missing or unreliable information problem
+			in that analytical area.}
+	\end{center}
+	
+	For example:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item \texttt{has\_tyre\_information\_issue = true} means that tyre information is incomplete or unreliable.
+	\end{itemize}
+	
+	This representation is more suitable for SQL and OLAP queries.
+	For example, to select laps that are usable for sector-based analysis, it is sufficient
+	to filter:
+	
+	\begin{center}
+		\texttt{has\_sector\_information\_issue = false}
+	\end{center}
+	
+	Expected nulls with \texttt{missing\_information\_area = NONE} are not treated as
+	cleaning problems.
+	They are useful for documentation, but they do not require a transformation of the
+	cleaned table.
+	
+	% ------------------------------------------------------------
 	\subsection{Missing Value Actions for the Lap Table}
+	% ------------------------------------------------------------
 	
-	\begin{longtable}{p{4cm}p{4cm}p{3cm}p{4cm}}
+	For the \texttt{lap} table, the cleaning script creates a set of boolean quality
+	flags.
+	
+	\begin{longtable}{p{6cm}p{4cm}p{5cm}}
+		\toprule
+		\textbf{Boolean Flag in Cleaned Table} & \textbf{Activated By} & \textbf{Meaning} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Boolean Flag in Cleaned Table} & \textbf{Activated By} & \textbf{Meaning} \\
+		\midrule
+		\endhead
+		
+		\texttt{has\_sector\_information\_issue}
+		& \texttt{SECTOR\_INFORMATION}
+		& Sector information is missing or unreliable. The row should not be used for complete sector analysis. \\
+		\midrule
+		
+		\texttt{has\_speed\_information\_issue}
+		& \texttt{SPEED\_INFORMATION}
+		& Speed information is missing or unreliable. The row should not be used for speed-based analysis. \\
+		\midrule
+		
+		\texttt{has\_tyre\_information\_issue}
+		& \texttt{TYRE\_INFORMATION}
+		& Tyre information is missing or unreliable. The row should not be used for tyre-based comparison without caution. \\
+		\midrule
+		
+		\texttt{has\_weather\_information\_issue}
+		& \texttt{WEATHER\_INFORMATION}
+		& Weather context information is missing or unreliable. Weather-based comparison is limited. \\
+		\midrule
+		
+		\texttt{has\_track\_status\_information\_issue}
+		& \texttt{TRACK\_STATUS\_INFORMATION}
+		& Track status information is missing or not interpretable. Clean-lap filtering is limited. \\
+		\midrule
+		
+		\texttt{has\_pit\_information\_issue}
+		& \texttt{PIT\_INFORMATION}
+		& Pit-related interpretation is incomplete. Special-lap analysis is limited. \\
+		\bottomrule
+	\end{longtable}
+	
+	The information area \texttt{LAP\_TIME\_INFORMATION} is handled differently.
+	If \texttt{lap\_time\_ms} is missing, the row is not flagged and preserved.
+	Instead, the row is removed from the cleaned \texttt{lap} table, because
+	\texttt{lap\_time\_ms} is the core measure of the Lap Performance fact.
+	
+	\begin{longtable}{p{4cm}p{5cm}p{4cm}p{4cm}}
 		\toprule
 		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
 		\midrule
@@ -833,37 +915,37 @@
 		\texttt{TYRE\_INFORMATION}
 		& \texttt{compound} or \texttt{tyre\_life} is missing
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but tyre-based analysis must know that tyre information is incomplete. \\
+		& The row is preserved and \texttt{has\_tyre\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{SECTOR\_INFORMATION}
 		& One or more sector times are missing
 		& \texttt{ADD\_FLAG}
-		& The row may still be usable for total lap time analysis, but not for complete sector analysis. \\
+		& The row is preserved and \texttt{has\_sector\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{SPEED\_INFORMATION}
 		& One or more speed values are missing
 		& \texttt{ADD\_FLAG}
-		& The row may still be usable for lap time analysis, but not for speed-based analysis. \\
+		& The row is preserved and \texttt{has\_speed\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{TRACK\_STATUS\_INFORMATION}
 		& \texttt{track\_status} is missing or not interpretable
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but clean-lap filtering and track-context analysis are limited. \\
+		& The row is preserved and \texttt{has\_track\_status\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{WEATHER\_INFORMATION}
 		& Lap-level weather context is missing
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but weather-based comparison cannot safely use it. \\
+		& The row is preserved and \texttt{has\_weather\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{PIT\_INFORMATION}
 		& Pit interpretation is incomplete
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but special-lap interpretation is limited. \\
+		& The row is preserved and \texttt{has\_pit\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{NONE}
@@ -873,11 +955,40 @@
 		\bottomrule
 	\end{longtable}
 	
-	When the action is \texttt{ADD\_FLAG}, the value of \texttt{missing\_information\_area} is added to the row-level quality metadata of the cleaned \texttt{lap} table.
+
 	
-	For example, if a lap has a missing \texttt{sector2\_time\_ms}, the row is preserved and the cleaned table records that the row has missing \texttt{SECTOR\_INFORMATION}.
-	
+	% ------------------------------------------------------------
 	\subsection{Missing Value Actions for the Result Table}
+	% ------------------------------------------------------------
+	
+	For the \texttt{result} table, the same principle is used.
+	The cleaned table does not store a combined textual list of missing information areas.
+	Instead, it stores one boolean flag for each relevant result information area.
+	
+	\begin{longtable}{p{5cm}p{5cm}p{5cm}}
+		\toprule
+		\textbf{Boolean Flag in Cleaned Table} & \textbf{Activated By} & \textbf{Meaning} \\
+		\midrule
+		\endfirsthead
+		
+		\toprule
+		\textbf{Boolean Flag in Cleaned Table} & \textbf{Activated By} & \textbf{Meaning} \\
+		\midrule
+		\endhead
+		
+		\texttt{has\_qualifying\_information\_issue}
+		& \texttt{QUALIFYING\_INFORMATION}
+		& Qualifying information is incomplete or suspicious. The row should not be used directly for complete qualifying time analysis. \\
+		\midrule
+		
+		\texttt{has\_race\_context\_information\_issue}
+		& \texttt{RACE\_CONTEXT\_INFORMATION}
+		& Race context information is incomplete. The row may still be usable for classification analysis, but not for all race-context analyses. \\
+		\bottomrule
+	\end{longtable}
+	
+	The information area \texttt{CLASSIFICATION\_INFORMATION} is handled more strictly.
+	If position or classified position information is missing when required, the row is removed from the cleaned \texttt{result} table.
 	
 	\begin{longtable}{p{5cm}p{4cm}p{2.5cm}p{4cm}}
 		\toprule
@@ -891,7 +1002,7 @@
 		\endhead
 		
 		\texttt{CLASSIFICATION\_INFORMATION}
-		& position or classified\_position is missing when required
+		& Position or classified position is missing when required
 		& \texttt{DROP\_ROW}
 		& The result cannot support the Session Result fact without classification information. \\
 		\midrule
@@ -899,13 +1010,13 @@
 		\texttt{QUALIFYING\_INFORMATION}
 		& Required qualifying time is missing
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but qualifying performance analysis must know that qualifying information is incomplete. \\
+		& The row is preserved and \texttt{has\_qualifying\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{RACE\_CONTEXT\_INFORMATION}
 		& Race context attributes are missing
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but race-context analysis is limited. \\
+		& The row is preserved and \texttt{has\_race\_context\_information\_issue} is set to true. \\
 		\midrule
 		
 		\texttt{NONE}
@@ -914,10 +1025,6 @@
 		& The missing value is expected in the current session context. \\
 		\bottomrule
 	\end{longtable}
-	
-	This means that missing classification information is handled more strictly than other missing result information.
-	If classification information is missing, the row is removed from the cleaned result table.
-	If qualifying or race context information is missing, the row is preserved with a flag.
 	
 	% ============================================================
 	\section{Outlier-driven Cleaning Actions}
@@ -947,10 +1054,30 @@
 			\bottomrule
 		\end{tabular}
 	\end{table}
-	`
 	
-	The cleaning script does not automatically replace outlier values.
-	The action depends on the metric and on the consensus score.
+	The outlier detection output is not interpreted as automatic proof that a value is wrong.
+	An outlier may be caused by real Formula 1 situations, by driver behaviour, by tyre degradation, or by source-specific recording effects.
+	
+	For this reason, the cleaning script does not automatically replace outlier values with artificial values.
+	The action depends on:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item the metric that was flagged;
+		\item the consensus score returned by the outlier detection script.
+	\end{itemize}
+	
+	The same quality-flag logic used for missing values is also used for outliers.
+
+	
+	For example:
+	
+	\begin{itemize}[leftmargin=1.2cm]
+		\item a sector-time outlier activates \texttt{has\_sector\_information\_issue};
+		\item a speed outlier activates \texttt{has\_speed\_information\_issue}.
+	\end{itemize}
+	
+	This means that the same flag can represent both missing information and unreliable information in the same analytical area.
+	For example, \texttt{has\_speed\_information\_issue = true} means that the speed information of the lap should not be trusted for speed-based analysis, either because it is missing or because it was detected as an outlier.
 	
 	\begin{longtable}{p{4cm}p{3cm}p{3cm}p{5cm}}
 		\toprule
@@ -975,29 +1102,33 @@
 		& A weak lap time anomaly is not enough to remove or flag the row during cleaning. The outlier report remains available for inspection. \\
 		\midrule
 		
-		Sector time metrics
+		\texttt{sector1\_time\_ms}, \texttt{sector2\_time\_ms}, \texttt{sector3\_time\_ms}
 		& 1 or 2
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but sector-based analysis should know that sector information may be unreliable. \\
+		& The row is preserved, but \texttt{has\_sector\_information\_issue} is set to true because sector information may be unreliable. \\
 		\midrule
 		
-		Speed metrics
+		\texttt{speed\_i1}, \texttt{speed\_i2}, \texttt{speed\_fl}, \texttt{speed\_st}
 		& 1 or 2
 		& \texttt{ADD\_FLAG}
-		& The row is preserved, but speed-based analysis should know that speed information may be unreliable. \\
+		& The row is preserved, but \texttt{has\_speed\_information\_issue} is set to true because speed information may be unreliable. \\
 		\bottomrule
 	\end{longtable}
 	
 	This rule keeps the cleaning process simple.
 	
 	A strong outlier in \texttt{lap\_time\_ms} removes the row because the main analytical measure is unreliable.
+	In this case, adding a flag would not be useful, because the row would not be suitable for the main Lap Performance fact.
 	
 	Outliers in sector or speed metrics do not remove the row.
-	They only add flags, because the same lap may still be useful for total lap time analysis.
+	They only activate the corresponding boolean quality flag, because the same lap may still be useful for total lap time analysis.
 	
-	For example, if \texttt{speed\_i1} is detected as an outlier, the cleaned \texttt{lap} row can still be loaded for lap time analysis, but it should be excluded from speed-based visualizations.
+	For example, if \texttt{speed\_i1} is detected as an outlier, the cleaned \texttt{lap} row can still be used for lap time analysis, but it should be excluded from speed-based visualizations by filtering:
 	
-
+	\begin{center}
+		\texttt{has\_speed\_information\_issue = false}
+	\end{center}
+	
 	
 	% ============================================================
 	\section{Audit Log and Traceability}
@@ -1013,7 +1144,10 @@
 	
 	The audit log records only the information needed to understand what triggered the cleaning action and what the script did.
 	
-	A structure is:
+	After the introduction of boolean quality flags, the audit log does not store a combined textual list of missing information areas.
+	Instead, when the cleaning action is \texttt{ADD\_FLAG}, the log records the specific boolean flag column that was activated.
+	
+	A possible structure is:
 	
 	\begin{longtable}{p{4.5cm}p{10cm}}
 		\toprule
@@ -1039,7 +1173,11 @@
 		\midrule
 		
 		\texttt{target\_column}
-		& Column affected by the action, when the action concerns a specific attribute. \\
+		& Column affected by the action when the action modifies or evaluates a specific source attribute. For example, \texttt{sector2\_time\_ms}, \texttt{speed\_i1}, or \texttt{compound}. \\
+		\midrule
+		
+		\texttt{quality\_flag\_column}
+		& Boolean quality flag activated by the cleaning action, when applicable. For example, \texttt{has\_sector\_information\_issue} or \texttt{has\_speed\_information\_issue}. \\
 		\midrule
 		
 		\texttt{check\_id}
@@ -1054,8 +1192,8 @@
 		& Missing value class, when the action comes from the focused missing value script. Possible values are \texttt{EXPLAINED\_NULL} and \texttt{SUSPICIOUS\_NULL}. \\
 		\midrule
 		
-		\texttt{missing\_information\_area}
-		& Type of analytical information missing from the row, when the action comes from the focused missing value script. \\
+		\texttt{information\_area}
+		& Analytical information area affected by the issue. This can come from missing values, DQA cleaning, or outlier detection. Examples are \texttt{SECTOR\_INFORMATION}, \texttt{SPEED\_INFORMATION}, \texttt{TYRE\_INFORMATION}, and \texttt{QUALIFYING\_INFORMATION}. \\
 		\midrule
 		
 		\texttt{outlier\_metric}
@@ -1071,11 +1209,11 @@
 		\midrule
 		
 		\texttt{old\_value}
-		& Value before cleaning, only when a value is modified. \\
+		& Value before cleaning, only when a value was modified. For \texttt{ADD\_FLAG}, this can be the previous boolean value of the quality flag. \\
 		\midrule
 		
 		\texttt{new\_value}
-		& Value after cleaning, only when a value is modified. \\
+		& Value after cleaning, only when a value was modified. For \texttt{ADD\_FLAG}, this is usually \texttt{true}. \\
 		\midrule
 		
 		\texttt{reason}
@@ -1087,7 +1225,21 @@
 	
 	The log does not contain a separate \texttt{policy\_id} or \texttt{action\_type}, because the cleaning decision is already represented directly by the column \texttt{cleaning\_action}.
 	
+	The column \texttt{information\_area} explains the analytical meaning of the problem, while \texttt{quality\_flag\_column} explains which boolean flag was actually changed in the cleaned table.
 	
+	For example, if \texttt{sector2\_time\_ms} is missing, the audit log records:
+	
+	\begin{center}
+		\texttt{information\_area = SECTOR\_INFORMATION}
+	\end{center}
+	
+	and:
+	
+	\begin{center}
+		\texttt{quality\_flag\_column = has\_sector\_information\_issue}
+	\end{center}
+	
+	This makes the cleaning action clear, while avoiding the previous problem of storing multiple categories inside a single textual attribute.
 	
 	% ============================================================
 	\subsection{Rejected Rows}
