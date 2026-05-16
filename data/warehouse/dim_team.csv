@@ -1,11 +1,11 @@
-team_key,team_id,team_name,nationality
-1,alfa,Alfa Romeo,Swiss
-2,alphatauri,AlphaTauri,Italian
-3,alpine,Alpine F1 Team,French
-4,aston_martin,Aston Martin,British
-5,ferrari,Ferrari,Italian
-6,haas,Haas F1 Team,American
-7,mclaren,McLaren,British
-8,mercedes,Mercedes,German
-9,red_bull,Red Bull,Austrian
-10,williams,Williams,British
+team_id,team_name,nationality
+alfa,Alfa Romeo,Swiss
+alphatauri,AlphaTauri,Italian
+alpine,Alpine F1 Team,French
+aston_martin,Aston Martin,British
+ferrari,Ferrari,Italian
+haas,Haas F1 Team,American
+mclaren,McLaren,British
+mercedes,Mercedes,German
+red_bull,Red Bull,Austrian
+williams,Williams,British

@@ -1,45 +1,45 @@
-grand_prix_key,grand_prix_id,season_year,round_number,circuit_id,event_name,event_date,event_format,season_key,circuit_key
-1,1,2021,1,bahrain,Bahrain Grand Prix,2021-03-28,conventional,1,2
-2,2,2021,2,imola,Emilia Romagna Grand Prix,2021-04-18,conventional,1,8
-3,3,2021,3,portimao,Portuguese Grand Prix,2021-05-02,conventional,1,19
-4,4,2021,4,barcelona,Spanish Grand Prix,2021-05-09,conventional,1,4
-5,5,2021,5,monaco,Monaco Grand Prix,2021-05-23,conventional,1,16
-6,6,2021,6,baku,Azerbaijan Grand Prix,2021-06-06,conventional,1,3
-7,7,2021,7,paul_ricard,French Grand Prix,2021-06-20,conventional,1,18
-8,8,2021,8,red_bull_ring,Styrian Grand Prix,2021-06-27,conventional,1,20
-9,9,2021,9,red_bull_ring,Austrian Grand Prix,2021-07-04,conventional,1,20
-10,10,2021,10,silverstone,British Grand Prix,2021-07-18,sprint,1,21
-11,11,2021,11,hungaroring,Hungarian Grand Prix,2021-08-01,conventional,1,7
-12,12,2021,12,spa,Belgian Grand Prix,2021-08-29,conventional,1,23
-13,13,2021,13,zandvoort,Dutch Grand Prix,2021-09-05,conventional,1,26
-14,14,2021,14,monza,Italian Grand Prix,2021-09-12,sprint,1,17
-15,15,2021,15,sochi,Russian Grand Prix,2021-09-26,conventional,1,22
-16,16,2021,16,istanbul,Turkish Grand Prix,2021-10-10,conventional,1,10
-17,17,2021,17,cota,United States Grand Prix,2021-10-24,conventional,1,5
-18,18,2021,18,mexico_city,Mexico City Grand Prix,2021-11-07,conventional,1,14
-19,19,2021,19,interlagos,São Paulo Grand Prix,2021-11-14,sprint,1,9
-20,20,2021,20,losail,Qatar Grand Prix,2021-11-21,conventional,1,12
-21,21,2021,21,jeddah,Saudi Arabian Grand Prix,2021-12-05,conventional,1,11
-22,22,2021,22,yas_marina,Abu Dhabi Grand Prix,2021-12-12,conventional,1,25
-23,23,2022,1,bahrain,Bahrain Grand Prix,2022-03-20,conventional,2,2
-24,24,2022,2,jeddah,Saudi Arabian Grand Prix,2022-03-27,conventional,2,11
-25,25,2022,3,albert_park,Australian Grand Prix,2022-04-10,conventional,2,1
-26,26,2022,4,imola,Emilia Romagna Grand Prix,2022-04-24,sprint,2,8
-27,27,2022,5,miami,Miami Grand Prix,2022-05-08,conventional,2,15
-28,28,2022,6,barcelona,Spanish Grand Prix,2022-05-22,conventional,2,4
-29,29,2022,7,monaco,Monaco Grand Prix,2022-05-29,conventional,2,16
-30,30,2022,8,baku,Azerbaijan Grand Prix,2022-06-12,conventional,2,3
-31,31,2022,9,gilles_villeneuve,Canadian Grand Prix,2022-06-19,conventional,2,6
-32,32,2022,10,silverstone,British Grand Prix,2022-07-03,conventional,2,21
-33,33,2022,11,red_bull_ring,Austrian Grand Prix,2022-07-10,sprint,2,20
-34,34,2022,12,paul_ricard,French Grand Prix,2022-07-24,conventional,2,18
-35,35,2022,13,hungaroring,Hungarian Grand Prix,2022-07-31,conventional,2,7
-36,36,2022,14,spa,Belgian Grand Prix,2022-08-28,conventional,2,23
-37,37,2022,15,zandvoort,Dutch Grand Prix,2022-09-04,conventional,2,26
-38,38,2022,16,monza,Italian Grand Prix,2022-09-11,conventional,2,17
-39,39,2022,17,marina_bay,Singapore Grand Prix,2022-10-02,conventional,2,13
-40,40,2022,18,suzuka,Japanese Grand Prix,2022-10-09,conventional,2,24
-41,41,2022,19,cota,United States Grand Prix,2022-10-23,conventional,2,5
-42,42,2022,20,mexico_city,Mexico City Grand Prix,2022-10-30,conventional,2,14
-43,43,2022,21,interlagos,São Paulo Grand Prix,2022-11-13,sprint,2,9
-44,44,2022,22,yas_marina,Abu Dhabi Grand Prix,2022-11-20,conventional,2,25
+grand_prix_id,season_year,round_number,circuit_id,event_name,event_date,event_format
+1,2021,1,bahrain,Bahrain Grand Prix,2021-03-28,conventional
+2,2021,2,imola,Emilia Romagna Grand Prix,2021-04-18,conventional
+3,2021,3,portimao,Portuguese Grand Prix,2021-05-02,conventional
+4,2021,4,barcelona,Spanish Grand Prix,2021-05-09,conventional
+5,2021,5,monaco,Monaco Grand Prix,2021-05-23,conventional
+6,2021,6,baku,Azerbaijan Grand Prix,2021-06-06,conventional
+7,2021,7,paul_ricard,French Grand Prix,2021-06-20,conventional
+8,2021,8,red_bull_ring,Styrian Grand Prix,2021-06-27,conventional
+9,2021,9,red_bull_ring,Austrian Grand Prix,2021-07-04,conventional
+10,2021,10,silverstone,British Grand Prix,2021-07-18,sprint
+11,2021,11,hungaroring,Hungarian Grand Prix,2021-08-01,conventional
+12,2021,12,spa,Belgian Grand Prix,2021-08-29,conventional
+13,2021,13,zandvoort,Dutch Grand Prix,2021-09-05,conventional
+14,2021,14,monza,Italian Grand Prix,2021-09-12,sprint
+15,2021,15,sochi,Russian Grand Prix,2021-09-26,conventional
+16,2021,16,istanbul,Turkish Grand Prix,2021-10-10,conventional
+17,2021,17,cota,United States Grand Prix,2021-10-24,conventional
+18,2021,18,mexico_city,Mexico City Grand Prix,2021-11-07,conventional
+19,2021,19,interlagos,São Paulo Grand Prix,2021-11-14,sprint
+20,2021,20,losail,Qatar Grand Prix,2021-11-21,conventional
+21,2021,21,jeddah,Saudi Arabian Grand Prix,2021-12-05,conventional
+22,2021,22,yas_marina,Abu Dhabi Grand Prix,2021-12-12,conventional
+23,2022,1,bahrain,Bahrain Grand Prix,2022-03-20,conventional
+24,2022,2,jeddah,Saudi Arabian Grand Prix,2022-03-27,conventional
+25,2022,3,albert_park,Australian Grand Prix,2022-04-10,conventional
+26,2022,4,imola,Emilia Romagna Grand Prix,2022-04-24,sprint
+27,2022,5,miami,Miami Grand Prix,2022-05-08,conventional
+28,2022,6,barcelona,Spanish Grand Prix,2022-05-22,conventional
+29,2022,7,monaco,Monaco Grand Prix,2022-05-29,conventional
+30,2022,8,baku,Azerbaijan Grand Prix,2022-06-12,conventional
+31,2022,9,gilles_villeneuve,Canadian Grand Prix,2022-06-19,conventional
+32,2022,10,silverstone,British Grand Prix,2022-07-03,conventional
+33,2022,11,red_bull_ring,Austrian Grand Prix,2022-07-10,sprint
+34,2022,12,paul_ricard,French Grand Prix,2022-07-24,conventional
+35,2022,13,hungaroring,Hungarian Grand Prix,2022-07-31,conventional
+36,2022,14,spa,Belgian Grand Prix,2022-08-28,conventional
+37,2022,15,zandvoort,Dutch Grand Prix,2022-09-04,conventional
+38,2022,16,monza,Italian Grand Prix,2022-09-11,conventional
+39,2022,17,marina_bay,Singapore Grand Prix,2022-10-02,conventional
+40,2022,18,suzuka,Japanese Grand Prix,2022-10-09,conventional
+41,2022,19,cota,United States Grand Prix,2022-10-23,conventional
+42,2022,20,mexico_city,Mexico City Grand Prix,2022-10-30,conventional
+43,2022,21,interlagos,São Paulo Grand Prix,2022-11-13,sprint
+44,2022,22,yas_marina,Abu Dhabi Grand Prix,2022-11-20,conventional
