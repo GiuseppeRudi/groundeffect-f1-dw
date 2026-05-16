@@ -30,23 +30,19 @@ The script also supports older table aliases used during the project:
 - lap_performance   -> lap
 - session_weather   -> weather
 
-Output CSVs:
-- dim_driver.csv
-- dim_team.csv
-- dim_season.csv
-- dim_grand_prix.csv
-- dim_circuit.csv
-- dim_session.csv
-- fact_lap_performance.csv
-- fact_session_result.csv
-- dw_build_log.csv
-- dw_validation_report.csv
+Output CSVs and warehouse tables:
+- shared dimensions: dim_driver, dim_team, dim_season, dim_grand_prix, dim_circuit, dim_session, dim_session_type
+- Lap Performance dimensions: dim_tyre_context, dim_track_status, dim_weather_context, dim_lap_type, dim_lap_number, dim_lap_data_quality
+- Session Result dimensions: dim_result_outcome, dim_result_weather_context, dim_result_data_quality
+- facts: fact_lap_performance, fact_session_result
+- metadata CSVs: dw_build_log.csv, dw_validation_report.csv
 """
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
+import os
 
 import numpy as np
 import pandas as pd
@@ -58,10 +54,24 @@ from sqlalchemy.engine import Engine
 # CONFIG
 # ============================================================
 
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project"
-SCHEMA_NAME = "public"
+# Main PostgreSQL connection. The default database is f1_project.
+# If your local DB is really named f1_proejct, set the environment variable
+# F1_DATABASE_URL before running the script.
+DATABASE_URL = os.getenv(
+    "F1_DATABASE_URL",
+    "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project",
+)
 
-OUTPUT_DIR = Path("dw_staging_csv")
+# The cleaned reconciled schema is the source level for the DW ETL.
+SOURCE_SCHEMA_NAME = os.getenv("F1_SOURCE_SCHEMA", "reconciled_clean")
+
+# The Star Schema / Data Warehouse is written here.
+WAREHOUSE_SCHEMA_NAME = os.getenv("F1_WAREHOUSE_SCHEMA", "warehouse")
+DROP_WAREHOUSE_SCHEMA_BEFORE_LOAD = True
+LOAD_TO_WAREHOUSE_DB = True
+EXPORT_CSVS = True
+
+OUTPUT_DIR = Path(os.getenv("F1_DW_OUTPUT_DIR", "dw_staging_csv"))
 
 # Keep False during development so that the script writes a validation report
 # instead of stopping at the first modeling inconsistency.
@@ -84,6 +94,26 @@ TABLE_ALIASES = {
     "track_status": ["track_status", "session_track_status"],
     "circuit": ["circuit"],
 }
+
+# Boolean quality attributes created by the Data Cleaning phase and retained in the DW.
+# They implement the Lap Data Quality and Result Data Quality junk dimensions described
+# in the conceptual report.
+LAP_QUALITY_FLAGS = [
+    "has_sector_information_issue",
+    "has_speed_information_issue",
+    "has_tyre_information_issue",
+    "has_weather_information_issue",
+    "has_track_status_information_issue",
+    "has_pit_information_issue",
+]
+
+RESULT_QUALITY_FLAGS = [
+    "has_qualifying_information_issue",
+    "has_race_context_information_issue",
+]
+
+LOW_MEDIUM_HIGH_UNKNOWN = {"Low", "Medium", "High", "Unknown"}
+
 
 
 # ============================================================
@@ -195,6 +225,93 @@ def build_composite_id(df: pd.DataFrame, cols: list[str], prefix: str) -> pd.Ser
     )
 
 
+def normalize_bool_or_false(value: object) -> bool:
+    normalized = normalize_bool(value)
+    if pd.isna(normalized):
+        return False
+    return bool(normalized)
+
+
+def normalize_bool_or_unknown(value: object) -> object:
+    normalized = normalize_bool(value)
+    if pd.isna(normalized):
+        return pd.NA
+    return bool(normalized)
+
+
+def ensure_quality_flag_columns(df: pd.DataFrame, flag_columns: list[str]) -> pd.DataFrame:
+    """Ensure data-cleaning-derived quality flags exist and are boolean."""
+    out = df.copy()
+    for col in flag_columns:
+        if col not in out.columns:
+            out[col] = False
+        else:
+            out[col] = out[col].apply(normalize_bool_or_false).astype(bool)
+    return out
+
+
+def fill_unknown_for_columns(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    out = df.copy()
+    for col in columns:
+        if col not in out.columns:
+            out[col] = "Unknown"
+        else:
+            out[col] = out[col].where(out[col].notna(), "Unknown")
+    return out
+
+
+def build_low_cardinality_dimension(
+    source_df: pd.DataFrame,
+    attributes: list[str],
+    key_name: str,
+    *,
+    bool_columns: list[str] | None = None,
+    sort_columns: list[str] | None = None,
+) -> pd.DataFrame:
+    """Build a small dimension from a set of low-cardinality attributes."""
+    bool_columns = bool_columns or []
+    sort_columns = sort_columns or attributes
+
+    work = ensure_columns(source_df, attributes).copy()
+    for col in bool_columns:
+        if col in work.columns:
+            work[col] = work[col].apply(normalize_bool_or_false).astype(bool)
+
+    for col in attributes:
+        if col in bool_columns:
+            continue
+        if col in work.columns:
+            work[col] = work[col].where(work[col].notna(), "Unknown")
+
+    dim = work[attributes].drop_duplicates().reset_index(drop=True)
+    dim = sort_if_possible(dim, sort_columns)
+    return add_surrogate_key(dim, key_name)
+
+
+def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
+    preferred = [
+        "dim_driver",
+        "dim_team",
+        "dim_season",
+        "dim_circuit",
+        "dim_grand_prix",
+        "dim_session",
+        "dim_session_type",
+        "dim_tyre_context",
+        "dim_track_status",
+        "dim_weather_context",
+        "dim_lap_type",
+        "dim_lap_number",
+        "dim_lap_data_quality",
+        "dim_result_outcome",
+        "dim_result_weather_context",
+        "dim_result_data_quality",
+        "fact_lap_performance",
+        "fact_session_result",
+    ]
+    return [name for name in preferred if name in dimensions or name.startswith("fact_")]
+
+
 # ============================================================
 # DATABASE ACCESS
 # ============================================================
@@ -204,9 +321,9 @@ def connect_to_reconciled_db() -> Engine:
     return create_engine(DATABASE_URL)
 
 
-def list_database_tables(engine: Engine) -> set[str]:
+def list_database_tables(engine: Engine, schema_name: str) -> set[str]:
     inspector = inspect(engine)
-    return set(inspector.get_table_names(schema=SCHEMA_NAME))
+    return set(inspector.get_table_names(schema=schema_name))
 
 
 def resolve_table_name(logical_name: str, available_tables: set[str]) -> str | None:
@@ -216,8 +333,8 @@ def resolve_table_name(logical_name: str, available_tables: set[str]) -> str | N
     return None
 
 
-def read_table(engine: Engine, table_name: str) -> pd.DataFrame:
-    sql = f"SELECT * FROM {quote_ident(SCHEMA_NAME)}.{quote_ident(table_name)}"
+def read_table(engine: Engine, table_name: str, schema_name: str) -> pd.DataFrame:
+    sql = f"SELECT * FROM {quote_ident(schema_name)}.{quote_ident(table_name)}"
     with engine.connect() as conn:
         df = pd.read_sql_query(text(sql), conn)
     return normalize_columns(df)
@@ -225,7 +342,7 @@ def read_table(engine: Engine, table_name: str) -> pd.DataFrame:
 
 def load_source_tables(engine: Engine) -> dict[str, pd.DataFrame]:
 
-    available = list_database_tables(engine)
+    available = list_database_tables(engine, SOURCE_SCHEMA_NAME)
     tables: dict[str, pd.DataFrame] = {}
     missing: list[str] = []
 
@@ -234,12 +351,17 @@ def load_source_tables(engine: Engine) -> dict[str, pd.DataFrame]:
         if physical_name is None:
             missing.append(logical_name)
             continue
-        tables[logical_name] = read_table(engine, physical_name)
-        print(f"LOADED {physical_name} -> {logical_name}: {len(tables[logical_name]):,} rows")
+        tables[logical_name] = read_table(engine, physical_name, SOURCE_SCHEMA_NAME)
+        print(
+            f"LOADED {SOURCE_SCHEMA_NAME}.{physical_name} -> {logical_name}: "
+            f"{len(tables[logical_name]):,} rows"
+        )
 
     if missing:
         raise RuntimeError(
-            "Missing expected reconciled tables: "
+            "Missing expected reconciled tables in schema "
+            + SOURCE_SCHEMA_NAME
+            + ": "
             + ", ".join(missing)
             + ". Available tables are: "
             + ", ".join(sorted(available))
@@ -394,7 +516,7 @@ def derive_starting_tyre_set_status(value: object) -> str:
     normalized = normalize_bool(value)
     if pd.isna(normalized):
         return "Unknown"
-    return "NewTyreSet" if normalized else "UsedTyreSet"
+    return "NewSet" if normalized else "UsedSet"
 
 
 def derive_tyre_life_class(value: object) -> str:
@@ -445,16 +567,20 @@ def derive_track_status_category(message: object, status: object = None) -> str:
 
 def derive_result_classification_category(value: object) -> str:
     if pd.isna(value):
-        return "Unknown"
+        return "NotApplicable"
     text_value = str(value).strip().upper()
     if text_value.isdigit():
         return "Classified"
     if text_value == "R":
         return "Retired"
+    if text_value in {"D", "DQ", "DSQ"}:
+        return "Disqualified"
+    if text_value == "E":
+        return "Excluded"
     if text_value == "W":
         return "Withdrawn"
-    if text_value in {"D", "DQ", "DSQ", "E"}:
-        return "Disqualified"
+    if text_value == "F":
+        return "FailedToQualify"
     if text_value in {"N", "NC"}:
         return "NotClassified"
     return "Other"
@@ -462,51 +588,43 @@ def derive_result_classification_category(value: object) -> str:
 
 def derive_result_status_category(value: object) -> str:
     if pd.isna(value):
-        return "Unknown"
+        return "NotApplicable"
     text_value = str(value).strip().lower()
 
     if text_value == "finished":
         return "Finished"
     if text_value.startswith("+"):
-        return "ClassifiedGap"
+        return "Lapped"
     if "disqualified" in text_value or "excluded" in text_value:
         return "Disqualified"
     if "did not start" in text_value or text_value == "dns":
         return "DidNotStart"
-
-    incident_words = [
-        "accident",
-        "collision",
-        "spun off",
-        "crash",
-        "damage",
-    ]
-    if any(word in text_value for word in incident_words):
-        return "IncidentRetirement"
-
-    mechanical_words = [
-        "engine",
-        "gearbox",
-        "hydraulic",
-        "transmission",
-        "power unit",
-        "brake",
-        "brakes",
-        "suspension",
-        "electrical",
-        "fuel",
-        "oil",
-        "water",
-        "exhaust",
-        "clutch",
-        "turbo",
-    ]
-    if any(word in text_value for word in mechanical_words):
-        return "MechanicalRetirement"
-
+    if "collision" in text_value:
+        return "Collision"
+    if any(word in text_value for word in ["accident", "spun off", "crash", "damage"]):
+        return "Accident"
+    if any(word in text_value for word in ["engine", "power unit", "turbo"]):
+        return "PowerUnitIssue"
+    if any(
+        word in text_value
+        for word in [
+            "gearbox",
+            "hydraulic",
+            "transmission",
+            "brake",
+            "brakes",
+            "suspension",
+            "electrical",
+            "fuel",
+            "oil",
+            "water",
+            "exhaust",
+            "clutch",
+        ]
+    ):
+        return "MechanicalIssue"
     if "retired" in text_value or "withdrawn" in text_value:
-        return "Retirement"
-
+        return "Retired"
     return "Other"
 
 
@@ -546,7 +664,6 @@ def context_time_col_for_lap(lap_df: pd.DataFrame) -> pd.Series:
         return to_numeric(lap_df["time_ms"])
     return pd.Series(np.nan, index=lap_df.index)
 
-
 def merge_asof_by_session(
     left_df: pd.DataFrame,
     right_df: pd.DataFrame,
@@ -556,37 +673,80 @@ def merge_asof_by_session(
     suffix: str,
 ) -> pd.DataFrame:
     """
-    A robust group-wise asof merge for time-dependent session data.
+    Robust group-wise asof merge for time-dependent session data.
 
-    For each fact row, find the nearest previous context row in the same session.
-    If no previous row exists, use the nearest row in that session as fallback.
+    For each fact row, the function searches the nearest previous context row
+    inside the same session. If no previous context row exists, it uses the
+    nearest context row in the same session as fallback.
+
+    Important:
+    temporary indexes are reset inside each group, because pandas boolean masks
+    must be aligned with the dataframe they filter.
     """
+
     if left_df.empty or right_df.empty:
         return left_df.copy()
 
-    missing_left = [col for col in session_cols + [left_time_col] if col not in left_df.columns]
-    missing_right = [col for col in session_cols + [right_time_col] if col not in right_df.columns]
+    missing_left = [
+        col for col in session_cols + [left_time_col]
+        if col not in left_df.columns
+    ]
+    missing_right = [
+        col for col in session_cols + [right_time_col]
+        if col not in right_df.columns
+    ]
+
     if missing_left or missing_right:
         return left_df.copy()
 
     pieces: list[pd.DataFrame] = []
+
     right_grouped = right_df.groupby(session_cols, dropna=False, sort=False)
 
     for session_key, left_group in left_df.groupby(session_cols, dropna=False, sort=False):
-        session_key_tuple = session_key if isinstance(session_key, tuple) else (session_key,)
         try:
             right_group = right_grouped.get_group(session_key)
         except KeyError:
-            missing_context = left_group.copy()
-            pieces.append(missing_context)
+            pieces.append(left_group.copy())
             continue
 
-        left_work = left_group.sort_values(left_time_col, kind="stable").copy()
-        right_work = right_group.sort_values(right_time_col, kind="stable").copy()
+        left_work = (
+            left_group
+            .sort_values(left_time_col, kind="stable")
+            .reset_index(drop=True)
+            .copy()
+        )
 
-        # First attempt: previous valid context row.
+        right_work = (
+            right_group
+            .sort_values(right_time_col, kind="stable")
+            .reset_index(drop=True)
+            .copy()
+        )
+
+        left_work[left_time_col] = pd.to_numeric(left_work[left_time_col], errors="coerce")
+        right_work[right_time_col] = pd.to_numeric(right_work[right_time_col], errors="coerce")
+
+        left_without_time = left_work[left_work[left_time_col].isna()].copy()
+
+        left_with_time = (
+            left_work[left_work[left_time_col].notna()]
+            .reset_index(drop=True)
+            .copy()
+        )
+
+        right_work = (
+            right_work[right_work[right_time_col].notna()]
+            .reset_index(drop=True)
+            .copy()
+        )
+
+        if left_with_time.empty or right_work.empty:
+            pieces.append(left_work.copy())
+            continue
+
         merged = pd.merge_asof(
-            left_work,
+            left_with_time,
             right_work,
             left_on=left_time_col,
             right_on=right_time_col,
@@ -594,29 +754,43 @@ def merge_asof_by_session(
             suffixes=("", suffix),
         )
 
-        # Fallback: if the first context row is after the lap timestamp, use nearest.
         context_cols = [col for col in right_work.columns if col not in session_cols]
+
         if context_cols:
             first_context_col = context_cols[0]
-            missing_mask = merged[first_context_col].isna() if first_context_col in merged.columns else pd.Series(False, index=merged.index)
-            if missing_mask.any():
+
+            if first_context_col in merged.columns:
+                missing_mask = merged[first_context_col].isna().to_numpy()
+            else:
+                missing_mask = [False] * len(merged)
+
+            if any(missing_mask):
                 nearest = pd.merge_asof(
-                    left_work.loc[missing_mask].copy(),
+                    left_with_time.iloc[missing_mask].copy(),
                     right_work,
                     left_on=left_time_col,
                     right_on=right_time_col,
                     direction="nearest",
                     suffixes=("", suffix),
                 )
+
+                nearest = nearest.reset_index(drop=True)
+
                 merged.loc[missing_mask, nearest.columns] = nearest.to_numpy()
 
-        # Groupby with nullable keys may coerce tuple-like values; preserve source rows only.
+        if not left_without_time.empty:
+            merged = pd.concat(
+                [merged, left_without_time],
+                ignore_index=True,
+                sort=False,
+            )
+
         pieces.append(merged)
 
     if not pieces:
         return left_df.copy()
-    return pd.concat(pieces, ignore_index=True)
 
+    return pd.concat(pieces, ignore_index=True, sort=False)
 
 def add_lap_weather_context(lap_df: pd.DataFrame, weather_df: pd.DataFrame) -> pd.DataFrame:
     out = lap_df.copy()
@@ -944,6 +1118,85 @@ def build_shared_dimensions(tables: dict[str, pd.DataFrame]) -> dict[str, pd.Dat
     }
 
 
+
+def build_dim_session_type(session_df: pd.DataFrame) -> pd.DataFrame:
+    work = ensure_columns(session_df, ["session_type"]).copy()
+    work["session_type"] = work["session_type"].where(work["session_type"].notna(), "Unknown")
+    work["session_type_description"] = work["session_type"].map(
+        {
+            "Q": "Qualifying",
+            "R": "Race",
+        }
+    ).fillna("Unknown")
+    dim = work[["session_type", "session_type_description"]].drop_duplicates().reset_index(drop=True)
+    dim = sort_if_possible(dim, ["session_type"])
+    return add_surrogate_key(dim, "session_type_key")
+
+
+def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    lap_work = ensure_quality_flag_columns(lap_work, LAP_QUALITY_FLAGS)
+
+    return {
+        "dim_tyre_context": build_low_cardinality_dimension(
+            lap_work,
+            ["compound", "starting_tyre_set_status", "tyre_life_class"],
+            "tyre_context_key",
+        ),
+        "dim_track_status": build_low_cardinality_dimension(
+            lap_work,
+            ["track_status_category"],
+            "track_status_key",
+        ),
+        "dim_weather_context": build_low_cardinality_dimension(
+            lap_work,
+            ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
+            "weather_context_key",
+            bool_columns=["rain_flag"],
+        ),
+        "dim_lap_type": build_low_cardinality_dimension(
+            lap_work,
+            ["lap_type"],
+            "lap_type_key",
+        ),
+        "dim_lap_number": build_low_cardinality_dimension(
+            lap_work,
+            ["lap_number"],
+            "lap_number_key",
+            sort_columns=["lap_number"],
+        ),
+        "dim_lap_data_quality": build_low_cardinality_dimension(
+            lap_work,
+            LAP_QUALITY_FLAGS,
+            "lap_data_quality_key",
+            bool_columns=LAP_QUALITY_FLAGS,
+        ),
+    }
+
+
+def build_result_specific_dimensions(result_work: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    result_work = ensure_quality_flag_columns(result_work, RESULT_QUALITY_FLAGS)
+
+    return {
+        "dim_result_outcome": build_low_cardinality_dimension(
+            result_work,
+            ["result_status_category", "result_classification_category"],
+            "result_outcome_key",
+        ),
+        "dim_result_weather_context": build_low_cardinality_dimension(
+            result_work,
+            ["rain_flag", "avg_air_temp_class", "avg_track_temp_class", "avg_wind_speed_class"],
+            "result_weather_context_key",
+            bool_columns=["rain_flag"],
+        ),
+        "dim_result_data_quality": build_low_cardinality_dimension(
+            result_work,
+            RESULT_QUALITY_FLAGS,
+            "result_data_quality_key",
+            bool_columns=RESULT_QUALITY_FLAGS,
+        ),
+    }
+
+
 # ============================================================
 # DIMENSION KEY MAPPING
 # ============================================================
@@ -993,21 +1246,22 @@ def map_all_shared_dimension_keys(
 
 
 # ============================================================
-# FACT BUILDERS
+# FACT PREPARATION AND BUILDERS
 # ============================================================
 
-def build_lap_performance_fact(
+def prepare_lap_performance_work(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
     """
-    Build fact_lap_performance.
+    Prepare the lap-level working table before final Star Schema pruning.
 
-    Grain:
-    one lap performed by one driver in one specific session, belonging to
-    one specific Grand Prix and one specific Formula 1 season.
+    This keeps all derived dimensional attributes temporarily, so that the
+    low-cardinality dimensions described in the LaTeX report can be built from
+    real data combinations and then mapped back to surrogate keys.
     """
     lap = tables["lap"].copy()
+    lap = ensure_quality_flag_columns(lap, LAP_QUALITY_FLAGS)
 
     if "lap_id" not in lap.columns:
         lap["lap_id"] = build_composite_id(
@@ -1035,59 +1289,41 @@ def build_lap_performance_fact(
     lap = add_lap_weather_context(lap, tables["weather"])
     lap = add_lap_track_status_context(lap, tables["track_status"])
 
-    # Map shared dimension keys.
+    # Normalize context attributes before dimension construction.
+    lap = fill_unknown_for_columns(
+        lap,
+        [
+            "compound",
+            "lap_type",
+            "starting_tyre_set_status",
+            "tyre_life_class",
+            "air_temp_class",
+            "track_temp_class",
+            "wind_speed_class",
+            "track_status_category",
+            "session_type",
+        ],
+    )
+    if "rain_flag" in lap.columns:
+        lap["rain_flag"] = lap["rain_flag"].apply(normalize_bool_or_false).astype(bool)
+    else:
+        lap["rain_flag"] = False
+
+    # Map shared structural dimension keys.
     lap = map_all_shared_dimension_keys(lap, dimensions)
-
-    # Final selection: this is the operational pruning step.
-    final_columns = [
-        "lap_id",
-        "driver_key",
-        "team_key",
-        "session_key",
-        "grand_prix_key",
-        "circuit_key",
-        "season_key",
-        # Degenerate / low-cardinality analytical dimensions kept directly in the fact.
-        "lap_number",
-        "compound",
-        "lap_type",
-        "starting_tyre_set_status",
-        "tyre_life_class",
-        "rain_flag",
-        "air_temp_class",
-        "track_temp_class",
-        "wind_speed_class",
-        "track_status_category",
-        # Measures.
-        "lap_time_ms",
-        "sector1_time_ms",
-        "sector2_time_ms",
-        "sector3_time_ms",
-        "speed_i1",
-        "speed_i2",
-        "speed_fl",
-        "speed_st",
-        "position",
-    ]
-
-    lap = ensure_columns(lap, final_columns)
-    fact = lap[final_columns].copy()
-    fact = add_surrogate_key(fact, "lap_performance_key")
-    return fact
+    lap = map_dimension_key(lap, dimensions["dim_session_type"], ["session_type"], "session_type_key")
+    return lap
 
 
-def build_session_result_fact(
+def prepare_session_result_work(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
     """
-    Build fact_session_result.
-
-    Grain:
-    one driver in one specific session, belonging to one specific Grand Prix
-    and one specific Formula 1 season.
+    Prepare the result-level working table before final Star Schema pruning.
     """
     result = tables["result"].copy()
+    result = ensure_quality_flag_columns(result, RESULT_QUALITY_FLAGS)
 
     if "result_id" not in result.columns:
         result["result_id"] = build_composite_id(
@@ -1124,36 +1360,152 @@ def build_session_result_fact(
             validate="m:1",
         )
     else:
-        result["rain_flag"] = pd.NA
+        result["rain_flag"] = False
         result["avg_air_temp_class"] = "Unknown"
         result["avg_track_temp_class"] = "Unknown"
         result["avg_wind_speed_class"] = "Unknown"
 
-    # Map shared dimension keys.
+    result = fill_unknown_for_columns(
+        result,
+        [
+            "result_classification_category",
+            "result_status_category",
+            "avg_air_temp_class",
+            "avg_track_temp_class",
+            "avg_wind_speed_class",
+            "session_type",
+        ],
+    )
+    if "rain_flag" in result.columns:
+        result["rain_flag"] = result["rain_flag"].apply(normalize_bool_or_false).astype(bool)
+    else:
+        result["rain_flag"] = False
+
+    # Map shared structural dimension keys.
     result = map_all_shared_dimension_keys(result, dimensions)
+    result = map_dimension_key(result, dimensions["dim_session_type"], ["session_type"], "session_type_key")
+    return result
+
+
+def finalize_lap_performance_fact(
+    lap_work: pd.DataFrame,
+    dimensions: dict[str, pd.DataFrame],
+) -> pd.DataFrame:
+    lap = lap_work.copy()
+
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_tyre_context"],
+        ["compound", "starting_tyre_set_status", "tyre_life_class"],
+        "tyre_context_key",
+    )
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_track_status"],
+        ["track_status_category"],
+        "track_status_key",
+    )
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_weather_context"],
+        ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
+        "weather_context_key",
+    )
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_lap_type"],
+        ["lap_type"],
+        "lap_type_key",
+    )
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_lap_number"],
+        ["lap_number"],
+        "lap_number_key",
+    )
+    lap = map_dimension_key(
+        lap,
+        dimensions["dim_lap_data_quality"],
+        LAP_QUALITY_FLAGS,
+        "lap_data_quality_key",
+    )
+
+    final_columns = [
+        "lap_id",
+        "driver_key",
+        "team_key",
+        "session_key",
+        "session_type_key",
+        "grand_prix_key",
+        "circuit_key",
+        "season_key",
+        "tyre_context_key",
+        "track_status_key",
+        "weather_context_key",
+        "lap_type_key",
+        "lap_number_key",
+        "lap_data_quality_key",
+        # Measures.
+        "lap_time_ms",
+        "sector1_time_ms",
+        "sector2_time_ms",
+        "sector3_time_ms",
+        "speed_i1",
+        "speed_i2",
+        "speed_fl",
+        "speed_st",
+        "position",
+    ]
+
+    lap = ensure_columns(lap, final_columns)
+    fact = lap[final_columns].copy()
+    fact = add_surrogate_key(fact, "lap_performance_key")
+    return fact
+
+
+def finalize_session_result_fact(
+    result_work: pd.DataFrame,
+    dimensions: dict[str, pd.DataFrame],
+) -> pd.DataFrame:
+    result = result_work.copy()
+
+    result = map_dimension_key(
+        result,
+        dimensions["dim_result_outcome"],
+        ["result_status_category", "result_classification_category"],
+        "result_outcome_key",
+    )
+    result = map_dimension_key(
+        result,
+        dimensions["dim_result_weather_context"],
+        ["rain_flag", "avg_air_temp_class", "avg_track_temp_class", "avg_wind_speed_class"],
+        "result_weather_context_key",
+    )
+    result = map_dimension_key(
+        result,
+        dimensions["dim_result_data_quality"],
+        RESULT_QUALITY_FLAGS,
+        "result_data_quality_key",
+    )
 
     final_columns = [
         "result_id",
         "driver_key",
         "team_key",
         "session_key",
+        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
-        # Derived categorical/context attributes.
-        "result_classification_category",
-        "result_status_category",
-        "rain_flag",
-        "avg_air_temp_class",
-        "avg_track_temp_class",
-        "avg_wind_speed_class",
+        "result_outcome_key",
+        "result_weather_context_key",
+        "result_data_quality_key",
         # Measures.
         "position",
         "grid_position",
         "q1_ms",
         "q2_ms",
         "q3_ms",
-        "time_ms",
         "gap_to_leader_ms",
         "points",
         "laps",
@@ -1163,6 +1515,41 @@ def build_session_result_fact(
     fact = result[final_columns].copy()
     fact = add_surrogate_key(fact, "session_result_key")
     return fact
+
+
+# Backward-compatible wrappers. They are intentionally kept, but the main workflow
+# now uses prepare_* + dimension construction + finalize_* to build a proper star schema.
+def build_lap_performance_fact(
+    tables: dict[str, pd.DataFrame],
+    dimensions: dict[str, pd.DataFrame],
+) -> pd.DataFrame:
+    lap_work = prepare_lap_performance_work(tables, dimensions)
+    missing = {
+        "dim_tyre_context",
+        "dim_track_status",
+        "dim_weather_context",
+        "dim_lap_type",
+        "dim_lap_number",
+        "dim_lap_data_quality",
+    } - set(dimensions)
+    if missing:
+        dimensions.update(build_lap_specific_dimensions(lap_work))
+    return finalize_lap_performance_fact(lap_work, dimensions)
+
+
+def build_session_result_fact(
+    tables: dict[str, pd.DataFrame],
+    dimensions: dict[str, pd.DataFrame],
+) -> pd.DataFrame:
+    result_work = prepare_session_result_work(tables, dimensions)
+    missing = {
+        "dim_result_outcome",
+        "dim_result_weather_context",
+        "dim_result_data_quality",
+    } - set(dimensions)
+    if missing:
+        dimensions.update(build_result_specific_dimensions(result_work))
+    return finalize_session_result_fact(result_work, dimensions)
 
 
 # ============================================================
@@ -1291,72 +1678,106 @@ def validate_outputs(
     validate_no_duplicates(fact_session_result, "fact_session_result", ["result_id"], issues)
 
     # Dimension key checks.
-    shared_fk_cols = [
+    lap_fk_cols = [
         "driver_key",
         "team_key",
         "session_key",
+        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
+        "tyre_context_key",
+        "track_status_key",
+        "weather_context_key",
+        "lap_type_key",
+        "lap_number_key",
+        "lap_data_quality_key",
     ]
-    validate_no_missing_keys(fact_lap_performance, "fact_lap_performance", shared_fk_cols, issues)
-    validate_no_missing_keys(fact_session_result, "fact_session_result", shared_fk_cols, issues)
+    result_fk_cols = [
+        "driver_key",
+        "team_key",
+        "session_key",
+        "session_type_key",
+        "grand_prix_key",
+        "circuit_key",
+        "season_key",
+        "result_outcome_key",
+        "result_weather_context_key",
+        "result_data_quality_key",
+    ]
+    validate_no_missing_keys(fact_lap_performance, "fact_lap_performance", lap_fk_cols, issues)
+    validate_no_missing_keys(fact_session_result, "fact_session_result", result_fk_cols, issues)
 
-    # Domain checks for derived attributes.
-    temp_classes = {"Low", "Medium", "High", "Unknown"}
-    validate_domain(fact_lap_performance, "fact_lap_performance", "air_temp_class", temp_classes, issues)
-    validate_domain(fact_lap_performance, "fact_lap_performance", "track_temp_class", temp_classes, issues)
-    validate_domain(fact_lap_performance, "fact_lap_performance", "wind_speed_class", temp_classes, issues)
-    validate_domain(fact_lap_performance, "fact_lap_performance", "tyre_life_class", temp_classes, issues)
-    validate_domain(
-        fact_lap_performance,
-        "fact_lap_performance",
-        "lap_type",
-        {"NormalLap", "OutLap", "InLap", "PitAffectedLap"},
-        issues,
-    )
-    validate_domain(
-        fact_lap_performance,
-        "fact_lap_performance",
-        "starting_tyre_set_status",
-        {"NewTyreSet", "UsedTyreSet", "Unknown"},
-        issues,
-    )
-    validate_domain(
-        fact_lap_performance,
-        "fact_lap_performance",
-        "track_status_category",
-        {"AllClear", "Yellow", "SCDeployed", "VSCDeployed", "VSCEnding", "Red", "Other", "Unknown"},
-        issues,
-    )
+    # Dimension-level domain checks.
+    if "dim_weather_context" in dimensions:
+        dim = dimensions["dim_weather_context"]
+        validate_domain(dim, "dim_weather_context", "air_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_weather_context", "track_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_weather_context", "wind_speed_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
 
-    validate_domain(
-        fact_session_result,
-        "fact_session_result",
-        "result_classification_category",
-        {"Classified", "Retired", "Withdrawn", "Disqualified", "NotClassified", "Other", "Unknown"},
-        issues,
-    )
-    validate_domain(
-        fact_session_result,
-        "fact_session_result",
-        "result_status_category",
-        {
-            "Finished",
-            "ClassifiedGap",
-            "Disqualified",
-            "DidNotStart",
-            "IncidentRetirement",
-            "MechanicalRetirement",
-            "Retirement",
-            "Other",
-            "Unknown",
-        },
-        issues,
-    )
-    validate_domain(fact_session_result, "fact_session_result", "avg_air_temp_class", temp_classes, issues)
-    validate_domain(fact_session_result, "fact_session_result", "avg_track_temp_class", temp_classes, issues)
-    validate_domain(fact_session_result, "fact_session_result", "avg_wind_speed_class", temp_classes, issues)
+    if "dim_tyre_context" in dimensions:
+        dim = dimensions["dim_tyre_context"]
+        validate_domain(dim, "dim_tyre_context", "tyre_life_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(
+            dim,
+            "dim_tyre_context",
+            "starting_tyre_set_status",
+            {"NewSet", "UsedSet", "Unknown"},
+            issues,
+        )
+
+    if "dim_lap_type" in dimensions:
+        validate_domain(
+            dimensions["dim_lap_type"],
+            "dim_lap_type",
+            "lap_type",
+            {"NormalLap", "OutLap", "InLap", "PitAffectedLap", "Unknown"},
+            issues,
+        )
+
+    if "dim_track_status" in dimensions:
+        validate_domain(
+            dimensions["dim_track_status"],
+            "dim_track_status",
+            "track_status_category",
+            {"AllClear", "Yellow", "SCDeployed", "VSCDeployed", "VSCEnding", "Red", "Other", "Unknown"},
+            issues,
+        )
+
+    if "dim_result_outcome" in dimensions:
+        dim = dimensions["dim_result_outcome"]
+        validate_domain(
+            dim,
+            "dim_result_outcome",
+            "result_classification_category",
+            {"Classified", "Retired", "Withdrawn", "Disqualified", "Excluded", "NotClassified", "FailedToQualify", "NotApplicable", "Other"},
+            issues,
+        )
+        validate_domain(
+            dim,
+            "dim_result_outcome",
+            "result_status_category",
+            {
+                "Finished",
+                "Lapped",
+                "Disqualified",
+                "DidNotStart",
+                "Accident",
+                "Collision",
+                "PowerUnitIssue",
+                "MechanicalIssue",
+                "Retired",
+                "Other",
+                "NotApplicable",
+            },
+            issues,
+        )
+
+    if "dim_result_weather_context" in dimensions:
+        dim = dimensions["dim_result_weather_context"]
+        validate_domain(dim, "dim_result_weather_context", "avg_air_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_result_weather_context", "avg_track_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_result_weather_context", "avg_wind_speed_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
 
     # Row-count coherence.
     validate_row_count(tables["lap"], fact_lap_performance, "lap", "fact_lap_performance", issues)
@@ -1385,7 +1806,7 @@ def validate_outputs(
 
 
 # ============================================================
-# EXPORT
+# EXPORT AND WAREHOUSE LOADING
 # ============================================================
 
 def export_csv(df: pd.DataFrame, filename: str) -> None:
@@ -1410,19 +1831,50 @@ def build_log(output_tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def export_csvs(
+def collect_output_tables(
     dimensions: dict[str, pd.DataFrame],
     fact_lap_performance: pd.DataFrame,
     fact_session_result: pd.DataFrame,
-    validation_report: pd.DataFrame,
-) -> None:
-    ensure_output_dir()
-
+) -> dict[str, pd.DataFrame]:
     output_tables = {
         **dimensions,
         "fact_lap_performance": fact_lap_performance,
         "fact_session_result": fact_session_result,
     }
+
+    preferred_order = [
+        "dim_driver",
+        "dim_team",
+        "dim_season",
+        "dim_circuit",
+        "dim_grand_prix",
+        "dim_session",
+        "dim_session_type",
+        "dim_tyre_context",
+        "dim_track_status",
+        "dim_weather_context",
+        "dim_lap_type",
+        "dim_lap_number",
+        "dim_lap_data_quality",
+        "dim_result_outcome",
+        "dim_result_weather_context",
+        "dim_result_data_quality",
+        "fact_lap_performance",
+        "fact_session_result",
+    ]
+
+    ordered = {name: output_tables[name] for name in preferred_order if name in output_tables}
+    for name, df in output_tables.items():
+        if name not in ordered:
+            ordered[name] = df
+    return ordered
+
+
+def export_csvs(
+    output_tables: dict[str, pd.DataFrame],
+    validation_report: pd.DataFrame,
+) -> None:
+    ensure_output_dir()
 
     for table_name, df in output_tables.items():
         export_csv(df, f"{table_name}.csv")
@@ -1432,35 +1884,242 @@ def export_csvs(
     export_csv(validation_report, "dw_validation_report.csv")
 
 
+def prepare_warehouse_schema(engine: Engine) -> None:
+    with engine.begin() as conn:
+        if DROP_WAREHOUSE_SCHEMA_BEFORE_LOAD:
+            conn.execute(text(f"DROP SCHEMA IF EXISTS {quote_ident(WAREHOUSE_SCHEMA_NAME)} CASCADE"))
+        conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {quote_ident(WAREHOUSE_SCHEMA_NAME)}"))
+
+
+def load_tables_to_warehouse(engine: Engine, output_tables: dict[str, pd.DataFrame]) -> None:
+    prepare_warehouse_schema(engine)
+
+    with engine.begin() as conn:
+        for table_name, df in output_tables.items():
+            print(f"LOADING {WAREHOUSE_SCHEMA_NAME}.{table_name}: {len(df):,} rows")
+            df.to_sql(
+                table_name,
+                conn,
+                schema=WAREHOUSE_SCHEMA_NAME,
+                if_exists="replace",
+                index=False,
+                method="multi",
+                chunksize=1000,
+            )
+
+    add_warehouse_constraints(engine)
+
+
+def constraint_exists(conn, constraint_name: str) -> bool:
+    result = conn.execute(
+        text(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.table_constraints
+                WHERE table_schema = :schema_name
+                  AND constraint_name = :constraint_name
+            )
+            """
+        ),
+        {"schema_name": WAREHOUSE_SCHEMA_NAME, "constraint_name": constraint_name},
+    )
+    return bool(result.scalar())
+
+
+def table_exists_in_schema(conn, table_name: str) -> bool:
+    result = conn.execute(
+        text(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.tables
+                WHERE table_schema = :schema_name
+                  AND table_name = :table_name
+            )
+            """
+        ),
+        {"schema_name": WAREHOUSE_SCHEMA_NAME, "table_name": table_name},
+    )
+    return bool(result.scalar())
+
+
+def column_exists_in_schema(conn, table_name: str, column_name: str) -> bool:
+    result = conn.execute(
+        text(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_schema = :schema_name
+                  AND table_name = :table_name
+                  AND column_name = :column_name
+            )
+            """
+        ),
+        {
+            "schema_name": WAREHOUSE_SCHEMA_NAME,
+            "table_name": table_name,
+            "column_name": column_name,
+        },
+    )
+    return bool(result.scalar())
+
+
+def safe_add_constraint(conn, sql: str, constraint_name: str) -> None:
+    if constraint_exists(conn, constraint_name):
+        return
+    try:
+        conn.execute(text(sql))
+    except Exception as exc:
+        print(f"[WARNING] Could not add constraint {constraint_name}: {exc}")
+
+
+def add_primary_key(conn, table_name: str, key_col: str) -> None:
+    if not table_exists_in_schema(conn, table_name) or not column_exists_in_schema(conn, table_name, key_col):
+        return
+    constraint_name = f"pk_{table_name}"
+    safe_add_constraint(
+        conn,
+        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(table_name)} "
+        f"ADD CONSTRAINT {quote_ident(constraint_name)} PRIMARY KEY ({quote_ident(key_col)})",
+        constraint_name,
+    )
+
+
+def add_foreign_key(conn, child_table: str, child_col: str, parent_table: str, parent_col: str) -> None:
+    if not table_exists_in_schema(conn, child_table) or not table_exists_in_schema(conn, parent_table):
+        return
+    if not column_exists_in_schema(conn, child_table, child_col) or not column_exists_in_schema(conn, parent_table, parent_col):
+        return
+    constraint_name = f"fk_{child_table}_{child_col}_to_{parent_table}_{parent_col}"
+    safe_add_constraint(
+        conn,
+        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(child_table)} "
+        f"ADD CONSTRAINT {quote_ident(constraint_name)} "
+        f"FOREIGN KEY ({quote_ident(child_col)}) "
+        f"REFERENCES {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(parent_table)} ({quote_ident(parent_col)})",
+        constraint_name,
+    )
+
+
+def add_warehouse_constraints(engine: Engine) -> None:
+    primary_keys = {
+        "dim_driver": "driver_key",
+        "dim_team": "team_key",
+        "dim_season": "season_key",
+        "dim_circuit": "circuit_key",
+        "dim_grand_prix": "grand_prix_key",
+        "dim_session": "session_key",
+        "dim_session_type": "session_type_key",
+        "dim_tyre_context": "tyre_context_key",
+        "dim_track_status": "track_status_key",
+        "dim_weather_context": "weather_context_key",
+        "dim_lap_type": "lap_type_key",
+        "dim_lap_number": "lap_number_key",
+        "dim_lap_data_quality": "lap_data_quality_key",
+        "dim_result_outcome": "result_outcome_key",
+        "dim_result_weather_context": "result_weather_context_key",
+        "dim_result_data_quality": "result_data_quality_key",
+        "fact_lap_performance": "lap_performance_key",
+        "fact_session_result": "session_result_key",
+    }
+
+    fact_lap_fks = {
+        "driver_key": ("dim_driver", "driver_key"),
+        "team_key": ("dim_team", "team_key"),
+        "session_key": ("dim_session", "session_key"),
+        "session_type_key": ("dim_session_type", "session_type_key"),
+        "grand_prix_key": ("dim_grand_prix", "grand_prix_key"),
+        "circuit_key": ("dim_circuit", "circuit_key"),
+        "season_key": ("dim_season", "season_key"),
+        "tyre_context_key": ("dim_tyre_context", "tyre_context_key"),
+        "track_status_key": ("dim_track_status", "track_status_key"),
+        "weather_context_key": ("dim_weather_context", "weather_context_key"),
+        "lap_type_key": ("dim_lap_type", "lap_type_key"),
+        "lap_number_key": ("dim_lap_number", "lap_number_key"),
+        "lap_data_quality_key": ("dim_lap_data_quality", "lap_data_quality_key"),
+    }
+
+    fact_result_fks = {
+        "driver_key": ("dim_driver", "driver_key"),
+        "team_key": ("dim_team", "team_key"),
+        "session_key": ("dim_session", "session_key"),
+        "session_type_key": ("dim_session_type", "session_type_key"),
+        "grand_prix_key": ("dim_grand_prix", "grand_prix_key"),
+        "circuit_key": ("dim_circuit", "circuit_key"),
+        "season_key": ("dim_season", "season_key"),
+        "result_outcome_key": ("dim_result_outcome", "result_outcome_key"),
+        "result_weather_context_key": ("dim_result_weather_context", "result_weather_context_key"),
+        "result_data_quality_key": ("dim_result_data_quality", "result_data_quality_key"),
+    }
+
+    with engine.begin() as conn:
+        for table_name, key_col in primary_keys.items():
+            add_primary_key(conn, table_name, key_col)
+
+        # Dimension hierarchy constraints.
+        add_foreign_key(conn, "dim_grand_prix", "season_key", "dim_season", "season_key")
+        add_foreign_key(conn, "dim_grand_prix", "circuit_key", "dim_circuit", "circuit_key")
+        add_foreign_key(conn, "dim_session", "grand_prix_key", "dim_grand_prix", "grand_prix_key")
+        add_foreign_key(conn, "dim_session", "season_key", "dim_season", "season_key")
+
+        for child_col, (parent_table, parent_col) in fact_lap_fks.items():
+            add_foreign_key(conn, "fact_lap_performance", child_col, parent_table, parent_col)
+
+        for child_col, (parent_table, parent_col) in fact_result_fks.items():
+            add_foreign_key(conn, "fact_session_result", child_col, parent_table, parent_col)
+
 # ============================================================
 # MAIN
 # ============================================================
 
 def main() -> None:
     print("=== DW STAGING BUILD STARTED ===")
+    print(f"Source schema: {SOURCE_SCHEMA_NAME}")
+    print(f"Warehouse schema: {WAREHOUSE_SCHEMA_NAME}")
     print(f"Output directory: {OUTPUT_DIR.resolve()}")
 
     engine = connect_to_reconciled_db()
 
-    print("\n--- Loading source tables from reconciled DB ---")
+    print("\n--- Loading source tables from cleaned reconciled DB ---")
     source_tables = load_source_tables(engine)
 
     print("\n--- Building shared dimensions ---")
     dimensions = build_shared_dimensions(source_tables)
-   
+    dimensions["dim_session_type"] = build_dim_session_type(source_tables["session"])
+
     for name, df in dimensions.items():
         print(f"BUILT {name}: {len(df):,} rows")
 
-    print("\n--- Building fact_lap_performance ---")
-    fact_lap_performance = build_lap_performance_fact(
+    print("\n--- Preparing fact working tables and derived context dimensions ---")
+    lap_work = prepare_lap_performance_work(
         tables=source_tables,
+        dimensions=dimensions,
+    )
+    result_work = prepare_session_result_work(
+        tables=source_tables,
+        dimensions=dimensions,
+    )
+
+    lap_dimensions = build_lap_specific_dimensions(lap_work)
+    result_dimensions = build_result_specific_dimensions(result_work)
+    dimensions.update(lap_dimensions)
+    dimensions.update(result_dimensions)
+
+    for name, df in {**lap_dimensions, **result_dimensions}.items():
+        print(f"BUILT {name}: {len(df):,} rows")
+
+    print("\n--- Building fact_lap_performance ---")
+    fact_lap_performance = finalize_lap_performance_fact(
+        lap_work=lap_work,
         dimensions=dimensions,
     )
     print(f"BUILT fact_lap_performance: {len(fact_lap_performance):,} rows")
 
     print("\n--- Building fact_session_result ---")
-    fact_session_result = build_session_result_fact(
-        tables=source_tables,
+    fact_session_result = finalize_session_result_fact(
+        result_work=result_work,
         dimensions=dimensions,
     )
     print(f"BUILT fact_session_result: {len(fact_session_result):,} rows")
@@ -1474,15 +2133,24 @@ def main() -> None:
     )
     print(validation_report)
 
-    print("\n--- Exporting CSV files ---")
-    export_csvs(
+    output_tables = collect_output_tables(
         dimensions=dimensions,
         fact_lap_performance=fact_lap_performance,
         fact_session_result=fact_session_result,
-        validation_report=validation_report,
     )
 
-    print("\nDONE: DW staging CSV files created.")
+    if EXPORT_CSVS:
+        print("\n--- Exporting CSV files ---")
+        export_csvs(
+            output_tables=output_tables,
+            validation_report=validation_report,
+        )
+
+    if LOAD_TO_WAREHOUSE_DB:
+        print(f"\n--- Loading tables into PostgreSQL schema {WAREHOUSE_SCHEMA_NAME} ---")
+        load_tables_to_warehouse(engine, output_tables)
+
+    print("\nDONE: DW staging CSV files created and warehouse schema loaded.")
 
 
 if __name__ == "__main__":
