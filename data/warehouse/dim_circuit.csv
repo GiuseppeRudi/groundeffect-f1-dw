@@ -1,0 +1,27 @@
+circuit_key,circuit_id,circuit_name,country,location,global_circuit_category,sector1_category,sector2_category,sector3_category
+1,albert_park,Albert Park Circuit,Australia,Melbourne,PowerSensitive,Power,FastCorners,Technical
+2,bahrain,Bahrain International Circuit,Bahrain,Sakhir,PowerSensitive,Power,Technical,Power
+3,baku,Baku City Circuit,Azerbaijan,Baku,Street,SlowCorners,Technical,Power
+4,barcelona,Circuit de Barcelona-Catalunya,Spain,Barcelona,AeroSensitive,Power,Technical,SlowCorners
+5,cota,Circuit of The Americas,United States,Austin,Mixed,FastCorners,Power,Technical
+6,gilles_villeneuve,Circuit Gilles-Villeneuve,Canada,Montréal,PowerSensitive,SlowCorners,FastCorners,Power
+7,hungaroring,Hungaroring,Hungary,Budapest,Mixed,Power,Technical,SlowCorners
+8,imola,Autodromo Enzo e Dino Ferrari,Italy,Imola,AeroSensitive,Power,FastCorners,Technical
+9,interlagos,Autódromo José Carlos Pace,Brazil,São Paulo,Mixed,FastCorners,Technical,Power
+10,istanbul,Istanbul Park,Turkey,Istanbul,AeroSensitive,Technical,FastCorners,SlowCorners
+11,jeddah,Jeddah Corniche Circuit,Saudi Arabia,Jeddah,Street,FastCorners,FastCorners,Power
+12,losail,Losail International Circuit,Qatar,Lusail,AeroSensitive,FastCorners,FastCorners,FastCorners
+13,marina_bay,Marina Bay Street Circuit,Singapore,Marina Bay,Street,Power,SlowCorners,Technical
+14,mexico_city,Autódromo Hermanos Rodríguez,Mexico,Mexico City,PowerSensitive,Power,Technical,SlowCorners
+15,miami,Miami International Autodrome,United States,Miami,Mixed,FastCorners,Technical,Power
+16,monaco,Circuit de Monaco,Monaco,Monte Carlo,Street,FastCorners,SlowCorners,Technical
+17,monza,Autodromo Nazionale Monza,Italy,Monza,PowerSensitive,Power,FastCorners,Power
+18,paul_ricard,Circuit Paul Ricard,France,Le Castellet,Mixed,FastCorners,Power,Technical
+19,portimao,Autódromo Internacional do Algarve,Portugal,Portimão,Mixed,Power,FastCorners,Technical
+20,red_bull_ring,Red Bull Ring,Austria,Spielberg,PowerSensitive,Power,Power,FastCorners
+21,silverstone,Silverstone Circuit,Great Britain,Silverstone,AeroSensitive,Technical,FastCorners,FastCorners
+22,sochi,Sochi Autodrom,Russia,Sochi,AeroSensitive,Power,Technical,SlowCorners
+23,spa,Circuit de Spa-Francorchamps,Belgium,Spa-Francorchamps,Mixed,Power,FastCorners,Power
+24,suzuka,Suzuka Circuit,Japan,Suzuka,AeroSensitive,FastCorners,Technical,Power
+25,yas_marina,Yas Marina Circuit,Abu Dhabi,Yas Island,Mixed,Technical,Power,SlowCorners
+26,zandvoort,Circuit Zandvoort,Netherlands,Zandvoort,AeroSensitive,FastCorners,FastCorners,FastCorners

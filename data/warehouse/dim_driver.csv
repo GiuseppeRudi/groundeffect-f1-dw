@@ -1,0 +1,27 @@
+driver_key,driver_id,abbreviation,first_name,last_name,nationality,driver_age_class
+1,albon,ALB,Alexander,Albon,Thai,Intermediate
+2,alonso,ALO,Fernando,Alonso,Spanish,Senior
+3,bottas,BOT,Valtteri,Bottas,Finnish,Senior
+4,de_vries,DEV,Nyck,de Vries,Dutch,Intermediate
+5,gasly,GAS,Pierre,Gasly,French,Intermediate
+6,giovinazzi,GIO,Antonio,Giovinazzi,Italian,Intermediate
+7,hamilton,HAM,Lewis,Hamilton,British,Senior
+8,hulkenberg,HUL,Nico,Hülkenberg,German,Senior
+9,kevin_magnussen,MAG,Kevin,Magnussen,Danish,Intermediate
+10,kubica,KUB,Robert,Kubica,Polish,Senior
+11,latifi,LAT,Nicholas,Latifi,Canadian,Intermediate
+12,leclerc,LEC,Charles,Leclerc,Monegasque,Young
+13,max_verstappen,VER,Max,Verstappen,Dutch,Young
+14,mazepin,MAZ,Nikita,Mazepin,Russian,Young
+15,mick_schumacher,MSC,Mick,Schumacher,German,Young
+16,norris,NOR,Lando,Norris,British,Young
+17,ocon,OCO,Esteban,Ocon,French,Intermediate
+18,perez,PER,Sergio,Pérez,Mexican,Intermediate
+19,raikkonen,RAI,Kimi,Räikkönen,Finnish,Senior
+20,ricciardo,RIC,Daniel,Ricciardo,Australian,Senior
+21,russell,RUS,George,Russell,British,Young
+22,sainz,SAI,Carlos,Sainz,Spanish,Intermediate
+23,stroll,STR,Lance,Stroll,Canadian,Young
+24,tsunoda,TSU,Yuki,Tsunoda,Japanese,Young
+25,vettel,VET,Sebastian,Vettel,German,Senior
+26,zhou,ZHO,Guanyu,Zhou,Chinese,Young

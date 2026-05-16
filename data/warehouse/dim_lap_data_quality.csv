@@ -1,0 +1,8 @@
+lap_data_quality_key,has_sector_information_issue,has_speed_information_issue,has_tyre_information_issue,has_weather_information_issue,has_track_status_information_issue,has_pit_information_issue
+1,False,False,False,False,False,False
+2,False,False,True,False,False,False
+3,False,True,False,False,False,False
+4,False,True,True,False,False,False
+5,True,False,False,False,False,False
+6,True,False,True,False,False,False
+7,True,True,False,False,False,False

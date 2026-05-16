@@ -31,9 +31,11 @@ The script also supports older table aliases used during the project:
 - session_weather   -> weather
 
 Output CSVs and warehouse tables:
-- shared dimensions: dim_driver, dim_team, dim_season, dim_grand_prix, dim_circuit, dim_session, dim_session_type
-- Lap Performance dimensions: dim_tyre_context, dim_track_status, dim_weather_context, dim_lap_type, dim_lap_number, dim_lap_data_quality
+- shared dimensions: dim_driver, dim_team, dim_season, dim_grand_prix, dim_circuit, dim_session
+- Lap Performance dimensions: dim_tyre_context, dim_weather_context, dim_lap_data_quality
 - Session Result dimensions: dim_result_outcome, dim_result_weather_context, dim_result_data_quality
+- degenerate dimensions kept inside fact_lap_performance: session_type, lap_type, lap_number, track_status_category
+- degenerate dimension kept inside fact_session_result: session_type
 - facts: fact_lap_performance, fact_session_result
 - metadata CSVs: dw_build_log.csv, dw_validation_report.csv
 """
@@ -54,8 +56,8 @@ from sqlalchemy.engine import Engine
 # CONFIG
 # ============================================================
 
-# Main PostgreSQL connection. The default database is f1_project.
-# If your local DB is really named f1_proejct, set the environment variable
+# Main PostgreSQL connection. The default database name follows the project request: f1_proejct.
+# If your local database is named f1_project instead, set the environment variable
 # F1_DATABASE_URL before running the script.
 DATABASE_URL = os.getenv(
     "F1_DATABASE_URL",
@@ -296,12 +298,8 @@ def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
         "dim_circuit",
         "dim_grand_prix",
         "dim_session",
-        "dim_session_type",
         "dim_tyre_context",
-        "dim_track_status",
         "dim_weather_context",
-        "dim_lap_type",
-        "dim_lap_number",
         "dim_lap_data_quality",
         "dim_result_outcome",
         "dim_result_weather_context",
@@ -664,6 +662,7 @@ def context_time_col_for_lap(lap_df: pd.DataFrame) -> pd.Series:
         return to_numeric(lap_df["time_ms"])
     return pd.Series(np.nan, index=lap_df.index)
 
+
 def merge_asof_by_session(
     left_df: pd.DataFrame,
     right_df: pd.DataFrame,
@@ -675,13 +674,14 @@ def merge_asof_by_session(
     """
     Robust group-wise asof merge for time-dependent session data.
 
-    For each fact row, the function searches the nearest previous context row
-    inside the same session. If no previous context row exists, it uses the
-    nearest context row in the same session as fallback.
+    For each row in left_df, the function finds the nearest previous context row
+    in right_df inside the same session.
 
-    Important:
-    temporary indexes are reset inside each group, because pandas boolean masks
-    must be aligned with the dataframe they filter.
+    If no previous context row exists, it uses the nearest context row in the same
+    session as fallback.
+
+    This version avoids boolean-index alignment errors by resetting the temporary
+    group indexes before using masks produced by pd.merge_asof.
     """
 
     if left_df.empty or right_df.empty:
@@ -691,6 +691,7 @@ def merge_asof_by_session(
         col for col in session_cols + [left_time_col]
         if col not in left_df.columns
     ]
+
     missing_right = [
         col for col in session_cols + [right_time_col]
         if col not in right_df.columns
@@ -699,19 +700,43 @@ def merge_asof_by_session(
     if missing_left or missing_right:
         return left_df.copy()
 
+    left_order_col = "__left_original_order__"
+
+    while left_order_col in left_df.columns or left_order_col in right_df.columns:
+        left_order_col = "_" + left_order_col
+
+    left_base = left_df.copy()
+    left_base[left_order_col] = range(len(left_base))
+
     pieces: list[pd.DataFrame] = []
 
-    right_grouped = right_df.groupby(session_cols, dropna=False, sort=False)
+    right_grouped = right_df.groupby(
+        session_cols,
+        dropna=False,
+        sort=False,
+    )
 
-    for session_key, left_group in left_df.groupby(session_cols, dropna=False, sort=False):
+    for session_key, left_group in left_base.groupby(
+        session_cols,
+        dropna=False,
+        sort=False,
+    ):
         try:
             right_group = right_grouped.get_group(session_key)
         except KeyError:
             pieces.append(left_group.copy())
             continue
 
+        left_group = left_group.copy()
+        right_group = right_group.copy()
+
+        valid_left_time = left_group[left_time_col].notna()
+        valid_right_time = right_group[right_time_col].notna()
+
+        left_without_time = left_group.loc[~valid_left_time].copy()
         left_work = (
             left_group
+            .loc[valid_left_time]
             .sort_values(left_time_col, kind="stable")
             .reset_index(drop=True)
             .copy()
@@ -719,34 +744,23 @@ def merge_asof_by_session(
 
         right_work = (
             right_group
+            .loc[valid_right_time]
             .sort_values(right_time_col, kind="stable")
             .reset_index(drop=True)
             .copy()
         )
 
-        left_work[left_time_col] = pd.to_numeric(left_work[left_time_col], errors="coerce")
-        right_work[right_time_col] = pd.to_numeric(right_work[right_time_col], errors="coerce")
+        if left_work.empty:
+            if not left_without_time.empty:
+                pieces.append(left_without_time)
+            continue
 
-        left_without_time = left_work[left_work[left_time_col].isna()].copy()
-
-        left_with_time = (
-            left_work[left_work[left_time_col].notna()]
-            .reset_index(drop=True)
-            .copy()
-        )
-
-        right_work = (
-            right_work[right_work[right_time_col].notna()]
-            .reset_index(drop=True)
-            .copy()
-        )
-
-        if left_with_time.empty or right_work.empty:
-            pieces.append(left_work.copy())
+        if right_work.empty:
+            pieces.append(left_group.copy())
             continue
 
         merged = pd.merge_asof(
-            left_with_time,
+            left_work,
             right_work,
             left_on=left_time_col,
             right_on=right_time_col,
@@ -754,19 +768,24 @@ def merge_asof_by_session(
             suffixes=("", suffix),
         )
 
-        context_cols = [col for col in right_work.columns if col not in session_cols]
+        context_cols = [
+            col for col in right_work.columns
+            if col not in session_cols
+        ]
 
         if context_cols:
             first_context_col = context_cols[0]
 
             if first_context_col in merged.columns:
-                missing_mask = merged[first_context_col].isna().to_numpy()
+                missing_mask = merged[first_context_col].isna()
             else:
-                missing_mask = [False] * len(merged)
+                missing_mask = pd.Series(False, index=merged.index)
 
-            if any(missing_mask):
+            if missing_mask.any():
+                nearest_left = left_work.loc[missing_mask].copy()
+
                 nearest = pd.merge_asof(
-                    left_with_time.iloc[missing_mask].copy(),
+                    nearest_left,
                     right_work,
                     left_on=left_time_col,
                     right_on=right_time_col,
@@ -774,23 +793,34 @@ def merge_asof_by_session(
                     suffixes=("", suffix),
                 )
 
-                nearest = nearest.reset_index(drop=True)
+                nearest.index = merged.index[missing_mask]
 
-                merged.loc[missing_mask, nearest.columns] = nearest.to_numpy()
+                common_cols = [
+                    col for col in nearest.columns
+                    if col in merged.columns
+                ]
 
-        if not left_without_time.empty:
-            merged = pd.concat(
-                [merged, left_without_time],
-                ignore_index=True,
-                sort=False,
-            )
+                for col in common_cols:
+                    merged.loc[missing_mask, col] = nearest[col].to_numpy()
 
         pieces.append(merged)
 
-    if not pieces:
-        return left_df.copy()
+        if not left_without_time.empty:
+            pieces.append(left_without_time)
 
-    return pd.concat(pieces, ignore_index=True, sort=False)
+    if not pieces:
+        out = left_base.copy()
+    else:
+        out = pd.concat(pieces, ignore_index=True)
+
+    out = (
+        out
+        .sort_values(left_order_col, kind="stable")
+        .drop(columns=[left_order_col])
+        .reset_index(drop=True)
+    )
+
+    return out
 
 def add_lap_weather_context(lap_df: pd.DataFrame, weather_df: pd.DataFrame) -> pd.DataFrame:
     out = lap_df.copy()
@@ -1133,7 +1163,18 @@ def build_dim_session_type(session_df: pd.DataFrame) -> pd.DataFrame:
     return add_surrogate_key(dim, "session_type_key")
 
 
+
 def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """
+    Build only the real low-cardinality dimensions for the Lap Performance fact.
+
+    Degenerate dimensions are not materialized as separate tables. Therefore,
+    the following attributes remain directly inside fact_lap_performance:
+    - session_type
+    - lap_type
+    - lap_number
+    - track_status_category
+    """
     lap_work = ensure_quality_flag_columns(lap_work, LAP_QUALITY_FLAGS)
 
     return {
@@ -1142,27 +1183,11 @@ def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFr
             ["compound", "starting_tyre_set_status", "tyre_life_class"],
             "tyre_context_key",
         ),
-        "dim_track_status": build_low_cardinality_dimension(
-            lap_work,
-            ["track_status_category"],
-            "track_status_key",
-        ),
         "dim_weather_context": build_low_cardinality_dimension(
             lap_work,
             ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
             "weather_context_key",
             bool_columns=["rain_flag"],
-        ),
-        "dim_lap_type": build_low_cardinality_dimension(
-            lap_work,
-            ["lap_type"],
-            "lap_type_key",
-        ),
-        "dim_lap_number": build_low_cardinality_dimension(
-            lap_work,
-            ["lap_number"],
-            "lap_number_key",
-            sort_columns=["lap_number"],
         ),
         "dim_lap_data_quality": build_low_cardinality_dimension(
             lap_work,
@@ -1171,7 +1196,6 @@ def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFr
             bool_columns=LAP_QUALITY_FLAGS,
         ),
     }
-
 
 def build_result_specific_dimensions(result_work: pd.DataFrame) -> dict[str, pd.DataFrame]:
     result_work = ensure_quality_flag_columns(result_work, RESULT_QUALITY_FLAGS)
@@ -1249,6 +1273,7 @@ def map_all_shared_dimension_keys(
 # FACT PREPARATION AND BUILDERS
 # ============================================================
 
+
 def prepare_lap_performance_work(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
@@ -1256,9 +1281,9 @@ def prepare_lap_performance_work(
     """
     Prepare the lap-level working table before final Star Schema pruning.
 
-    This keeps all derived dimensional attributes temporarily, so that the
-    low-cardinality dimensions described in the LaTeX report can be built from
-    real data combinations and then mapped back to surrogate keys.
+    Derived low-cardinality attributes are kept temporarily. Some of them will
+    be mapped to real dimensions; degenerate dimensions remain directly inside
+    fact_lap_performance.
     """
     lap = tables["lap"].copy()
     lap = ensure_quality_flag_columns(lap, LAP_QUALITY_FLAGS)
@@ -1309,9 +1334,10 @@ def prepare_lap_performance_work(
     else:
         lap["rain_flag"] = False
 
-    # Map shared structural dimension keys.
+    # Map shared structural dimension keys only.
+    # Degenerate dimensions are kept as columns in the fact:
+    # session_type, lap_type, lap_number, track_status_category.
     lap = map_all_shared_dimension_keys(lap, dimensions)
-    lap = map_dimension_key(lap, dimensions["dim_session_type"], ["session_type"], "session_type_key")
     return lap
 
 
@@ -1321,6 +1347,8 @@ def prepare_session_result_work(
 ) -> pd.DataFrame:
     """
     Prepare the result-level working table before final Star Schema pruning.
+
+    session_type is kept directly in fact_session_result as a degenerate dimension.
     """
     result = tables["result"].copy()
     result = ensure_quality_flag_columns(result, RESULT_QUALITY_FLAGS)
@@ -1381,9 +1409,9 @@ def prepare_session_result_work(
     else:
         result["rain_flag"] = False
 
-    # Map shared structural dimension keys.
+    # Map shared structural dimension keys only.
+    # session_type remains directly in the fact as a degenerate dimension.
     result = map_all_shared_dimension_keys(result, dimensions)
-    result = map_dimension_key(result, dimensions["dim_session_type"], ["session_type"], "session_type_key")
     return result
 
 
@@ -1391,7 +1419,27 @@ def finalize_lap_performance_fact(
     lap_work: pd.DataFrame,
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
+    """
+    Build fact_lap_performance.
+
+    Degenerate dimensions are stored directly in the fact table:
+    - session_type
+    - lap_type
+    - lap_number
+    - track_status_category
+
+    Therefore, the fact does not contain:
+    - session_type_key
+    - track_status_key
+    - lap_type_key
+    - lap_number_key
+    """
     lap = lap_work.copy()
+
+    lap = fill_unknown_for_columns(
+        lap,
+        ["session_type", "lap_type", "track_status_category"],
+    )
 
     lap = map_dimension_key(
         lap,
@@ -1401,27 +1449,9 @@ def finalize_lap_performance_fact(
     )
     lap = map_dimension_key(
         lap,
-        dimensions["dim_track_status"],
-        ["track_status_category"],
-        "track_status_key",
-    )
-    lap = map_dimension_key(
-        lap,
         dimensions["dim_weather_context"],
         ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
         "weather_context_key",
-    )
-    lap = map_dimension_key(
-        lap,
-        dimensions["dim_lap_type"],
-        ["lap_type"],
-        "lap_type_key",
-    )
-    lap = map_dimension_key(
-        lap,
-        dimensions["dim_lap_number"],
-        ["lap_number"],
-        "lap_number_key",
     )
     lap = map_dimension_key(
         lap,
@@ -1432,19 +1462,22 @@ def finalize_lap_performance_fact(
 
     final_columns = [
         "lap_id",
+        # Shared dimension keys.
         "driver_key",
         "team_key",
         "session_key",
-        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
+        # Normal dimension keys.
         "tyre_context_key",
-        "track_status_key",
         "weather_context_key",
-        "lap_type_key",
-        "lap_number_key",
         "lap_data_quality_key",
+        # Degenerate dimensions.
+        "session_type",
+        "lap_type",
+        "lap_number",
+        "track_status_category",
         # Measures.
         "lap_time_ms",
         "sector1_time_ms",
@@ -1467,7 +1500,16 @@ def finalize_session_result_fact(
     result_work: pd.DataFrame,
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
+    """
+    Build fact_session_result.
+
+    Degenerate dimension stored directly in the fact table:
+    - session_type
+
+    Therefore, the fact does not contain session_type_key.
+    """
     result = result_work.copy()
+    result = fill_unknown_for_columns(result, ["session_type"])
 
     result = map_dimension_key(
         result,
@@ -1490,16 +1532,19 @@ def finalize_session_result_fact(
 
     final_columns = [
         "result_id",
+        # Shared dimension keys.
         "driver_key",
         "team_key",
         "session_key",
-        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
+        # Normal dimension keys.
         "result_outcome_key",
         "result_weather_context_key",
         "result_data_quality_key",
+        # Degenerate dimension.
+        "session_type",
         # Measures.
         "position",
         "grid_position",
@@ -1517,8 +1562,6 @@ def finalize_session_result_fact(
     return fact
 
 
-# Backward-compatible wrappers. They are intentionally kept, but the main workflow
-# now uses prepare_* + dimension construction + finalize_* to build a proper star schema.
 def build_lap_performance_fact(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
@@ -1526,16 +1569,12 @@ def build_lap_performance_fact(
     lap_work = prepare_lap_performance_work(tables, dimensions)
     missing = {
         "dim_tyre_context",
-        "dim_track_status",
         "dim_weather_context",
-        "dim_lap_type",
-        "dim_lap_number",
         "dim_lap_data_quality",
     } - set(dimensions)
     if missing:
         dimensions.update(build_lap_specific_dimensions(lap_work))
     return finalize_lap_performance_fact(lap_work, dimensions)
-
 
 def build_session_result_fact(
     tables: dict[str, pd.DataFrame],
@@ -1665,6 +1704,7 @@ def validate_row_count(
         )
 
 
+
 def validate_outputs(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
@@ -1677,27 +1717,22 @@ def validate_outputs(
     validate_no_duplicates(fact_lap_performance, "fact_lap_performance", ["lap_id"], issues)
     validate_no_duplicates(fact_session_result, "fact_session_result", ["result_id"], issues)
 
-    # Dimension key checks.
+    # Dimension key checks. Degenerate dimensions are not foreign keys.
     lap_fk_cols = [
         "driver_key",
         "team_key",
         "session_key",
-        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
         "tyre_context_key",
-        "track_status_key",
         "weather_context_key",
-        "lap_type_key",
-        "lap_number_key",
         "lap_data_quality_key",
     ]
     result_fk_cols = [
         "driver_key",
         "team_key",
         "session_key",
-        "session_type_key",
         "grand_prix_key",
         "circuit_key",
         "season_key",
@@ -1707,6 +1742,36 @@ def validate_outputs(
     ]
     validate_no_missing_keys(fact_lap_performance, "fact_lap_performance", lap_fk_cols, issues)
     validate_no_missing_keys(fact_session_result, "fact_session_result", result_fk_cols, issues)
+
+    # Degenerate dimension domain checks.
+    validate_domain(
+        fact_lap_performance,
+        "fact_lap_performance",
+        "session_type",
+        {"Q", "R", "Unknown"},
+        issues,
+    )
+    validate_domain(
+        fact_session_result,
+        "fact_session_result",
+        "session_type",
+        {"Q", "R", "Unknown"},
+        issues,
+    )
+    validate_domain(
+        fact_lap_performance,
+        "fact_lap_performance",
+        "lap_type",
+        {"NormalLap", "OutLap", "InLap", "PitAffectedLap", "Unknown"},
+        issues,
+    )
+    validate_domain(
+        fact_lap_performance,
+        "fact_lap_performance",
+        "track_status_category",
+        {"AllClear", "Yellow", "SCDeployed", "VSCDeployed", "VSCEnding", "Red", "Other", "Unknown"},
+        issues,
+    )
 
     # Dimension-level domain checks.
     if "dim_weather_context" in dimensions:
@@ -1723,24 +1788,6 @@ def validate_outputs(
             "dim_tyre_context",
             "starting_tyre_set_status",
             {"NewSet", "UsedSet", "Unknown"},
-            issues,
-        )
-
-    if "dim_lap_type" in dimensions:
-        validate_domain(
-            dimensions["dim_lap_type"],
-            "dim_lap_type",
-            "lap_type",
-            {"NormalLap", "OutLap", "InLap", "PitAffectedLap", "Unknown"},
-            issues,
-        )
-
-    if "dim_track_status" in dimensions:
-        validate_domain(
-            dimensions["dim_track_status"],
-            "dim_track_status",
-            "track_status_category",
-            {"AllClear", "Yellow", "SCDeployed", "VSCDeployed", "VSCEnding", "Red", "Other", "Unknown"},
             issues,
         )
 
@@ -1804,7 +1851,6 @@ def validate_outputs(
 
     return report
 
-
 # ============================================================
 # EXPORT AND WAREHOUSE LOADING
 # ============================================================
@@ -1831,6 +1877,7 @@ def build_log(output_tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+
 def collect_output_tables(
     dimensions: dict[str, pd.DataFrame],
     fact_lap_performance: pd.DataFrame,
@@ -1849,12 +1896,8 @@ def collect_output_tables(
         "dim_circuit",
         "dim_grand_prix",
         "dim_session",
-        "dim_session_type",
         "dim_tyre_context",
-        "dim_track_status",
         "dim_weather_context",
-        "dim_lap_type",
-        "dim_lap_number",
         "dim_lap_data_quality",
         "dim_result_outcome",
         "dim_result_weather_context",
@@ -1868,7 +1911,6 @@ def collect_output_tables(
         if name not in ordered:
             ordered[name] = df
     return ordered
-
 
 def export_csvs(
     output_tables: dict[str, pd.DataFrame],
@@ -2003,6 +2045,7 @@ def add_foreign_key(conn, child_table: str, child_col: str, parent_table: str, p
     )
 
 
+
 def add_warehouse_constraints(engine: Engine) -> None:
     primary_keys = {
         "dim_driver": "driver_key",
@@ -2011,12 +2054,8 @@ def add_warehouse_constraints(engine: Engine) -> None:
         "dim_circuit": "circuit_key",
         "dim_grand_prix": "grand_prix_key",
         "dim_session": "session_key",
-        "dim_session_type": "session_type_key",
         "dim_tyre_context": "tyre_context_key",
-        "dim_track_status": "track_status_key",
         "dim_weather_context": "weather_context_key",
-        "dim_lap_type": "lap_type_key",
-        "dim_lap_number": "lap_number_key",
         "dim_lap_data_quality": "lap_data_quality_key",
         "dim_result_outcome": "result_outcome_key",
         "dim_result_weather_context": "result_weather_context_key",
@@ -2029,15 +2068,11 @@ def add_warehouse_constraints(engine: Engine) -> None:
         "driver_key": ("dim_driver", "driver_key"),
         "team_key": ("dim_team", "team_key"),
         "session_key": ("dim_session", "session_key"),
-        "session_type_key": ("dim_session_type", "session_type_key"),
         "grand_prix_key": ("dim_grand_prix", "grand_prix_key"),
         "circuit_key": ("dim_circuit", "circuit_key"),
         "season_key": ("dim_season", "season_key"),
         "tyre_context_key": ("dim_tyre_context", "tyre_context_key"),
-        "track_status_key": ("dim_track_status", "track_status_key"),
         "weather_context_key": ("dim_weather_context", "weather_context_key"),
-        "lap_type_key": ("dim_lap_type", "lap_type_key"),
-        "lap_number_key": ("dim_lap_number", "lap_number_key"),
         "lap_data_quality_key": ("dim_lap_data_quality", "lap_data_quality_key"),
     }
 
@@ -2045,7 +2080,6 @@ def add_warehouse_constraints(engine: Engine) -> None:
         "driver_key": ("dim_driver", "driver_key"),
         "team_key": ("dim_team", "team_key"),
         "session_key": ("dim_session", "session_key"),
-        "session_type_key": ("dim_session_type", "session_type_key"),
         "grand_prix_key": ("dim_grand_prix", "grand_prix_key"),
         "circuit_key": ("dim_circuit", "circuit_key"),
         "season_key": ("dim_season", "season_key"),
@@ -2074,8 +2108,10 @@ def add_warehouse_constraints(engine: Engine) -> None:
 # MAIN
 # ============================================================
 
+
 def main() -> None:
     print("=== DW STAGING BUILD STARTED ===")
+    print(f"Database URL: {DATABASE_URL}")
     print(f"Source schema: {SOURCE_SCHEMA_NAME}")
     print(f"Warehouse schema: {WAREHOUSE_SCHEMA_NAME}")
     print(f"Output directory: {OUTPUT_DIR.resolve()}")
@@ -2087,7 +2123,6 @@ def main() -> None:
 
     print("\n--- Building shared dimensions ---")
     dimensions = build_shared_dimensions(source_tables)
-    dimensions["dim_session_type"] = build_dim_session_type(source_tables["session"])
 
     for name, df in dimensions.items():
         print(f"BUILT {name}: {len(df):,} rows")
