@@ -31,9 +31,11 @@ The script also supports older table aliases used during the project:
 - session_weather   -> weather
 
 Output CSVs and warehouse tables:
-- shared dimensions: dim_driver, dim_team, dim_season, dim_grand_prix, dim_circuit, dim_session
-- shared dimensions reuse the stable identifiers already present in the reconciled schema
-  (driver_id, team_id, season_year, circuit_id, grand_prix_id, session_id);
+- shared dimensions: dim_driver, dim_team, dim_grand_prix, dim_circuit
+- dim_grand_prix keeps season_year and circuit_id as hierarchy attributes;
+- facts reference dim_grand_prix only through grand_prix_id;
+- dim_season and dim_session are not exported as CSV/table;
+- session_type is kept inside both facts as a degenerate dimension;
 - new surrogate keys are created only for derived low-cardinality / junk dimensions
   (tyre_context_key, weather_context_key, lap_data_quality_key, result_outcome_key,
   result_weather_context_key, result_data_quality_key);
@@ -293,14 +295,13 @@ def build_low_cardinality_dimension(
     return add_surrogate_key(dim, key_name)
 
 
+
 def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
     preferred = [
         "dim_driver",
         "dim_team",
-        "dim_season",
         "dim_circuit",
         "dim_grand_prix",
-        "dim_session",
         "dim_tyre_context",
         "dim_weather_context",
         "dim_lap_data_quality",
@@ -311,7 +312,6 @@ def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
         "fact_session_result",
     ]
     return [name for name in preferred if name in dimensions or name.startswith("fact_")]
-
 
 # ============================================================
 # DATABASE ACCESS
@@ -1023,16 +1023,17 @@ def build_dim_circuit(circuit_df: pd.DataFrame) -> pd.DataFrame:
     dim = sort_if_possible(dim, ["circuit_id"])
     return dim
 
+
 def build_dim_grand_prix(
     grand_prix_df: pd.DataFrame,
-    dim_season: pd.DataFrame,
     dim_circuit: pd.DataFrame,
 ) -> pd.DataFrame:
     """Build dim_grand_prix using grand_prix_id as the dimension key.
 
-    The function intentionally does not create grand_prix_key. The foreign keys
-    to season and circuit are kept as season_year and circuit_id, because those
-    are the identifiers already used by the corresponding dimensions.
+    Modeling decision:
+    - season_year is kept here, not in the fact tables;
+    - circuit_id is kept here, not in the fact tables;
+    - facts point to this dimension only through grand_prix_id.
     """
     work = grand_prix_df.copy()
 
@@ -1108,24 +1109,25 @@ def build_dim_session(
     dim = sort_if_possible(dim, ["season_year", "round_number", "session_type", "session_id"])
     return dim
 
+
 def build_shared_dimensions(tables: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
+    """Build only the shared dimensions retained in the final model.
+
+    dim_season is not exported: season_year is kept inside dim_grand_prix.
+    dim_session is not exported: session_type is kept inside the facts as a
+    degenerate dimension.
+    """
     dim_driver = build_dim_driver(tables["driver"])
     dim_team = build_dim_team(tables["team"])
-    dim_season = build_dim_season(tables["season"])
     dim_circuit = build_dim_circuit(tables["circuit"])
-    dim_grand_prix = build_dim_grand_prix(tables["grand_prix"], dim_season, dim_circuit)
-    dim_session = build_dim_session(tables["session"], tables["grand_prix"], dim_grand_prix, dim_season)
+    dim_grand_prix = build_dim_grand_prix(tables["grand_prix"], dim_circuit)
 
     return {
         "dim_driver": dim_driver,
         "dim_team": dim_team,
-        "dim_season": dim_season,
         "dim_circuit": dim_circuit,
         "dim_grand_prix": dim_grand_prix,
-        "dim_session": dim_session,
     }
-
-
 
 def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFrame]:
     """
@@ -1208,36 +1210,22 @@ def map_dimension_key(
     return out
 
 
+
 def map_all_shared_dimension_keys(
     fact_df: pd.DataFrame,
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
-    """Keep shared dimension identifiers directly in the fact.
+    """Keep only the shared dimension identifiers that belong in the facts.
 
-    For entity dimensions already present in the reconciled schema, this script
-    reuses the existing identifiers instead of generating redundant DW keys:
-    - driver_id -> dim_driver.driver_id
-    - team_id -> dim_team.team_id
-    - season_year -> dim_season.season_year
-    - circuit_id -> dim_circuit.circuit_id
-    - grand_prix_id -> dim_grand_prix.grand_prix_id
-    - session_id -> dim_session.session_id
-
-    New surrogate keys are created only later for derived context/junk
-    dimensions, such as tyre_context_key and lap_data_quality_key.
+    Final modeling decision:
+    - facts reference dim_driver through driver_id;
+    - facts reference dim_team through team_id;
+    - facts reference dim_grand_prix through grand_prix_id;
+    - facts do not contain session_id, circuit_id, or season_year;
+    - session_type remains directly in the facts as a degenerate dimension.
     """
     out = fact_df.copy()
-
-    required_ids = [
-        "driver_id",
-        "team_id",
-        "session_id",
-        "grand_prix_id",
-        "circuit_id",
-        "season_year",
-    ]
-    out = ensure_columns(out, required_ids)
-    return out
+    return ensure_columns(out, ["driver_id", "team_id", "grand_prix_id"])
 
 # ============================================================
 # FACT PREPARATION AND BUILDERS
@@ -1385,21 +1373,16 @@ def prepare_session_result_work(
     return result
 
 
+
 def finalize_lap_performance_fact(
     lap_work: pd.DataFrame,
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
     """Build fact_lap_performance.
 
-    Reused shared dimension identifiers are stored directly in the fact:
-    driver_id, team_id, session_id, grand_prix_id, circuit_id, season_year.
-
-    New keys are used only for derived low-cardinality / junk dimensions.
-    Degenerate dimensions are stored directly in the fact table:
-    - session_type
-    - lap_type
-    - lap_number
-    - track_status_category
+    The fact keeps only driver_id, team_id, and grand_prix_id as shared
+    dimension identifiers. circuit_id and season_year are reachable through
+    dim_grand_prix. session_type is a degenerate dimension in the fact.
     """
     lap = lap_work.copy()
 
@@ -1429,13 +1412,10 @@ def finalize_lap_performance_fact(
 
     final_columns = [
         "lap_id",
-        # Reused shared dimension identifiers.
+        # Reused shared dimension identifiers kept in the fact.
         "driver_id",
         "team_id",
-        "session_id",
         "grand_prix_id",
-        "circuit_id",
-        "season_year",
         # New keys only for derived context / junk dimensions.
         "tyre_context_key",
         "weather_context_key",
@@ -1462,15 +1442,16 @@ def finalize_lap_performance_fact(
     fact = add_surrogate_key(fact, "lap_performance_key")
     return fact
 
+
 def finalize_session_result_fact(
     result_work: pd.DataFrame,
     dimensions: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
     """Build fact_session_result.
 
-    Reused shared dimension identifiers are stored directly in the fact.
-    New keys are used only for derived result-specific dimensions.
-    session_type is stored directly in the fact as a degenerate dimension.
+    The fact keeps only driver_id, team_id, and grand_prix_id as shared
+    dimension identifiers. circuit_id and season_year are reachable through
+    dim_grand_prix. session_type is a degenerate dimension in the fact.
     """
     result = result_work.copy()
     result = fill_unknown_for_columns(result, ["session_type"])
@@ -1496,13 +1477,10 @@ def finalize_session_result_fact(
 
     final_columns = [
         "result_id",
-        # Reused shared dimension identifiers.
+        # Reused shared dimension identifiers kept in the fact.
         "driver_id",
         "team_id",
-        "session_id",
         "grand_prix_id",
-        "circuit_id",
-        "season_year",
         # New keys only for derived context / junk dimensions.
         "result_outcome_key",
         "result_weather_context_key",
@@ -1668,6 +1646,7 @@ def validate_row_count(
 
 
 
+
 def validate_outputs(
     tables: dict[str, pd.DataFrame],
     dimensions: dict[str, pd.DataFrame],
@@ -1680,15 +1659,12 @@ def validate_outputs(
     validate_no_duplicates(fact_lap_performance, "fact_lap_performance", ["lap_id"], issues)
     validate_no_duplicates(fact_session_result, "fact_session_result", ["result_id"], issues)
 
-    # Shared dimensions reuse existing identifiers. They are therefore checked
-    # directly with their original key columns, not with artificial DW keys.
+    # Retained dimensions only. dim_season and dim_session are intentionally absent.
     dimension_keys = {
         "dim_driver": ["driver_id"],
         "dim_team": ["team_id"],
-        "dim_season": ["season_year"],
         "dim_circuit": ["circuit_id"],
         "dim_grand_prix": ["grand_prix_id"],
-        "dim_session": ["session_id"],
         "dim_tyre_context": ["tyre_context_key"],
         "dim_weather_context": ["weather_context_key"],
         "dim_lap_data_quality": ["lap_data_quality_key"],
@@ -1701,14 +1677,11 @@ def validate_outputs(
             validate_no_duplicates(dimensions[table_name], table_name, key_cols, issues)
             validate_no_missing_keys(dimensions[table_name], table_name, key_cols, issues)
 
-    # Fact foreign-key columns. Degenerate dimensions are not foreign keys.
+    # Fact foreign-key columns. session_type is degenerate, not a foreign key.
     lap_fk_cols = [
         "driver_id",
         "team_id",
-        "session_id",
         "grand_prix_id",
-        "circuit_id",
-        "season_year",
         "tyre_context_key",
         "weather_context_key",
         "lap_data_quality_key",
@@ -1716,16 +1689,30 @@ def validate_outputs(
     result_fk_cols = [
         "driver_id",
         "team_id",
-        "session_id",
         "grand_prix_id",
-        "circuit_id",
-        "season_year",
         "result_outcome_key",
         "result_weather_context_key",
         "result_data_quality_key",
     ]
     validate_no_missing_keys(fact_lap_performance, "fact_lap_performance", lap_fk_cols, issues)
     validate_no_missing_keys(fact_session_result, "fact_session_result", result_fk_cols, issues)
+
+    # Explicitly detect forbidden duplicated hierarchy columns inside the facts.
+    for fact_name, fact_df in {
+        "fact_lap_performance": fact_lap_performance,
+        "fact_session_result": fact_session_result,
+    }.items():
+        forbidden = ["session_id", "circuit_id", "season_year"]
+        present = [col for col in forbidden if col in fact_df.columns]
+        if present:
+            add_issue(
+                issues,
+                "ERROR",
+                fact_name,
+                "forbidden_fact_columns",
+                f"Forbidden columns found in fact table: {present}",
+                len(fact_df),
+            )
 
     # Degenerate dimension domain checks.
     validate_domain(
@@ -1810,7 +1797,6 @@ def validate_outputs(
         validate_domain(dim, "dim_result_weather_context", "avg_track_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
         validate_domain(dim, "dim_result_weather_context", "avg_wind_speed_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
 
-    # Row-count coherence.
     validate_row_count(tables["lap"], fact_lap_performance, "lap", "fact_lap_performance", issues)
     validate_row_count(tables["result"], fact_session_result, "result", "fact_session_result", issues)
 
@@ -1862,6 +1848,7 @@ def build_log(output_tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 
 
+
 def collect_output_tables(
     dimensions: dict[str, pd.DataFrame],
     fact_lap_performance: pd.DataFrame,
@@ -1876,10 +1863,8 @@ def collect_output_tables(
     preferred_order = [
         "dim_driver",
         "dim_team",
-        "dim_season",
         "dim_circuit",
         "dim_grand_prix",
-        "dim_session",
         "dim_tyre_context",
         "dim_weather_context",
         "dim_lap_data_quality",
@@ -2030,29 +2015,25 @@ def add_foreign_key(conn, child_table: str, child_col: str, parent_table: str, p
 
 
 
-def add_warehouse_constraints(engine: Engine) -> None:
-    """Add warehouse constraints using reused entity identifiers where possible.
 
-    Original identifiers are used as primary/foreign keys for dimensions already
-    present in the reconciled schema. New surrogate keys remain only for derived
-    context and junk dimensions.
+def add_warehouse_constraints(engine: Engine) -> None:
+    """Add warehouse constraints for the corrected model.
+
+    No dim_season and no dim_session are created. dim_grand_prix carries
+    season_year and circuit_id. Facts reference dim_grand_prix only through
+    grand_prix_id and keep session_type as a degenerate dimension.
     """
     primary_keys = {
-        # Existing identifiers reused from the reconciled schema.
         "dim_driver": "driver_id",
         "dim_team": "team_id",
-        "dim_season": "season_year",
         "dim_circuit": "circuit_id",
         "dim_grand_prix": "grand_prix_id",
-        "dim_session": "session_id",
-        # New keys only for derived context / junk dimensions.
         "dim_tyre_context": "tyre_context_key",
         "dim_weather_context": "weather_context_key",
         "dim_lap_data_quality": "lap_data_quality_key",
         "dim_result_outcome": "result_outcome_key",
         "dim_result_weather_context": "result_weather_context_key",
         "dim_result_data_quality": "result_data_quality_key",
-        # Fact technical identifiers.
         "fact_lap_performance": "lap_performance_key",
         "fact_session_result": "session_result_key",
     }
@@ -2060,10 +2041,7 @@ def add_warehouse_constraints(engine: Engine) -> None:
     fact_lap_fks = {
         "driver_id": ("dim_driver", "driver_id"),
         "team_id": ("dim_team", "team_id"),
-        "session_id": ("dim_session", "session_id"),
         "grand_prix_id": ("dim_grand_prix", "grand_prix_id"),
-        "circuit_id": ("dim_circuit", "circuit_id"),
-        "season_year": ("dim_season", "season_year"),
         "tyre_context_key": ("dim_tyre_context", "tyre_context_key"),
         "weather_context_key": ("dim_weather_context", "weather_context_key"),
         "lap_data_quality_key": ("dim_lap_data_quality", "lap_data_quality_key"),
@@ -2072,10 +2050,7 @@ def add_warehouse_constraints(engine: Engine) -> None:
     fact_result_fks = {
         "driver_id": ("dim_driver", "driver_id"),
         "team_id": ("dim_team", "team_id"),
-        "session_id": ("dim_session", "session_id"),
         "grand_prix_id": ("dim_grand_prix", "grand_prix_id"),
-        "circuit_id": ("dim_circuit", "circuit_id"),
-        "season_year": ("dim_season", "season_year"),
         "result_outcome_key": ("dim_result_outcome", "result_outcome_key"),
         "result_weather_context_key": ("dim_result_weather_context", "result_weather_context_key"),
         "result_data_quality_key": ("dim_result_data_quality", "result_data_quality_key"),
@@ -2085,11 +2060,8 @@ def add_warehouse_constraints(engine: Engine) -> None:
         for table_name, key_col in primary_keys.items():
             add_primary_key(conn, table_name, key_col)
 
-        # Dimension hierarchy constraints using reused identifiers.
-        add_foreign_key(conn, "dim_grand_prix", "season_year", "dim_season", "season_year")
+        # Dimension hierarchy: Grand Prix carries the circuit relationship.
         add_foreign_key(conn, "dim_grand_prix", "circuit_id", "dim_circuit", "circuit_id")
-        add_foreign_key(conn, "dim_session", "grand_prix_id", "dim_grand_prix", "grand_prix_id")
-        add_foreign_key(conn, "dim_session", "season_year", "dim_season", "season_year")
 
         for child_col, (parent_table, parent_col) in fact_lap_fks.items():
             add_foreign_key(conn, "fact_lap_performance", child_col, parent_table, parent_col)
