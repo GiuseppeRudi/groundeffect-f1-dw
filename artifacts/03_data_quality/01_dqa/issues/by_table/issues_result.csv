@@ -1,4 +1,2 @@
 table_name,row_identifier,dimension,check_id,issue_code,issue_description,severity
-result,result_id=180,Completeness,result_required_structural_columns,MISSING_REQUIRED_VALUE,"Missing required values in columns: ['driver_id', 'team_id', 'position']",yellow
-result,result_id=880,Completeness,result_required_structural_columns,MISSING_REQUIRED_VALUE,Missing required values in columns: ['position'],yellow
-result,result_id=960,Completeness,result_required_structural_columns,MISSING_REQUIRED_VALUE,Missing required values in columns: ['position'],yellow
+result,result_id=180,Completeness,result_required_structural_columns,MISSING_REQUIRED_VALUE,"Missing required values in columns: ['driver_id', 'team_id']",yellow

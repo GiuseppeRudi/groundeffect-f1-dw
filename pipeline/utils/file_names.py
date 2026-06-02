@@ -34,6 +34,34 @@ CACHE_DIR = PROJECT_ROOT / "cache"
 
 
 # ============================================================
+# DATABASE DIRECTORIES
+# ============================================================
+
+
+SQL_RECONCILED_DIR = DATABASE_DIR / "reconciled" / "schema"
+
+SQL_DW_DIR = DATABASE_DIR / "dw" / "schema"
+
+DROP_SQL_RECONCILED_DIR = SQL_RECONCILED_DIR / "00_drop_reconciled_tables.sql"
+DROP_SQL_DW_DIR = SQL_DW_DIR / "00_drop_dw_tables.sql"
+
+CREATE_SQL_RECONCILED_FILE = SQL_RECONCILED_DIR / "01_create_reconciled_tables.sql"
+CREATE_SQL_DW_FILE = SQL_DW_DIR / "01_create_dw_tables.sql"
+
+
+TABLE_FILES = {
+    "season": "season.csv",
+    "circuit": "circuit.csv",
+    "driver": "driver.csv",
+    "team": "team.csv",
+    "grand_prix": "grand_prix.csv",
+    "session": "session.csv",
+    "result": "result.csv",
+    "lap": "lap.csv",
+    "weather": "weather.csv",
+    "track_status": "track_status.csv",
+}
+# ============================================================
 # DATA DIRECTORIES
 # ============================================================
 

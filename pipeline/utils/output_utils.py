@@ -1,14 +1,9 @@
-"""
-output_utils.py
-
-Generic reusable output helpers for the pipeline.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
 
 import json
+from typing import Any
 import pandas as pd
 
 
@@ -101,3 +96,7 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     print(f"[OK] Saved: {path}")
 
 
+
+def export_dataframe(df: pd.DataFrame, name: str, output_dir : Path) -> None:
+    path = output_dir / f"{name}.csv"
+    df.to_csv(path, index=False)

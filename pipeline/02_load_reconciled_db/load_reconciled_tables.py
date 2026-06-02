@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-
 import sys
 import pandas as pd
 
@@ -16,40 +15,13 @@ if not (PROJECT_ROOT / "pipeline").exists():
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from database.db_config import get_engine
-
-
-# ============================================================
-# CONFIG
-# ============================================================
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-CSV_DIR = PROJECT_ROOT / "data" / "reconciled"
-
-SQL_DIR = PROJECT_ROOT / "database" / "reconciled" / "schema"
-DROP_SQL_FILE = SQL_DIR / "00_drop_reconciled_tables.sql"
-CREATE_SQL_FILE = SQL_DIR / "01_create_reconciled_tables.sql"
-
+from pipeline.utils.file_names import (
+    RECONCILED_DATA_DIR,
+    DROP_SQL_RECONCILED_FILE,
+    CREATE_SQL_RECONCILED_FILE,
+    TABLE_FILES)
 
 DROP_EXISTING_TABLES = True
-
-TABLE_FILES = {
-    "season": "season.csv",
-    "circuit": "circuit.csv",
-    "driver": "driver.csv",
-    "team": "team.csv",
-    "grand_prix": "grand_prix.csv",
-    "session": "session.csv",
-    "result": "result.csv",
-    "lap": "lap.csv",
-    "weather": "weather.csv",
-    "track_status": "track_status.csv",
-}
-
-
-# ============================================================
-# HELPERS
-# ============================================================
 
 def to_snake_case(name: str) -> str:
     name = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", str(name))
@@ -93,10 +65,6 @@ def execute_sql_file(conn, sql_path: Path) -> None:
     conn.exec_driver_sql(sql)
 
 
-# ============================================================
-# MAIN
-# ============================================================
-
 def main() -> None:
     engine, schema = get_engine("reconciled")
 
@@ -113,25 +81,19 @@ def main() -> None:
         "track_status",
     ]
 
-    # --------------------------------------------------------
-    # DROP + CREATE TABLES FROM SQL FILES
-    # --------------------------------------------------------
     with engine.begin() as conn:
         if DROP_EXISTING_TABLES:
-            execute_sql_file(conn, DROP_SQL_FILE)
+            execute_sql_file(conn, DROP_SQL_RECONCILED_FILE)
 
-        execute_sql_file(conn, CREATE_SQL_FILE)
+        execute_sql_file(conn, CREATE_SQL_RECONCILED_FILE)
 
-    # --------------------------------------------------------
-    # LOAD CSV DATA INTO EXISTING TABLES
-    # --------------------------------------------------------
     with engine.begin() as conn:
         for table_name in load_order:
             filename = TABLE_FILES[table_name]
-            csv_path = CSV_DIR / filename
+            csv_path = RECONCILED_DATA_DIR / filename
 
             if not csv_path.exists():
-                print(f"SKIP: {filename} not found in {CSV_DIR}")
+                print(f"SKIP: {filename} not found in {RECONCILED_DATA_DIR}")
                 continue
 
             print(f"LOADING {filename} -> {table_name}")

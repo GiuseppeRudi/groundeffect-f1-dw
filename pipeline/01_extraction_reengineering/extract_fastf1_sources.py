@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
 from typing import Any
@@ -20,9 +19,10 @@ if not (PROJECT_ROOT / "pipeline").exists():
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
+
 from pipeline.utils.input_utils import read_csv
+from pipeline.utils.output_utils import export_dataframe, ensure_dirs
 from pipeline.utils.file_names import (
-    DATA_DIR,
     EXTERNAL_DATA_DIR,
     RECONCILED_DATA_DIR,
     RAW_DATA_DIR,
@@ -30,18 +30,9 @@ from pipeline.utils.file_names import (
     CACHE_DIR
 )
 
-
 # ============================================================
 # HELPERS
 # ============================================================
-
-def ensure_dirs() -> None:
-    EXTERNAL_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    RECONCILED_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    EXTRACTION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
 
 
 def normalize_timedelta_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -79,12 +70,6 @@ LOCATION_ALIASES = {
 def normalize_location_for_match(value: object) -> str:
     text = normalize_text_for_match(value)
     return LOCATION_ALIASES.get(text, text)
-
-
-
-def export_dataframe(df: pd.DataFrame, name: str, output_dir : Path) -> None:
-    path = output_dir / f"{name}.csv"
-    df.to_csv(path, index=False)
 
 
 
@@ -242,9 +227,16 @@ def enrich_events_with_circuit_id(
 
 def main() -> None:
 
+    dirs : list[Path] = [
+        EXTERNAL_DATA_DIR,
+        RAW_DATA_DIR,
+        RECONCILED_DATA_DIR,
+        EXTRACTION_OUTPUT_DIR,
+        CACHE_DIR
+    ]
 
     # check if the directory already exists 
-    ensure_dirs()
+    ensure_dirs(dirs)
 
     # enable FastF1 cache
     fastf1.Cache.enable_cache(str(CACHE_DIR))
@@ -414,7 +406,7 @@ def main() -> None:
                     # --------------------------
                     results_raw_df = session.results.copy()
 
-                    #print(results_raw_df.columns) 
+                    # print(results_raw_df.columns) 
                     # 'DriverNumber', 'BroadcastName', 'Abbreviation', 'DriverId', 'TeamName',
                     # 'TeamColor', 'TeamId', 'FirstName', 'LastName', 'FullName',
                     # 'HeadshotUrl', 'CountryCode', 'Position', 'ClassifiedPosition',
@@ -575,9 +567,7 @@ def main() -> None:
 
                 extraction_log_rows.append(log_record)
 
-    # ============================================================
-    # BUILD FINAL TABLES
-    # ============================================================
+
 
     # RECONCILED DF 
     grand_prix_df = pd.concat(grand_prix_reconciled_dfs, ignore_index= True)
@@ -597,9 +587,6 @@ def main() -> None:
     # LOG
     extraction_log_df = pd.DataFrame(extraction_log_rows)
 
-    # ============================================================
-    # EXPORT
-    # ============================================================
 
     # RAW 
     export_dataframe(schedules_df, "schedule_raw", RAW_DATA_DIR)
@@ -618,16 +605,12 @@ def main() -> None:
 
     export_dataframe(grand_prix_df, "grand_prix", RECONCILED_DATA_DIR)
     export_dataframe(sessions_df, "session" , RECONCILED_DATA_DIR)
-
-
     export_dataframe(driver_reconciled_df, "driver", RECONCILED_DATA_DIR)
     export_dataframe(team_reconciled_df, "team", RECONCILED_DATA_DIR)
-
     export_dataframe(session_results_reconciled_df, "result", RECONCILED_DATA_DIR)
     export_dataframe(laps_reconciled_df, "lap", RECONCILED_DATA_DIR)
     export_dataframe(weather_reconciled_df, "weather", RECONCILED_DATA_DIR)
     export_dataframe(track_status_reconciled_df, "track_status",RECONCILED_DATA_DIR)
-
 
     # LOG 
     export_dataframe(extraction_log_df, "extraction_log", EXTRACTION_OUTPUT_DIR)

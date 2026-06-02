@@ -22,15 +22,13 @@ session,Uniqueness,natural_key_1_unique,"Natural key ['grand_prix_id', 'session_
 session,Validity,session_type_domain,session_type must belong to the allowed session domain for this project: Q or R.,88,0,88,1.0,green
 session,Consistency,session_date_near_grand_prix_date,"session_date should be coherent with the corresponding Grand Prix event_date. For Q and R sessions, it should normally fall between event_date minus two days and event_date.",88,0,88,1.0,green
 session,Referential Integrity,fk_session_grand_prix_id_to_grand_prix_grand_prix_id,session.grand_prix_id must reference grand_prix.grand_prix_id.,88,0,88,1.0,green
-result,Completeness,result_required_structural_columns,"result_id, session_id, driver_id, team_id, and position must be present.",8795,5,8800,0.999432,green
-result,Completeness,result_required_race_classification_columns,"For race sessions, classified_position, status, points, and laps must be present.",3520,0,3520,1.0,green
+result,Completeness,result_required_structural_columns,"result_id, session_id, driver_id, and team_id must be present.",7038,2,7040,0.999716,green
 result,Uniqueness,primary_key_unique,Primary key ['result_id'] must be unique among complete key values.,1760,0,1760,1.0,green
 result,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'driver_id'] should be unique among complete key values.",1759,0,1759,1.0,green
 result,Validity,result_position_positive,position must be greater than zero when present.,1757,0,1757,1.0,green
 result,Validity,result_points_non_negative,points must be greater than or equal to zero when present.,880,0,880,1.0,green
 result,Validity,result_laps_non_negative,laps must be greater than or equal to zero when present.,880,0,880,1.0,green
 result,Validity,result_grid_position_non_negative,grid_position must be greater than or equal to zero when present.,878,0,878,1.0,green
-result,Consistency,result_qualifying_progression_consistency,"In qualifying sessions, Q2 and Q3 times must be coherent with the qualifying progression.",868,0,868,1.0,green
 result,Referential Integrity,fk_result_session_id_to_session_session_id,result.session_id must reference session.session_id.,1760,0,1760,1.0,green
 result,Referential Integrity,fk_result_driver_id_to_driver_driver_id,result.driver_id must reference driver.driver_id.,1759,0,1759,1.0,green
 result,Referential Integrity,fk_result_team_id_to_team_team_id,result.team_id must reference team.team_id.,1759,0,1759,1.0,green
@@ -79,4 +77,4 @@ driver,Uniqueness,primary_key_unique,Primary key ['driver_id'] must be unique am
 driver,Validity,driver_abbreviation_format,abbreviation must be a three-letter uppercase driver code.,26,0,26,1.0,green
 driver,Validity,driver_url_format,driver_url must have a valid URL format when present.,26,0,26,1.0,green
 driver,Validity,permanent_number_range,permanent_number must be between 1 and 99 when present.,26,0,26,1.0,green
-driver,Accuracy/Plausibility,driver_age_plausible_2021_2022,Driver age during the selected 2021--2022 seasons should be within a broad plausible Formula 1 range.,26,0,26,1.0,green
+driver,Accuracy,driver_age_plausible_2021_2022,Driver age during the selected 2021--2022 seasons should be within a broad plausible Formula 1 range.,26,0,26,1.0,green

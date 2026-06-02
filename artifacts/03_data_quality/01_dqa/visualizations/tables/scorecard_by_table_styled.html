@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>General DQA Scorecard by Table</title>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 32px;
+            background: #fafafa;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        table.dataTable {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .status-green {
+            color: #2ca02c;
+            font-weight: bold;
+        }
+
+        .status-yellow {
+            color: #b58900;
+            font-weight: bold;
+        }
+
+        .status-red {
+            color: #d62728;
+            font-weight: bold;
+        }
+
+        .status-not_applicable {
+            color: #777;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>General DQA Scorecard by Table</h1>
+    <p class="subtitle">Interactive table generated from the General Data Quality Assessment outputs.</p>
+
+    <table border="1" class="dataframe display compact" id="data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>table_name</th>
+      <th>overall_score</th>
+      <th>status</th>
+      <th>issue_count</th>
+      <th>completeness_score</th>
+      <th>uniqueness_score</th>
+      <th>validity_score</th>
+      <th>consistency_score</th>
+      <th>accuracy_plausibility_score</th>
+      <th>timeliness_score</th>
+      <th>referential_integrity_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>circuit</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>0.999972</td>
+      <td><span class="status-green">green</span></td>
+      <td>60</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.999859</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>0.999929</td>
+      <td><span class="status-green">green</span></td>
+      <td>1</td>
+      <td>0.999716</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>team</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>0.998925</td>
+      <td><span class="status-green">green</span></td>
+      <td>9</td>
+      <td>1.000000</td>
+      <td>0.994623</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>1.000000</td>
+      <td><span class="status-green">green</span></td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('#data-table').DataTable({
+                pageLength: 25,
+                order: [],
+                scrollX: true
+            });
+        });
+    </script>
+</body>
+</html>

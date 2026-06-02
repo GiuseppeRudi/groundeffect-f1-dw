@@ -1,8 +1,18 @@
 from __future__ import annotations
 
 from pathlib import Path
-import os
+import sys
 
+PROJECT_ROOT = Path.cwd()
+
+if not (PROJECT_ROOT / "database").exists() or not (PROJECT_ROOT / "pipeline").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+    )
+
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from pipeline.config.domain import *
 
 QUALITY_DIMENSIONS = [
     "Completeness",
@@ -13,21 +23,6 @@ QUALITY_DIMENSIONS = [
     "Timeliness",
     "Referential Integrity",
 ]
-
-GLOBAL_CIRCUIT_CATEGORIES = {"Street", "PowerSensitive", "AeroSensitive", "Mixed"}
-SECTOR_CATEGORIES = {"Power", "FastCorners", "SlowCorners", "Technical"}
-SESSION_TYPES = {"Q", "R"}
-EVENT_FORMATS = {"conventional", "sprint"}
-TYRE_COMPOUNDS = {"SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"}
-
-TRACK_STATUS_MAPPING = {
-    1: "AllClear",
-    2: "Yellow",
-    4: "SCDeployed",
-    5: "Red",
-    6: "VSCDeployed",
-    7: "VSCEnding",
-}
 
 TABLE_RULES = {
    

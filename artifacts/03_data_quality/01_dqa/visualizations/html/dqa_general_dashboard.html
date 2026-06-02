@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>General DQA Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 32px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 28px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        a {
+            color: #1f77b4;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>General Data Quality Assessment Dashboard</h1>
+
+    <p class="subtitle">
+        Minimal interactive visual summary generated from the General DQA scorecard and issue files.
+    </p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="card-title">Tables assessed</div>
+            <div class="card-value">10</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Average overall score</div>
+            <div class="card-value">1.000</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Total issues</div>
+            <div class="card-value">70</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Worst table score</div>
+            <div class="card-value">0.999</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Quick interpretation</h2>
+        <p>
+            The table with the lowest overall data quality score is:
+            <strong>track_status</strong>.
+            This dashboard does not modify data. It only visualizes the deterministic
+            outputs produced by the General DQA script.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Charts and interactive tables</h2>
+        <ul>
+            <li><a href="overall_score_by_table.html">Overall score by table</a></li>
+<li><a href="dimension_score_heatmap.html">Table × dimension heatmap</a></li>
+<li><a href="issues_by_dimension.html">Issues by dimension</a></li>
+<li><a href="../tables/scorecard_by_table_styled.html">Interactive scorecard table</a></li>
+<li><a href="../tables/issues_all_tables_styled.html">Interactive issues table</a></li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-import argparse
 from pathlib import Path
-
 import pandas as pd
 import sys
-
-
 
 PROJECT_ROOT = Path.cwd()
 
@@ -20,19 +16,11 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from database.db_config import get_engine
 from core.dqa_rules import TABLE_RULES, QUALITY_DIMENSIONS
 from core.dqa_engine import DQAEngine
-from sqlalchemy import text
 from database.db_utils import load_tables
-
-
-from database.db_utils import read_configured_tables
 
 
 from pipeline.utils.file_names import (
     GENERAL_DQA_OUTPUT_DIR,
-
-    SCORECARDS_DIR_NAME,
-    ISSUES_DIR_NAME,
-    ISSUES_BY_TABLE_DIR_NAME,
 
     DQA_CHECK_RESULTS_FILE,
     DQA_SCORECARD_FILE,
@@ -45,11 +33,9 @@ from pipeline.utils.file_names import (
 )
 
 from pipeline.utils.output_utils import (
-    ensure_dirs,
     write_csv,
     write_partitioned_csv,
 )
-
 
 GENERAL_DQA_ISSUE_COLUMNS = [
     "table_name",
@@ -62,12 +48,7 @@ GENERAL_DQA_ISSUE_COLUMNS = [
 ]
 
 
-
-
 def normalize_issues_df(issues_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Ensure that the issues dataframe has stable columns even when empty.
-    """
 
     if issues_df.empty:
         return pd.DataFrame(columns=GENERAL_DQA_ISSUE_COLUMNS)
@@ -83,12 +64,7 @@ def export_general_dqa_outputs(
     check_df: pd.DataFrame,
     scorecard_df: pd.DataFrame,
     issues_df: pd.DataFrame,
-    output_dir: Path,
 ) -> None:
-    """
-    Export all General DQA outputs.
-    """
-
 
     check_path = GENERAL_DQA_SCORECARDS_DIR / DQA_CHECK_RESULTS_FILE
     scorecard_path = GENERAL_DQA_SCORECARDS_DIR / DQA_SCORECARD_FILE
@@ -130,9 +106,7 @@ def main() -> None:
     print(f"[INFO] Schema: {schema}")
     print(f"[INFO] Output directory: {output_dir}")
 
-
     table_names = list(TABLE_RULES.keys())
-
     all_tables = load_tables(
         engine=engine,
         schema=schema,
@@ -147,14 +121,8 @@ def main() -> None:
         check_df=check_df,
         scorecard_df=scorecard_df,
         issues_df=issues_df,
-        output_dir=GENERAL_DQA_OUTPUT_DIR,
     )
 
-    print("\n[INFO] Scorecard preview:")
-    if scorecard_df.empty:
-        print("[WARN] Empty scorecard")
-    else:
-        print(scorecard_df.to_string(index=False))
 
 
 if __name__ == "__main__":

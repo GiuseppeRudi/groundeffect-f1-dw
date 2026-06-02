@@ -5,11 +5,6 @@ from typing import Any, Callable
 
 import pandas as pd
 
-
-# ============================================================
-# DATA STRUCTURES
-# ============================================================
-
 @dataclass
 class CheckResult:
     table_name: str
@@ -33,10 +28,6 @@ class Issue:
     issue_description: str
     severity: str
 
-
-# ============================================================
-# GENERIC HELPERS
-# ============================================================
 
 def status_from_score(score: float | None) -> str:
     if score is None or pd.isna(score):
@@ -109,7 +100,7 @@ def empty_applicability(index: pd.Index) -> tuple[pd.Series, pd.Series]:
 
 
 # ============================================================
-# CUSTOM CONSISTENCY / PLAUSIBILITY CHECKS
+# CUSTOM CHECKS
 # ============================================================
 
 def custom_season_dates_order(table_name, df, all_tables, rules, check):
@@ -295,6 +286,8 @@ class DQAEngine:
         self.quality_dimensions = quality_dimensions
 
     def run(self, all_tables: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+        
+
         results: list[CheckResult] = []
         issues: list[Issue] = []
 
@@ -302,6 +295,7 @@ class DQAEngine:
             df = all_tables.get(table_name)
 
             if df is None:
+
                 results.append(
                     CheckResult(
                         table_name=table_name,
@@ -315,6 +309,7 @@ class DQAEngine:
                         status="red",
                     )
                 )
+
                 issues.append(
                     Issue(
                         table_name=table_name,
@@ -326,6 +321,7 @@ class DQAEngine:
                         severity="red",
                     )
                 )
+
                 continue
 
             table_results, table_issues = self.run_for_table(table_name, df, all_tables, rules)
@@ -341,20 +337,23 @@ class DQAEngine:
     def run_for_table(
         self,
         table_name: str,
-        df: pd.DataFrame,
-        all_tables: dict[str, pd.DataFrame],
-        rules: dict[str, Any],
+        df: pd.DataFrame, # the current table
+        all_tables: dict[str, pd.DataFrame], #  all the table in the reconciled schema 
+        rules: dict[str, Any], # all the entire dict for all the table (not filter for the current table)
     ) -> tuple[list[CheckResult], list[Issue]]:
+        
+        # for a certain table
         results: list[CheckResult] = []
         issues: list[Issue] = []
 
-        # Completeness: required groups only.
+        # Completeness
         for group in rules.get("required_groups", []):
+            # group is a dict ewith check_id , description , columns (list)
             result, new_issues = self.check_required_group(table_name, df, rules, group)
             results.append(result)
             issues.extend(new_issues)
 
-        # Uniqueness: duplicate complete keys only.
+        # Uniqueness
         pk = rules.get("primary_key")
         if pk:
             result, new_issues = self.check_unique_key(
@@ -383,25 +382,25 @@ class DQAEngine:
             results.append(result)
             issues.extend(new_issues)
 
-        # Validity: present values only.
+        # Validity
         for check in rules.get("validity_checks", []):
             result, new_issues = self.check_validity(table_name, df, rules, check)
             results.append(result)
             issues.extend(new_issues)
 
-        # Consistency: semantic custom checks.
+        # Consistency
         for check in rules.get("consistency_checks", []):
             result, new_issues = self.check_custom(table_name, df, all_tables, rules, check, "Consistency")
             results.append(result)
             issues.extend(new_issues)
 
-        # Accuracy/Plausibility: optional custom checks, only if declared in rules.
+        # Accuracy
         for check in rules.get("plausibility_checks", []):
-            result, new_issues = self.check_custom(table_name, df, all_tables, rules, check, "Accuracy/Plausibility")
+            result, new_issues = self.check_custom(table_name, df, all_tables, rules, check, "Accuracy")
             results.append(result)
             issues.extend(new_issues)
 
-        # Referential Integrity: non-null child FK values must exist in parent table.
+        # Referential Integrity
         for fk in rules.get("foreign_keys", []):
             result, new_issues = self.check_foreign_key(table_name, df, all_tables, rules, fk)
             results.append(result)
@@ -417,16 +416,27 @@ class DQAEngine:
         rules: dict[str, Any],
         group: dict[str, Any],
     ) -> tuple[CheckResult, list[Issue]]:
+        """ 
+            This function controll the COMPLETENESS dimensions
+            1- check if at least one required colum are missing and invalide all the current tables
+            2- if all the required columns are present check that for each of them doesn't contain the null-values
+            3- identify the number of null-values and create a issue for each of them 
+        """
+        
         cols = group.get("columns", [])
         check_id = group.get("check_id", "required_columns")
         description = group.get("description", "Required columns must be present and non-null.")
-        issue_code = group.get("issue_code", "MISSING_REQUIRED_VALUE")
+        
+        issue_code = "MISSING_REQUIRED_VALUE"
 
         issues: list[Issue] = []
         missing = missing_columns(df, cols)
 
+        # If at least one required column are missing we invalide all the current table 
         if missing:
+
             total = max(len(df), 1) * max(len(cols), 1)
+
             issues.append(
                 Issue(
                     table_name=table_name,
@@ -438,6 +448,7 @@ class DQAEngine:
                     severity="red",
                 )
             )
+
             return CheckResult(
                 table_name=table_name,
                 dimension="Completeness",
@@ -450,10 +461,11 @@ class DQAEngine:
                 status="red",
             ), issues
 
-
+        # create a boolean mask and count the number of rows (sum each row where there is the True value )
         applicable_rows = pd.Series(True, index=df.index)     
         applicable_count = int(applicable_rows.sum())
 
+        # check if the table are no rows 
         if applicable_count == 0:
             return CheckResult(
                 table_name=table_name,
@@ -468,10 +480,26 @@ class DQAEngine:
             ), issues
 
         total = int(applicable_count * len(cols))
+
+        # df.loc[rows, cols] selects the rows where applicable_rows is True
+        # and only the columns listed in cols.
+        #
+        # .notna() creates a boolean table:
+        # True  = value is present / not null
+        # False = value is missing / null
+        #
+        # The first .sum() counts True values column by column.
+        # The second .sum() sums all column counts into one total number.
+        #
+        # passed is the total number of required values that are present.
         passed = int(df.loc[applicable_rows, cols].notna().sum().sum())
+
+        # total number of elements minus the number of non null values => total number of null values
         failed = total - passed
+
         score = safe_score(passed, total)
 
+        # Select rows where the check applies and at least one required column is null.
         bad_rows = applicable_rows & df[cols].isna().any(axis=1)
 
         for idx, row in df.loc[bad_rows].iterrows():
@@ -505,7 +533,7 @@ class DQAEngine:
         table_name: str,
         df: pd.DataFrame,
         rules: dict[str, Any],
-        key_cols: list[str],
+        key_cols: list[str], # list of PK or NK columns 
         check_id: str,
         description: str,
     ) -> tuple[CheckResult, list[Issue]]:
@@ -527,6 +555,8 @@ class DQAEngine:
                 status="not_applicable",
             ), issues
 
+        # the tilde means the negation of the boolean mask, so we select only the rows where all key columns are not null
+        # True = all keys in a specific rows are present so not null, otherwise False
         complete_key_mask = ~df[key_cols].isna().any(axis=1)
         applicable_df = df.loc[complete_key_mask]
         total = int(len(applicable_df))
@@ -544,8 +574,10 @@ class DQAEngine:
                 status="not_applicable",
             ), issues
 
+        # boolena mask  where are True when a specific row contain the duplicated key_cols , keep false mark all the duplicated rows not only the second one 
         duplicated_subset = applicable_df.duplicated(subset=key_cols, keep=False)
         failing = pd.Series(False, index=df.index)
+
         failing.loc[applicable_df.index] = duplicated_subset
 
         failed = int(failing.sum())
@@ -584,6 +616,7 @@ class DQAEngine:
         rules: dict[str, Any],
         check: dict[str, Any],
     ) -> tuple[CheckResult, list[Issue]]:
+        
         check_type = check["type"]
         check_id = check["check_id"]
         description = check.get("description", check_id)
@@ -616,7 +649,7 @@ class DQAEngine:
                 status="red",
             ), issues
 
-        # Missing values are not validity failures in this simplified engine.
+        # Missing values are not validity failures 
         # They are handled by Completeness through required_groups.
         applicable = pd.Series(False, index=df.index)
         failing = pd.Series(False, index=df.index)
@@ -817,6 +850,7 @@ class DQAEngine:
             score=score,
             status=status_from_score(score),
         ), issues
+
 
     def build_scorecard_by_table(self, check_df: pd.DataFrame, issues_df: pd.DataFrame) -> pd.DataFrame:
         if check_df.empty:

@@ -10,6 +10,7 @@ import time
 from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
+import pandas as pd
 
 PROJECT_ROOT = Path.cwd()
 
@@ -20,12 +21,10 @@ if not (PROJECT_ROOT / "artifacts").exists():
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from pipeline.utils.output_utils import ensure_dirs, write_json, write_text
-
 from pipeline.utils.input_utils import read_csv, safe_records
 
-import pandas as pd
 
-from llm_config import (
+from pipeline.config.llm_config import (
     OLLAMA_HOST,
     LLM_MODEL_NAME,
     LLM_TEMPERATURE,
@@ -33,13 +32,8 @@ from llm_config import (
     MAX_ISSUES_IN_PROMPT,
     MAX_FAILED_CHECKS_IN_PROMPT,
     MAX_RI_ISSUES_IN_PROMPT,
-    LLM_INPUT_JSON,
-    LLM_PROMPT_TXT,
-    STAKEHOLDER_SUMMARY_MD,
-    TECHNICAL_SUMMARY_MD,
-    CLEANING_PRIORITIES_MD,
-    FULL_LLM_OUTPUT_MD,
 )
+
 
 from pipeline.utils.file_names import (
 
@@ -58,7 +52,6 @@ from pipeline.utils.file_names import (
     LLM_OUTPUT_DIR,
     GENERAL_DQA_OUTPUT_DIR,
 
-    LLM_OUTPUT_DIR,
     INPUT_DIR_NAME,
     OUTPUTS_DIR_NAME,
     PROMPTS_DIR_NAME
@@ -78,37 +71,6 @@ def ollama_cli_exists() -> bool:
 def run_command(command: list[str], check: bool = True) -> subprocess.CompletedProcess:
     print(f"[INFO] Running command: {' '.join(command)}")
     return subprocess.run(command, check=check, text=True)
-
-
-def try_auto_install_ollama() -> None:
-    """Best-effort Ollama installation. Runs only with --auto-install-ollama."""
-    system = platform.system().lower()
-
-    if "windows" in system:
-        if shutil.which("winget") is None:
-            raise RuntimeError(
-                "Ollama is not installed and winget was not found. "
-                "Install Ollama manually from https://ollama.com/download"
-            )
-        run_command(["winget", "install", "-e", "--id", "Ollama.Ollama"])
-        return
-
-    if "darwin" in system:
-        if shutil.which("brew") is None:
-            raise RuntimeError(
-                "Ollama is not installed and Homebrew was not found. "
-                "Install Ollama manually from https://ollama.com/download"
-            )
-        run_command(["brew", "install", "ollama"])
-        return
-
-    if "linux" in system:
-        raise RuntimeError(
-            "Automatic Ollama installation on Linux is not executed by this script "
-            "for safety reasons. Install Ollama manually from https://ollama.com/download"
-        )
-
-    raise RuntimeError(f"Unsupported OS for automatic Ollama installation: {platform.system()}")
 
 
 def ollama_request(endpoint: str, payload: dict[str, Any] | None = None, timeout: int = 60) -> dict[str, Any]:
@@ -138,13 +100,14 @@ def ollama_server_is_running() -> bool:
         return False
 
 
-def start_ollama_server_if_needed(wait_seconds: int = 15) -> subprocess.Popen | None:
+def start_ollama_server(wait_seconds: int = 15) -> subprocess.Popen | None:
+
     if ollama_server_is_running():
         print("[INFO] Ollama server is already running.")
         return None
 
     if not ollama_cli_exists():
-        raise RuntimeError("Ollama CLI was not found. Install Ollama or run with --auto-install-ollama.")
+        raise RuntimeError("Ollama CLI was not found. Install Ollama")
 
     print("[INFO] Starting Ollama server...")
     process = subprocess.Popen(
@@ -155,6 +118,7 @@ def start_ollama_server_if_needed(wait_seconds: int = 15) -> subprocess.Popen | 
 
     start = time.time()
     while time.time() - start < wait_seconds:
+
         if ollama_server_is_running():
             print("[INFO] Ollama server is running.")
             return process
@@ -169,7 +133,7 @@ def get_installed_models() -> set[str]:
     return {m.get("name") for m in models if m.get("name")}
 
 
-def pull_model_if_missing(model_name: str) -> None:
+def pull_model(model_name: str) -> None:
     installed = get_installed_models()
 
     if model_name in installed:
@@ -200,9 +164,7 @@ def generate_with_ollama(model_name: str, prompt: str) -> str:
     return response.get("response", "").strip()
 
 
-# ============================================================
-# DQA SUMMARY BUILDING
-# ============================================================
+
 
 def build_llm_input(scorecard_df: pd.DataFrame, check_df: pd.DataFrame, issues_df: pd.DataFrame, ri_issues_df: pd.DataFrame) -> dict[str, Any]:
     """Build compact input for the LLM. Raw database rows are not included."""
@@ -277,19 +239,9 @@ def build_llm_input(scorecard_df: pd.DataFrame, check_df: pd.DataFrame, issues_d
     else:
         summary["referential_integrity_issues"] = []
 
-    summary["important_constraints"] = [
-        "The LLM output is only explanatory.",
-        "The deterministic DQA scorecards and issue files remain the official results.",
-        "The LLM must not invent new rules that were not checked by the DQA scripts.",
-        "Cleaning decisions must be manually validated and implemented in a separate cleaning phase.",
-    ]
 
     return summary
 
-
-from pathlib import Path
-import json
-from typing import Any
 
 
 PROMPT_TEMPLATE_PATH = (
@@ -316,67 +268,76 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+
 def main() -> None:
-    args = parse_args()
-
-    paths : list[Path]  = []
-    paths.append(Path(LLM_OUTPUT_DIR))
-    paths.append(Path(LLM_OUTPUT_DIR / INPUT_DIR_NAME ))
-    paths.append(Path(LLM_OUTPUT_DIR / PROMPTS_DIR_NAME))
-    paths.append(Path(LLM_OUTPUT_DIR /OUTPUTS_DIR_NAME ))
-
-    ensure_dirs(paths)
 
     print("[INFO] Starting local LLM interpretation for General DQA")
     print(f"[INFO] General DQA input directory: {GENERAL_DQA_OUTPUT_DIR}")
     print(f"[INFO] LLM output directory: {LLM_OUTPUT_DIR}")
-    print(f"[INFO] Selected model: {args.model}")
+    print(f"[INFO] Selected model: {LLM_MODEL_NAME}")
+
+    # Ollama is optional.
+    # If it is not installed, skip the LLM phase without raising an error.
+    if not ollama_cli_exists():
+        print("[WARNING] Ollama CLI was not found.")
+        print("[WARNING] Local LLM interpretation skipped.")
+        return
+
+    paths: list[Path] = [
+        Path(LLM_OUTPUT_DIR),
+        Path(LLM_OUTPUT_DIR / INPUT_DIR_NAME),
+        Path(LLM_OUTPUT_DIR / PROMPTS_DIR_NAME),
+        Path(LLM_OUTPUT_DIR / OUTPUTS_DIR_NAME),
+    ]
+
+    ensure_dirs(paths)
 
     scorecard_df = read_csv(Path(SCORECARD_BY_TABLE_PATH), required=True)
     check_df = read_csv(Path(CHECK_RESULTS_PATH), required=True)
     issues_df = read_csv(Path(ISSUES_ALL_TABLES_PATH), required=False)
     ri_issues_df = read_csv(Path(RI_ISSUES_PATH), required=False)
 
-    llm_input = build_llm_input(scorecard_df, check_df, issues_df, ri_issues_df)
-    input_path = LLM_INPUT_JSON_PATH
-    prompt_path = LLM_PROMPT_PATH
+    llm_input = build_llm_input(
+        scorecard_df=scorecard_df,
+        check_df=check_df,
+        issues_df=issues_df,
+        ri_issues_df=ri_issues_df,
+    )
 
-    write_json(input_path, llm_input)
+    write_json(LLM_INPUT_JSON_PATH, llm_input)
+
     prompt = build_prompt(llm_input)
-    write_text(prompt_path, prompt)
-
-    if not ollama_cli_exists():
-        if args.auto_install_ollama:
-            print("[INFO] Ollama CLI not found. Trying automatic installation...")
-            try_auto_install_ollama()
-        else:
-            raise RuntimeError(
-                "Ollama CLI was not found.\n"
-                "Install Ollama manually, or rerun with --auto-install-ollama.\n"
-                "Download page: https://ollama.com/download"
-            )
+    write_text(LLM_PROMPT_PATH, prompt)
 
     server_process = None
+
     try:
-        server_process = start_ollama_server_if_needed()
+        server_process = start_ollama_server()
 
-        if not args.skip_model_pull:
-            pull_model_if_missing(args.model)
+        pull_model(LLM_MODEL_NAME)
 
-        full_output = generate_with_ollama(args.model, prompt)
+        full_output = generate_with_ollama(
+            model_name=LLM_MODEL_NAME,
+            prompt=prompt,
+        )
+
         if not full_output:
-            raise RuntimeError("The LLM returned an empty response.")
+            print("[WARNING] Ollama returned an empty response.")
+            print("[WARNING] Local LLM interpretation skipped.")
+            return
 
-
-        write_text(LLM_FULL_OUTPUT_PATH , full_output)
+        write_text(LLM_FULL_OUTPUT_PATH, full_output)
 
         print("\n[OK] LLM interpretation completed.")
-        print(f"[INFO] Main output folder: {LLM_FULL_OUTPUT_PATH}")
+        print(f"[INFO] Main output file: {LLM_FULL_OUTPUT_PATH}")
+
+    except Exception as exc:
+        print(f"[WARNING] Local LLM interpretation skipped: {exc}")
+        return
 
     finally:
         if server_process is not None:
             print("[INFO] Ollama server was started by this script and is left running for reuse.")
-
 
 if __name__ == "__main__":
     main()
