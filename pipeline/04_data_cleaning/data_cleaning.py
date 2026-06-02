@@ -13,9 +13,7 @@ import pandas as pd
 from sqlalchemy import text
 
 
-# ============================================================
-# PROJECT PATH
-# ============================================================
+
 
 PROJECT_ROOT = Path.cwd()
 
@@ -28,136 +26,44 @@ if not (PROJECT_ROOT / "database").exists():
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
-# ============================================================
-# CONFIG
-# ============================================================
+from pipeline.config.domain_constants import (
+    GLOBAL_CIRCUIT_CATEGORIES,
+    SECTOR_CATEGORIES,
+    SESSION_TYPES,
+    EVENT_FORMATS,
+    TYRE_COMPOUNDS,
+    TRACK_STATUS_MAPPING,
+)
 
-INPUT_SCHEMA = "reconciled"
-OUTPUT_SCHEMA = "reconciled_clean"
-DROP_OUTPUT_SCHEMA_BEFORE_LOAD = True
-RUN_POST_CLEANING_DQA_COMPARISON = False
+from pipeline.config.schema_metadata import (
+    TABLE_ORDER,
+    PRIMARY_KEYS,
+    FOREIGN_KEYS,
+)
 
-OUTPUT_DIR = Path("artifacts") / "04_data_cleaning"
-CLEANED_TABLES_DIR = OUTPUT_DIR / "cleaned_tables"
+from pipeline.config.data_cleaning_config import (
+    INPUT_SCHEMA,
+    OUTPUT_SCHEMA,
+    DROP_OUTPUT_SCHEMA_BEFORE_LOAD,
+    RUN_POST_CLEANING_DQA_COMPARISON,
+    VALID_MISSING_INFORMATION_AREAS,
+    SECTOR_METRICS,
+    SPEED_METRICS,
+    QUALITY_FLAG_COLUMNS,
+)
 
-CLEANING_ACTION_LOG_FILE = OUTPUT_DIR / "cleaning_action_log.csv"
-CLEANING_SUMMARY_BY_TABLE_FILE = OUTPUT_DIR / "cleaning_summary_by_table.csv"
-CLEANING_SUMMARY_BY_DECISION_FILE = OUTPUT_DIR / "cleaning_summary_by_decision.csv"
-REJECTED_ROWS_FILE = OUTPUT_DIR / "rejected_rows.csv"
-BEFORE_AFTER_SCORECARD_FILE = OUTPUT_DIR / "before_after_scorecard.csv"
-
-DQA_ISSUE_CANDIDATES = [
-    Path("artifacts") / "03_data_quality" / "01_dqa" / "issues" / "issues_all_tables.csv",
-]
-
-MISSING_FLAGS_CANDIDATES = [
-    Path("artifacts") / "03_data_quality" / "03_missing_values" / "focused_missing_row_flags.csv",
-]
-
-OUTLIER_FLAGS_CANDIDATES = [
-    Path("artifacts") / "03_data_quality" / "04_outlier_detection" / "lap_outlier_flags.csv",
-]
-TABLE_ORDER = [
-    "season",
-    "circuit",
-    "driver",
-    "team",
-    "grand_prix",
-    "session",
-    "result",
-    "lap",
-    "weather",
-    "track_status",
-]
-
-PRIMARY_KEYS: dict[str, list[str]] = {
-    "season": ["season_year"],
-    "circuit": ["circuit_id"],
-    "driver": ["driver_id"],
-    "team": ["team_id"],
-    "grand_prix": ["grand_prix_id"],
-    "session": ["session_id"],
-    "result": ["result_id"],
-    "lap": ["lap_id"],
-    "weather": ["weather_id"],
-    "track_status": ["track_status_id"],
-}
-
-FOREIGN_KEYS: dict[str, list[tuple[str, str, str]]] = {
-    "grand_prix": [
-        ("season_year", "season", "season_year"),
-        ("circuit_id", "circuit", "circuit_id"),
-    ],
-    "session": [
-        ("grand_prix_id", "grand_prix", "grand_prix_id"),
-    ],
-    "result": [
-        ("session_id", "session", "session_id"),
-        ("driver_id", "driver", "driver_id"),
-        ("team_id", "team", "team_id"),
-    ],
-    "lap": [
-        ("session_id", "session", "session_id"),
-        ("driver_id", "driver", "driver_id"),
-        ("team_id", "team", "team_id"),
-    ],
-    "weather": [
-        ("session_id", "session", "session_id"),
-    ],
-    "track_status": [
-        ("session_id", "session", "session_id"),
-    ],
-}
-
-GLOBAL_CIRCUIT_CATEGORIES = {"Street", "PowerSensitive", "AeroSensitive", "Mixed"}
-SECTOR_CATEGORIES = {"Power", "FastCorners", "SlowCorners", "Technical"}
-SESSION_TYPES = {"Q", "R"}
-EVENT_FORMATS = {"conventional", "sprint"}
-TYRE_COMPOUNDS = {"SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"}
-
-TRACK_STATUS_MAPPING = {
-    1: "AllClear",
-    2: "Yellow",
-    4: "SCDeployed",
-    5: "Red",
-    6: "VSCDeployed",
-    7: "VSCEnding",
-}
-
-VALID_MISSING_INFORMATION_AREAS = {
-    "NONE",
-    "LAP_TIME_INFORMATION",
-    "SECTOR_INFORMATION",
-    "SPEED_INFORMATION",
-    "TYRE_INFORMATION",
-    "WEATHER_INFORMATION",
-    "TRACK_STATUS_INFORMATION",
-    "PIT_INFORMATION",
-    "CLASSIFICATION_INFORMATION",
-    "QUALIFYING_INFORMATION",
-    "RACE_CONTEXT_INFORMATION",
-}
-
-SECTOR_METRICS = {"sector1_time_ms", "sector2_time_ms", "sector3_time_ms"}
-SPEED_METRICS = {"speed_i1", "speed_i2", "speed_fl", "speed_st"}
-
-# Boolean quality flags created in the cleaned analytical tables.
-# These replace the old single textual column missing_information_areas.
-QUALITY_FLAG_COLUMNS: dict[str, dict[str, str]] = {
-    "lap": {
-        "SECTOR_INFORMATION": "has_sector_information_issue",
-        "SPEED_INFORMATION": "has_speed_information_issue",
-        "TYRE_INFORMATION": "has_tyre_information_issue",
-        "WEATHER_INFORMATION": "has_weather_information_issue",
-        "TRACK_STATUS_INFORMATION": "has_track_status_information_issue",
-        "PIT_INFORMATION": "has_pit_information_issue",
-    },
-    "result": {
-        "QUALIFYING_INFORMATION": "has_qualifying_information_issue",
-        "RACE_CONTEXT_INFORMATION": "has_race_context_information_issue",
-    },
-}
-
+from pipeline.utils.file_names import (
+    DATA_CLEANING_OUTPUT_DIR,
+    CLEANED_DATA_DIR,
+    CLEANING_ACTION_LOG_PATH,
+    CLEANING_SUMMARY_BY_TABLE_PATH,
+    CLEANING_SUMMARY_BY_DECISION_PATH,
+    REJECTED_ROWS_PATH,
+    BEFORE_AFTER_SCORECARD_PATH,
+    DQA_ISSUES_PATH,
+    FOCUSED_MISSING_ROW_FLAGS_PATH,
+    LAP_OUTLIER_FLAGS_PATH,
+)
 
 # ============================================================
 # DATA STRUCTURES
@@ -404,9 +310,6 @@ def remove_internal_row_ids(tables: dict[str, pd.DataFrame]) -> dict[str, pd.Dat
         if "_clean_row_id" in clean_df.columns:
             clean_df = clean_df.drop(columns=["_clean_row_id"])
 
-        # The old implementation used a single textual column with combined
-        # information areas. The current model uses separate boolean flags,
-        # so this deprecated column must not enter the cleaned schema.
         if table_name in {"lap", "result"} and "missing_information_areas" in clean_df.columns:
             clean_df = clean_df.drop(columns=["missing_information_areas"])
 
@@ -468,8 +371,7 @@ def append_log(
     new_value: Any = None,
     reason: str,
 ) -> None:
-    # Backward-compatible parameter name: old code may still pass
-    # missing_information_area. The audit log now stores information_area.
+
     final_information_area = information_area if information_area is not None else missing_information_area
 
     actions.append(
@@ -1112,9 +1014,6 @@ def apply_dqa_cleaning(
         apply_dqa_issue(tables, drop_masks, actions, issue)
 
 
-# ============================================================
-# MISSING-VALUE-DRIVEN CLEANING - OPTIMIZED WITH BOOLEAN FLAGS
-# ============================================================
 
 
 def apply_missing_value_cleaning(
@@ -1154,9 +1053,6 @@ def apply_missing_value_cleaning(
     if flags.empty:
         return
 
-    # ------------------------------------------------------------
-    # DROP_ROW decisions, selected in bulk.
-    # ------------------------------------------------------------
 
     lap_drop_ids = set(
         flags.loc[
@@ -1208,10 +1104,7 @@ def apply_missing_value_cleaning(
             reason="Rows with missing classification information are removed from the cleaned result table.",
         )
 
-    # ------------------------------------------------------------
-    # ADD_FLAG decisions, grouped by table and information area.
-    # This avoids df['_clean_row_id'].eq(...) for thousands of CSV rows.
-    # ------------------------------------------------------------
+
 
     add_flags = flags.copy()
     add_flags = add_flags[
@@ -1274,11 +1167,6 @@ def apply_missing_value_cleaning(
         )
 
 
-# ============================================================
-# OUTLIER-DRIVEN CLEANING - OPTIMIZED WITH BOOLEAN FLAGS
-# ============================================================
-
-
 def apply_outlier_cleaning(
     tables: dict[str, pd.DataFrame],
     drop_masks: dict[str, pd.Series],
@@ -1309,9 +1197,6 @@ def apply_outlier_cleaning(
 
     df = tables["lap"]
 
-    # ------------------------------------------------------------
-    # DROP_ROW for strong lap_time_ms outliers.
-    # ------------------------------------------------------------
 
     strong_lap_time_ids = set(
         outliers.loc[
@@ -1337,10 +1222,6 @@ def apply_outlier_cleaning(
             outlier_consensus_score=2,
             reason="Rows with strong consensus lap_time_ms outliers are removed because lap time is the core performance measure.",
         )
-
-    # ------------------------------------------------------------
-    # ADD_FLAG for sector and speed outliers, grouped by information area.
-    # ------------------------------------------------------------
 
     sector_outliers = outliers[
         outliers["metric"].isin(SECTOR_METRICS)
@@ -1390,11 +1271,6 @@ def apply_outlier_cleaning(
         )
 
 
-# ============================================================
-# REFERENTIAL CASCADE AFTER DROPS
-# ============================================================
-
-
 def current_df(tables: dict[str, pd.DataFrame], drop_masks: dict[str, pd.Series], table_name: str) -> pd.DataFrame:
     df = tables[table_name]
     mask = drop_masks.get(table_name, pd.Series(False, index=df.index))
@@ -1442,10 +1318,6 @@ def apply_referential_cascade(
                     )
 
 
-# ============================================================
-# FINALIZATION AND OUTPUTS
-# ============================================================
-
 
 def build_rejected_rows(
     tables_before_drop: dict[str, pd.DataFrame],
@@ -1489,9 +1361,9 @@ def apply_final_drops(tables: dict[str, pd.DataFrame], drop_masks: dict[str, pd.
 
 
 def write_cleaned_table_csvs(tables: dict[str, pd.DataFrame]) -> None:
-    CLEANED_TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    CLEANED_DATA_DIR.mkdir(parents=True, exist_ok=True)
     for table_name, df in tables.items():
-        df.to_csv(CLEANED_TABLES_DIR / f"{table_name}.csv", index=False)
+        df.to_csv(CLEANED_DATA_DIR / f"{table_name}.csv", index=False)
 
 
 def write_metadata_outputs(
@@ -1499,7 +1371,7 @@ def write_metadata_outputs(
     rejected_rows_df: pd.DataFrame,
     before_after_df: pd.DataFrame,
 ) -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_CLEANING_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     actions_df = pd.DataFrame([asdict(action) for action in actions])
 
@@ -1524,7 +1396,7 @@ def write_metadata_outputs(
             ]
         )
 
-    actions_df.to_csv(CLEANING_ACTION_LOG_FILE, index=False)
+    actions_df.to_csv(CLEANING_ACTION_LOG_PATH, index=False)
 
     if not actions_df.empty:
         summary_by_table = (
@@ -1538,7 +1410,7 @@ def write_metadata_outputs(
         summary_by_table = pd.DataFrame(
             columns=["table_name", "cleaning_action", "action_count"]
         )
-    summary_by_table.to_csv(CLEANING_SUMMARY_BY_TABLE_FILE, index=False)
+    summary_by_table.to_csv(CLEANING_SUMMARY_BY_TABLE_PATH, index=False)
 
     decision_cols = [
         "source",
@@ -1559,13 +1431,13 @@ def write_metadata_outputs(
         )
     else:
         summary_by_decision = pd.DataFrame(columns=decision_cols + ["action_count"])
-    summary_by_decision.to_csv(CLEANING_SUMMARY_BY_DECISION_FILE, index=False)
+    summary_by_decision.to_csv(CLEANING_SUMMARY_BY_DECISION_PATH, index=False)
 
     if rejected_rows_df.empty:
         rejected_rows_df = pd.DataFrame(
             columns=["table_name", "row_identifier", "reasons", "row_data_json"]
         )
-    rejected_rows_df.to_csv(REJECTED_ROWS_FILE, index=False)
+    rejected_rows_df.to_csv(REJECTED_ROWS_PATH, index=False)
 
     if before_after_df.empty:
         before_after_df = pd.DataFrame(
@@ -1577,12 +1449,7 @@ def write_metadata_outputs(
                 "overall_score_after",
             ]
         )
-    before_after_df.to_csv(BEFORE_AFTER_SCORECARD_FILE, index=False)
-
-
-# ============================================================
-# OPTIONAL POST-CLEANING DQA
-# ============================================================
+    before_after_df.to_csv(BEFORE_AFTER_SCORECARD_PATH, index=False)
 
 
 def import_module_from_path(module_name: str, path: Path):
@@ -1599,7 +1466,7 @@ def find_project_file(filename: str) -> Path | None:
     candidates = list(PROJECT_ROOT.rglob(filename))
     if not candidates:
         return None
-    # Prefer files outside artifacts and hidden/cache folders.
+
     clean_candidates = [
         p for p in candidates
         if "artifacts" not in p.parts and "__pycache__" not in p.parts and ".venv" not in p.parts
@@ -1645,13 +1512,10 @@ def try_build_before_after_scorecard(
         return pd.DataFrame()
 
 
-# ============================================================
-# MAIN
-# ============================================================
-
-
 def main() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    DATA_CLEANING_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    CLEANED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     input_engine, input_schema = get_engine_and_schema(INPUT_SCHEMA)
     output_engine, output_schema = get_engine_and_schema(OUTPUT_SCHEMA)
@@ -1678,14 +1542,26 @@ def main() -> None:
     apply_general_cleaning(tables, actions)
     print(f"General cleaning completed in {perf_counter() - t0:.2f}s")
 
-    # Internal identifiers are used only to match CSV row flags efficiently.
-    # They are removed before writing the cleaned schema.
     add_internal_row_ids(tables)
 
-    dqa_issues_df = read_csv_optional(DQA_ISSUE_CANDIDATES, required=False, name="General DQA issues")
-    missing_flags_df = read_csv_optional(MISSING_FLAGS_CANDIDATES, required=False, name="Focused missing value row flags")
-    outlier_flags_df = read_csv_optional(OUTLIER_FLAGS_CANDIDATES, required=False, name="Lap outlier flags")
+    dqa_issues_df = read_csv_optional(
+        [DQA_ISSUES_PATH],
+        required=False,
+        name="General DQA issues",
+    )
 
+    missing_flags_df = read_csv_optional(
+        [FOCUSED_MISSING_ROW_FLAGS_PATH],
+        required=False,
+        name="Focused missing value row flags",
+    )
+
+    outlier_flags_df = read_csv_optional(
+        [LAP_OUTLIER_FLAGS_PATH],
+        required=False,
+        name="Lap outlier flags",
+    )
+    
     t0 = perf_counter()
     apply_dqa_cleaning(tables, drop_masks, actions, dqa_issues_df)
     print(f"DQA-driven cleaning completed in {perf_counter() - t0:.2f}s")
@@ -1723,12 +1599,12 @@ def main() -> None:
 
     print("Data Cleaning completed.")
     print(f"Cleaned schema: {output_schema}")
-    print(f"Cleaned CSV tables: {CLEANED_TABLES_DIR}")
-    print(f"Cleaning action log: {CLEANING_ACTION_LOG_FILE}")
-    print(f"Rejected rows: {REJECTED_ROWS_FILE}")
-    print(f"Summary by table: {CLEANING_SUMMARY_BY_TABLE_FILE}")
-    print(f"Summary by decision: {CLEANING_SUMMARY_BY_DECISION_FILE}")
-    print(f"Before/after scorecard: {BEFORE_AFTER_SCORECARD_FILE}")
+    print(f"Cleaned CSV tables: {CLEANED_DATA_DIR}")
+    print(f"Cleaning action log: {CLEANING_ACTION_LOG_PATH}")
+    print(f"Rejected rows: {REJECTED_ROWS_PATH}")
+    print(f"Summary by table: {CLEANING_SUMMARY_BY_TABLE_PATH}")
+    print(f"Summary by decision: {CLEANING_SUMMARY_BY_DECISION_PATH}")
+    print(f"Before/after scorecard: {BEFORE_AFTER_SCORECARD_PATH}")
 
 
 if __name__ == "__main__":

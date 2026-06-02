@@ -15,6 +15,7 @@ if not (PROJECT_ROOT / "pipeline").exists():
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from database.db_config import get_engine
+from pipeline.utils.input_utils import execute_sql_file
 from pipeline.utils.file_names import (
     RECONCILED_DATA_DIR,
     DROP_SQL_RECONCILED_FILE,
@@ -55,14 +56,6 @@ def load_csv(csv_path: Path) -> pd.DataFrame:
     return df
 
 
-def execute_sql_file(conn, sql_path: Path) -> None:
-    if not sql_path.exists():
-        raise FileNotFoundError(f"SQL file not found: {sql_path}")
-
-    print(f"EXECUTING SQL FILE: {sql_path.relative_to(PROJECT_ROOT)}")
-
-    sql = sql_path.read_text(encoding="utf-8")
-    conn.exec_driver_sql(sql)
 
 
 def main() -> None:

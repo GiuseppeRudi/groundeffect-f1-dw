@@ -26,7 +26,7 @@ SCHEMAS = {
     "raw": "raw",
     "reconciled": "reconciled",
     "reconciled_clean": "reconciled_clean",
-    "data_warehouse": "warehouse",
+    "warehouse": "warehouse",
 }
 
 
@@ -42,7 +42,7 @@ def normalize_schema(schema: str) -> str:
     - raw
     - reconciled
     - reconciled_clean
-    - data_warehouse
+    - warehouse
     """
     key = schema.strip().lower()
 

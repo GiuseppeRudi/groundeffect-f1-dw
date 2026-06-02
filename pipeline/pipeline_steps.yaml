@@ -1,48 +1,48 @@
 steps:
-  - number: 1
-    name: "Extraction and re-engineering"
-    script: "01_extraction_reengineering/extract_fastf1_sources.py"
-    enabled: true
+  # - number: 1
+  #   name: "Extraction and re-engineering"
+  #   script: "01_extraction_reengineering/extract_fastf1_sources.py"
+  #   enabled: true
 
-  - number: 2
-    name: "Load reconciled PostgreSQL database"
-    script: "02_load_reconciled_db/load_reconciled_tables.py"
-    enabled: true
+  # - number: 2
+  #   name: "Load reconciled PostgreSQL database"
+  #   script: "02_load_reconciled_db/load_reconciled_tables.py"
+  #   enabled: true
 
-  - number: 3
-    name: "General data quality assessment"
-    script: "03_data_quality/01_dqa/01_dqa.py"
-    enabled: true
+  # - number: 3
+  #   name: "General data quality assessment"
+  #   script: "03_data_quality/01_dqa/01_dqa.py"
+  #   enabled: true
 
-  - number: 4
-    name: "Generate DQA visualizations"
-    script: "03_data_quality/01_dqa/02_dqa_visualization.py"
-    enabled: true
+  # - number: 4
+  #   name: "Generate DQA visualizations"
+  #   script: "03_data_quality/01_dqa/02_dqa_visualization.py"
+  #   enabled: true
 
-  - number: 5
-    name: "LLM interpretation of DQA results"
-    script: "03_data_quality/02_llm/llm_dqa.py"
-    enabled: false
+  # - number: 5
+  #   name: "LLM interpretation of DQA results"
+  #   script: "03_data_quality/02_llm/llm_dqa.py"
+  #   enabled: true
 
-  - number: 6
-    name: "Focused missing values analysis"
-    script: "03_data_quality/03_missing_values/missing_values_analysis.py"
-    enabled: true
+  # - number: 6
+  #   name: "Focused missing values analysis"
+  #   script: "03_data_quality/03_missing_values/missing_values_analysis.py"
+  #   enabled: true
 
-  - number: 7
-    name: "Focused lap outlier detection"
-    script: "03_data_quality/04_outlier_detection/lap_outlier_detection.py"
-    enabled: true
+  # - number: 7
+  #   name: "Focused lap outlier detection"
+  #   script: "03_data_quality/04_outlier_detection/lap_outlier_detection.py"
+  #   enabled: true
 
-  - number: 8
-    name: "Data cleaning"
-    script: "04_data_cleaning/data_cleaning.py"
-    enabled: true
+  # - number: 8
+  #   name: "Data cleaning"
+  #   script: "04_data_cleaning/data_cleaning.py"
+  #   enabled: true
 
-  - number: 9
-    name: "Apply reconciled database constraints"
-    script: "05_apply_reconciled_constraints/apply_reconciled_constraints.py"
-    enabled: true
+  # - number: 9
+  #   name: "Apply reconciled database constraints"
+  #   script: "05_apply_reconciled_constraints/apply_reconciled_constraints.py"
+  #   enabled: true
 
   - number: 10
     name: "Transform reconciled clean data to data warehouse"

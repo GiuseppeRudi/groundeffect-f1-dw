@@ -1,84 +1,35 @@
 from __future__ import annotations
 
-"""
-01_transform_reconciled_to_dw_csvs.py
-
-Transform the cleaned reconciled Formula 1 PostgreSQL database into CSV files
-ready to be loaded into the analytical Data Warehouse / Star Schema.
-
-This script operationalizes the conceptual DFM decisions:
-- pruning  -> final column selection and exclusion of non-analytical raw fields;
-- grafting -> controlled joins that preserve useful descendants while hiding
-              purely technical intermediate identifiers from the analytical model;
-- derived attributes -> transformation of raw/time-dependent attributes into
-                        fact-grain analytical attributes.
-
-Expected reconciled tables, using the current project naming convention:
-- season
-- grand_prix
-- session
-- driver
-- team
-- result
-- lap
-- weather
-- track_status
-
-The script also supports older table aliases used during the project:
-- event_weekend     -> grand_prix
-- session_result    -> result
-- lap_performance   -> lap
-- session_weather   -> weather
-
-Output CSVs and warehouse tables:
-- shared dimensions: dim_driver, dim_team, dim_grand_prix, dim_circuit
-- dim_grand_prix keeps season_year and circuit_id as hierarchy attributes;
-- facts reference dim_grand_prix only through grand_prix_id;
-- dim_season and dim_session are not exported as CSV/table;
-- session_type is kept inside both facts as a degenerate dimension;
-- new surrogate keys are created only for derived low-cardinality / junk dimensions
-  (tyre_context_key, weather_context_key, lap_data_quality_key, result_outcome_key,
-  result_weather_context_key, result_data_quality_key);
-- degenerate dimensions kept inside fact_lap_performance: session_type, lap_type, lap_number, track_status_category
-- degenerate dimension kept inside fact_session_result: session_type
-- facts: fact_lap_performance, fact_session_result
-- metadata CSVs: dw_build_log.csv, dw_validation_report.csv
-"""
-
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+import sys
 from typing import Iterable
-import os
-
 import numpy as np
 import pandas as pd
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import  inspect, text
 from sqlalchemy.engine import Engine
 
+PROJECT_ROOT = Path.cwd()
 
-# ============================================================
-# CONFIG
-# ============================================================
+if not (PROJECT_ROOT / "database").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+        "The project root must contain the database/ package."
+    )
 
-# Main PostgreSQL connection. The default database name follows the project request: f1_proejct.
-# If your local database is named f1_project instead, set the environment variable
-# F1_DATABASE_URL before running the script.
-DATABASE_URL = os.getenv(
-    "F1_DATABASE_URL",
-    "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project",
-)
+sys.path.insert(0, str(PROJECT_ROOT))
 
-# The cleaned reconciled schema is the source level for the DW ETL.
-SOURCE_SCHEMA_NAME = os.getenv("F1_SOURCE_SCHEMA", "reconciled_clean")
+from database.db_config import get_engine
+from pipeline.utils.output_utils import ensure_dirs
+from pipeline.utils.file_names import (WAREHOUSE_DATA_DIR, ETL_OUTPUT_DIR)
+RECONCILED_CLEAN_SCHEMA = "reconciled_clean"
+WAREHOUSE_SCHEMA =  "warehouse"
 
-# The Star Schema / Data Warehouse is written here.
-WAREHOUSE_SCHEMA_NAME = os.getenv("F1_WAREHOUSE_SCHEMA", "warehouse")
 DROP_WAREHOUSE_SCHEMA_BEFORE_LOAD = True
 LOAD_TO_WAREHOUSE_DB = True
 EXPORT_CSVS = True
 
-OUTPUT_DIR = Path(os.getenv("F1_DW_OUTPUT_DIR", "dw_staging_csv"))
 
 # Keep False during development so that the script writes a validation report
 # instead of stopping at the first modeling inconsistency.
@@ -144,8 +95,7 @@ def now_utc_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def ensure_output_dir() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 
 def quote_ident(identifier: str) -> str:
@@ -317,11 +267,6 @@ def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
 # DATABASE ACCESS
 # ============================================================
 
-def connect_to_reconciled_db() -> Engine:
-    """Create the SQLAlchemy engine for the reconciled PostgreSQL database."""
-    return create_engine(DATABASE_URL)
-
-
 def list_database_tables(engine: Engine, schema_name: str) -> set[str]:
     inspector = inspect(engine)
     return set(inspector.get_table_names(schema=schema_name))
@@ -343,7 +288,7 @@ def read_table(engine: Engine, table_name: str, schema_name: str) -> pd.DataFram
 
 def load_source_tables(engine: Engine) -> dict[str, pd.DataFrame]:
 
-    available = list_database_tables(engine, SOURCE_SCHEMA_NAME)
+    available = list_database_tables(engine, RECONCILED_CLEAN_SCHEMA)
     tables: dict[str, pd.DataFrame] = {}
     missing: list[str] = []
 
@@ -352,16 +297,16 @@ def load_source_tables(engine: Engine) -> dict[str, pd.DataFrame]:
         if physical_name is None:
             missing.append(logical_name)
             continue
-        tables[logical_name] = read_table(engine, physical_name, SOURCE_SCHEMA_NAME)
+        tables[logical_name] = read_table(engine, physical_name, RECONCILED_CLEAN_SCHEMA)
         print(
-            f"LOADED {SOURCE_SCHEMA_NAME}.{physical_name} -> {logical_name}: "
+            f"LOADED {RECONCILED_CLEAN_SCHEMA}.{physical_name} -> {logical_name}: "
             f"{len(tables[logical_name]):,} rows"
         )
 
     if missing:
         raise RuntimeError(
             "Missing expected reconciled tables in schema "
-            + SOURCE_SCHEMA_NAME
+            + RECONCILED_CLEAN_SCHEMA
             + ": "
             + ", ".join(missing)
             + ". Available tables are: "
@@ -1826,10 +1771,14 @@ def validate_outputs(
 # ============================================================
 
 def export_csv(df: pd.DataFrame, filename: str) -> None:
-    path = OUTPUT_DIR / filename
+    path = WAREHOUSE_DATA_DIR / filename
     df.to_csv(path, index=False)
     print(f"EXPORTED {filename}: {len(df):,} rows")
 
+def export_logs_csv(df: pd.DataFrame, filename: str) -> None:
+    path = ETL_OUTPUT_DIR / filename
+    df.to_csv(path, index=False)
+    print(f"EXPORTED {filename}: {len(df):,} rows")
 
 def build_log(output_tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     rows = []
@@ -1885,21 +1834,21 @@ def export_csvs(
     output_tables: dict[str, pd.DataFrame],
     validation_report: pd.DataFrame,
 ) -> None:
-    ensure_output_dir()
+    ensure_dirs([WAREHOUSE_DATA_DIR, ETL_OUTPUT_DIR])
 
     for table_name, df in output_tables.items():
         export_csv(df, f"{table_name}.csv")
 
     log_df = build_log(output_tables)
-    export_csv(log_df, "dw_build_log.csv")
-    export_csv(validation_report, "dw_validation_report.csv")
+    export_logs_csv(log_df, "dw_build_log.csv")
+    export_logs_csv(validation_report, "dw_validation_report.csv")
 
 
 def prepare_warehouse_schema(engine: Engine) -> None:
     with engine.begin() as conn:
         if DROP_WAREHOUSE_SCHEMA_BEFORE_LOAD:
-            conn.execute(text(f"DROP SCHEMA IF EXISTS {quote_ident(WAREHOUSE_SCHEMA_NAME)} CASCADE"))
-        conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {quote_ident(WAREHOUSE_SCHEMA_NAME)}"))
+            conn.execute(text(f"DROP SCHEMA IF EXISTS {quote_ident(WAREHOUSE_SCHEMA)} CASCADE"))
+        conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {quote_ident(WAREHOUSE_SCHEMA)}"))
 
 
 def load_tables_to_warehouse(engine: Engine, output_tables: dict[str, pd.DataFrame]) -> None:
@@ -1907,11 +1856,11 @@ def load_tables_to_warehouse(engine: Engine, output_tables: dict[str, pd.DataFra
 
     with engine.begin() as conn:
         for table_name, df in output_tables.items():
-            print(f"LOADING {WAREHOUSE_SCHEMA_NAME}.{table_name}: {len(df):,} rows")
+            print(f"LOADING {WAREHOUSE_SCHEMA}.{table_name}: {len(df):,} rows")
             df.to_sql(
                 table_name,
                 conn,
-                schema=WAREHOUSE_SCHEMA_NAME,
+                schema=WAREHOUSE_SCHEMA,
                 if_exists="replace",
                 index=False,
                 method="multi",
@@ -1933,7 +1882,7 @@ def constraint_exists(conn, constraint_name: str) -> bool:
             )
             """
         ),
-        {"schema_name": WAREHOUSE_SCHEMA_NAME, "constraint_name": constraint_name},
+        {"schema_name": WAREHOUSE_SCHEMA, "constraint_name": constraint_name},
     )
     return bool(result.scalar())
 
@@ -1950,7 +1899,7 @@ def table_exists_in_schema(conn, table_name: str) -> bool:
             )
             """
         ),
-        {"schema_name": WAREHOUSE_SCHEMA_NAME, "table_name": table_name},
+        {"schema_name": WAREHOUSE_SCHEMA, "table_name": table_name},
     )
     return bool(result.scalar())
 
@@ -1969,7 +1918,7 @@ def column_exists_in_schema(conn, table_name: str, column_name: str) -> bool:
             """
         ),
         {
-            "schema_name": WAREHOUSE_SCHEMA_NAME,
+            "schema_name": WAREHOUSE_SCHEMA,
             "table_name": table_name,
             "column_name": column_name,
         },
@@ -1992,7 +1941,7 @@ def add_primary_key(conn, table_name: str, key_col: str) -> None:
     constraint_name = f"pk_{table_name}"
     safe_add_constraint(
         conn,
-        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(table_name)} "
+        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA)}.{quote_ident(table_name)} "
         f"ADD CONSTRAINT {quote_ident(constraint_name)} PRIMARY KEY ({quote_ident(key_col)})",
         constraint_name,
     )
@@ -2006,10 +1955,10 @@ def add_foreign_key(conn, child_table: str, child_col: str, parent_table: str, p
     constraint_name = f"fk_{child_table}_{child_col}_to_{parent_table}_{parent_col}"
     safe_add_constraint(
         conn,
-        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(child_table)} "
+        f"ALTER TABLE {quote_ident(WAREHOUSE_SCHEMA)}.{quote_ident(child_table)} "
         f"ADD CONSTRAINT {quote_ident(constraint_name)} "
         f"FOREIGN KEY ({quote_ident(child_col)}) "
-        f"REFERENCES {quote_ident(WAREHOUSE_SCHEMA_NAME)}.{quote_ident(parent_table)} ({quote_ident(parent_col)})",
+        f"REFERENCES {quote_ident(WAREHOUSE_SCHEMA)}.{quote_ident(parent_table)} ({quote_ident(parent_col)})",
         constraint_name,
     )
 
@@ -2076,12 +2025,11 @@ def add_warehouse_constraints(engine: Engine) -> None:
 
 def main() -> None:
     print("=== DW STAGING BUILD STARTED ===")
-    print(f"Database URL: {DATABASE_URL}")
-    print(f"Source schema: {SOURCE_SCHEMA_NAME}")
-    print(f"Warehouse schema: {WAREHOUSE_SCHEMA_NAME}")
-    print(f"Output directory: {OUTPUT_DIR.resolve()}")
+    print(f"Source schema: {RECONCILED_CLEAN_SCHEMA}")
+    print(f"Warehouse schema: {WAREHOUSE_SCHEMA}")
+    print(f"Output directory: {WAREHOUSE_DATA_DIR.resolve()}")
 
-    engine = connect_to_reconciled_db()
+    engine, schema = get_engine(RECONCILED_CLEAN_SCHEMA)
 
     print("\n--- Loading source tables from cleaned reconciled DB ---")
     source_tables = load_source_tables(engine)
@@ -2147,7 +2095,7 @@ def main() -> None:
         )
 
     if LOAD_TO_WAREHOUSE_DB:
-        print(f"\n--- Loading tables into PostgreSQL schema {WAREHOUSE_SCHEMA_NAME} ---")
+        print(f"\n--- Loading tables into PostgreSQL schema {WAREHOUSE_SCHEMA} ---")
         load_tables_to_warehouse(engine, output_tables)
 
     print("\nDONE: DW staging CSV files created and warehouse schema loaded.")

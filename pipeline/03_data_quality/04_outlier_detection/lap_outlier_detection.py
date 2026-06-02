@@ -20,15 +20,16 @@ if not (PROJECT_ROOT / "database").exists():
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
-# ============================================================
-# CONFIG
-# ============================================================
+from pipeline.utils.file_names import (
+    OUTLIER_DETECTION_OUTPUT_DIR,
+    LAP_OUTLIER_FLAGS_PATH,
+    OUTLIER_SUMMARY_PATH,
+)
+
+from database.db_config import get_engine
 
 INPUT_SCHEMA = "reconciled"
-OUTPUT_DIR = Path("artifacts") / "03_data_quality" / "04_outlier_detection"
 
-LAP_OUTLIER_FLAGS_FILE = OUTPUT_DIR / "lap_outlier_flags.csv"
-OUTLIER_SUMMARY_FILE = OUTPUT_DIR / "outlier_summary.csv"
 
 METRICS = [
     "lap_time_ms",
@@ -46,9 +47,6 @@ IQR_K = 1.5
 MODIFIED_Z_THRESHOLD = 3.5
 
 
-# ============================================================
-# DATABASE HELPERS
-# ============================================================
 
 _IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -59,25 +57,6 @@ def validate_identifier(identifier: str) -> str:
     return identifier
 
 
-def get_engine_and_schema(schema: str):
-    """
-    Uses database_utils.get_engine.
-
-    Expected behavior:
-        engine, schema_name = get_engine("reconciled")
-
-    The fallback supports older versions where get_engine returns only the engine.
-    """
-    from database.db_config import get_engine
-
-    result = get_engine(schema)
-
-    if isinstance(result, tuple):
-        return result
-
-    return result, schema
-
-
 def read_table(table_name: str, engine, schema: str) -> pd.DataFrame:
     table_name = validate_identifier(table_name)
     schema = validate_identifier(schema)
@@ -85,9 +64,6 @@ def read_table(table_name: str, engine, schema: str) -> pd.DataFrame:
     return pd.read_sql_query(query, engine)
 
 
-# ============================================================
-# DATA STRUCTURES
-# ============================================================
 
 @dataclass
 class OutlierFlag:
@@ -109,9 +85,6 @@ class OutlierFlag:
     modified_z_score: float | None
 
 
-# ============================================================
-# GENERIC HELPERS
-# ============================================================
 
 def snake_case_columns(df: pd.DataFrame) -> pd.DataFrame:
     def to_snake(name: str) -> str:
@@ -160,9 +133,6 @@ def is_track_all_clear(value: Any) -> bool:
     return text in {"1", "1.0"}
 
 
-# ============================================================
-# DRY SESSION SELECTION
-# ============================================================
 
 def dry_sessions_from_weather(weather_df: pd.DataFrame) -> set[Any]:
     weather_df = snake_case_columns(weather_df)
@@ -185,9 +155,7 @@ def dry_sessions_from_weather(weather_df: pd.DataFrame) -> set[Any]:
     return set(dry.tolist())
 
 
-# ============================================================
-# CLEAN LAP SELECTION
-# ============================================================
+
 
 def select_clean_laps(
     lap_df: pd.DataFrame,
@@ -226,9 +194,7 @@ def select_clean_laps(
     return lap_df.loc[mask].copy()
 
 
-# ============================================================
-# OUTLIER METHODS
-# ============================================================
+
 
 def compute_iqr_flags(values: pd.Series) -> tuple[pd.Series, float | None, float | None, float | None, float | None]:
     values = numeric_series(values)
@@ -275,9 +241,6 @@ def interpretation_from_consensus(score: int) -> str:
     return "NORMAL"
 
 
-# ============================================================
-# LAP OUTLIER DETECTION
-# ============================================================
 
 
 def race_sessions_from_session(session_df: pd.DataFrame) -> set[Any]:
@@ -391,14 +354,12 @@ def detect_lap_outliers(clean_laps: pd.DataFrame) -> tuple[pd.DataFrame, pd.Data
     return flags_df, summary_df
 
 
-# ============================================================
-# MAIN
-# ============================================================
+
 
 def main() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTLIER_DETECTION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    engine, schema = get_engine_and_schema(INPUT_SCHEMA)
+    engine, schema = get_engine(INPUT_SCHEMA)
 
     lap_df = snake_case_columns(read_table("lap", engine, schema))
     weather_df = snake_case_columns(read_table("weather", engine, schema))
@@ -415,14 +376,14 @@ def main() -> None:
 
     flags_df, summary_df = detect_lap_outliers(clean_laps)
 
-    flags_df.to_csv(LAP_OUTLIER_FLAGS_FILE, index=False)
-    summary_df.to_csv(OUTLIER_SUMMARY_FILE, index=False)
+    flags_df.to_csv(LAP_OUTLIER_FLAGS_PATH, index=False)
+    summary_df.to_csv(OUTLIER_SUMMARY_PATH, index=False)
 
     print(f"Race sessions available: {len(race_session_ids)}")
     print(f"Dry sessions available: {len(dry_session_ids)}")
     print(f"Clean race candidate laps used for outlier detection: {len(clean_laps)}")
-    print(f"Lap outlier flags written to: {LAP_OUTLIER_FLAGS_FILE}")
-    print(f"Outlier summary written to: {OUTLIER_SUMMARY_FILE}")
+    print(f"Lap outlier flags written to: {LAP_OUTLIER_FLAGS_PATH}")
+    print(f"Outlier summary written to: {OUTLIER_SUMMARY_PATH}")
 
 if __name__ == "__main__":
     main()

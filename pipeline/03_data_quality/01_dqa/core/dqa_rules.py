@@ -12,7 +12,7 @@ if not (PROJECT_ROOT / "database").exists() or not (PROJECT_ROOT / "pipeline").e
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from pipeline.config.domain import *
+from pipeline.config.domain_constants import *
 
 QUALITY_DIMENSIONS = [
     "Completeness",

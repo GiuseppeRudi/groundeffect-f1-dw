@@ -1,0 +1,13 @@
+table_name,row_count,column_count,created_at_utc,status
+dim_driver,26,6,2026-06-02T14:05:58+00:00,created
+dim_team,10,3,2026-06-02T14:05:58+00:00,created
+dim_circuit,26,8,2026-06-02T14:05:58+00:00,created
+dim_grand_prix,44,7,2026-06-02T14:05:58+00:00,created
+dim_tyre_context,40,4,2026-06-02T14:05:58+00:00,created
+dim_weather_context,24,5,2026-06-02T14:05:58+00:00,created
+dim_lap_data_quality,7,7,2026-06-02T14:05:58+00:00,created
+dim_result_outcome,18,3,2026-06-02T14:05:58+00:00,created
+dim_result_weather_context,20,5,2026-06-02T14:05:58+00:00,created
+dim_result_data_quality,3,3,2026-06-02T14:05:58+00:00,created
+fact_lap_performance,55349,21,2026-06-02T14:05:58+00:00,created
+fact_session_result,1757,17,2026-06-02T14:05:58+00:00,created

@@ -1,0 +1,45 @@
+grand_prix_id,season_year,round_number,event_name,official_event_name,country,location,event_date,event_format,f1_api_support,circuit_id
+1,2021,1,Bahrain Grand Prix,FORMULA 1 GULF AIR BAHRAIN GRAND PRIX 2021,Bahrain,Sakhir,2021-03-28,conventional,True,bahrain
+2,2021,2,Emilia Romagna Grand Prix,FORMULA 1 PIRELLI GRAN PREMIO DEL MADE IN ITALY E DELL'EMILIA ROMAGNA 2021,Italy,Imola,2021-04-18,conventional,True,imola
+3,2021,3,Portuguese Grand Prix,FORMULA 1 HEINEKEN GRANDE PRÉMIO DE PORTUGAL 2021,Portugal,Portimão,2021-05-02,conventional,True,portimao
+4,2021,4,Spanish Grand Prix,FORMULA 1 ARAMCO GRAN PREMIO DE ESPAÑA 2021,Spain,Barcelona,2021-05-09,conventional,True,barcelona
+5,2021,5,Monaco Grand Prix,FORMULA 1 GRAND PRIX DE MONACO 2021,Monaco,Monte Carlo,2021-05-23,conventional,True,monaco
+6,2021,6,Azerbaijan Grand Prix,FORMULA 1 AZERBAIJAN GRAND PRIX 2021,Azerbaijan,Baku,2021-06-06,conventional,True,baku
+7,2021,7,French Grand Prix,FORMULA 1 EMIRATES GRAND PRIX DE FRANCE 2021,France,Le Castellet,2021-06-20,conventional,True,paul_ricard
+8,2021,8,Styrian Grand Prix,FORMULA 1 BWT GROSSER PREIS DER STEIERMARK 2021,Austria,Spielberg,2021-06-27,conventional,True,red_bull_ring
+9,2021,9,Austrian Grand Prix,FORMULA 1 BWT GROSSER PREIS VON ÖSTERREICH 2021,Austria,Spielberg,2021-07-04,conventional,True,red_bull_ring
+10,2021,10,British Grand Prix,FORMULA 1 PIRELLI BRITISH GRAND PRIX 2021,Great Britain,Silverstone,2021-07-18,sprint,True,silverstone
+11,2021,11,Hungarian Grand Prix,FORMULA 1 ROLEX MAGYAR NAGYDÍJ 2021,Hungary,Budapest,2021-08-01,conventional,True,hungaroring
+12,2021,12,Belgian Grand Prix,FORMULA 1 ROLEX BELGIAN GRAND PRIX 2021,Belgium,Spa-Francorchamps,2021-08-29,conventional,True,spa
+13,2021,13,Dutch Grand Prix,FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2021,Netherlands,Zandvoort,2021-09-05,conventional,True,zandvoort
+14,2021,14,Italian Grand Prix,FORMULA 1 HEINEKEN GRAN PREMIO D’ITALIA 2021,Italy,Monza,2021-09-12,sprint,True,monza
+15,2021,15,Russian Grand Prix,FORMULA 1 VTB RUSSIAN GRAND PRIX 2021,Russia,Sochi,2021-09-26,conventional,True,sochi
+16,2021,16,Turkish Grand Prix,FORMULA 1 ROLEX TURKISH GRAND PRIX 2021,Turkey,Istanbul,2021-10-10,conventional,True,istanbul
+17,2021,17,United States Grand Prix,FORMULA 1 ARAMCO UNITED STATES GRAND PRIX 2021,United States,Austin,2021-10-24,conventional,True,cota
+18,2021,18,Mexico City Grand Prix,FORMULA 1 GRAN PREMIO DE LA CIUDAD DE MÉXICO 2021,Mexico,Mexico City,2021-11-07,conventional,True,mexico_city
+19,2021,19,São Paulo Grand Prix,FORMULA 1 HEINEKEN GRANDE PRÊMIO DE SÃO PAULO 2021,Brazil,São Paulo,2021-11-14,sprint,True,interlagos
+20,2021,20,Qatar Grand Prix,FORMULA 1 OOREDOO QATAR GRAND PRIX 2021,Qatar,Lusail,2021-11-21,conventional,True,losail
+21,2021,21,Saudi Arabian Grand Prix,FORMULA 1 STC SAUDI ARABIAN GRAND PRIX 2021,Saudi Arabia,Jeddah,2021-12-05,conventional,True,jeddah
+22,2021,22,Abu Dhabi Grand Prix,FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2021,Abu Dhabi,Yas Island,2021-12-12,conventional,True,yas_marina
+23,2022,1,Bahrain Grand Prix,FORMULA 1 GULF AIR BAHRAIN GRAND PRIX 2022,Bahrain,Sakhir,2022-03-20,conventional,True,bahrain
+24,2022,2,Saudi Arabian Grand Prix,FORMULA 1 STC SAUDI ARABIAN GRAND PRIX 2022,Saudi Arabia,Jeddah,2022-03-27,conventional,True,jeddah
+25,2022,3,Australian Grand Prix,FORMULA 1 HEINEKEN AUSTRALIAN GRAND PRIX 2022,Australia,Melbourne,2022-04-10,conventional,True,albert_park
+26,2022,4,Emilia Romagna Grand Prix,FORMULA 1 ROLEX GRAN PREMIO DEL MADE IN ITALY E DELL'EMILIA-ROMAGNA 2022,Italy,Imola,2022-04-24,sprint,True,imola
+27,2022,5,Miami Grand Prix,FORMULA 1 CRYPTO.COM MIAMI GRAND PRIX 2022,United States,Miami,2022-05-08,conventional,True,miami
+28,2022,6,Spanish Grand Prix,FORMULA 1 PIRELLI GRAN PREMIO DE ESPAÑA 2022,Spain,Barcelona,2022-05-22,conventional,True,barcelona
+29,2022,7,Monaco Grand Prix,FORMULA 1 GRAND PRIX DE MONACO 2022,Monaco,Monaco,2022-05-29,conventional,True,monaco
+30,2022,8,Azerbaijan Grand Prix,FORMULA 1 AZERBAIJAN GRAND PRIX 2022,Azerbaijan,Baku,2022-06-12,conventional,True,baku
+31,2022,9,Canadian Grand Prix,FORMULA 1 AWS GRAND PRIX DU CANADA 2022,Canada,Montréal,2022-06-19,conventional,True,gilles_villeneuve
+32,2022,10,British Grand Prix,FORMULA 1 LENOVO BRITISH GRAND PRIX 2022,Great Britain,Silverstone,2022-07-03,conventional,True,silverstone
+33,2022,11,Austrian Grand Prix,FORMULA 1 ROLEX GROSSER PREIS VON ÖSTERREICH 2022,Austria,Spielberg,2022-07-10,sprint,True,red_bull_ring
+34,2022,12,French Grand Prix,FORMULA 1 LENOVO GRAND PRIX DE FRANCE 2022,France,Le Castellet,2022-07-24,conventional,True,paul_ricard
+35,2022,13,Hungarian Grand Prix,FORMULA 1 ARAMCO MAGYAR NAGYDÍJ 2022,Hungary,Budapest,2022-07-31,conventional,True,hungaroring
+36,2022,14,Belgian Grand Prix,FORMULA 1 ROLEX BELGIAN GRAND PRIX 2022,Belgium,Spa-Francorchamps,2022-08-28,conventional,True,spa
+37,2022,15,Dutch Grand Prix,FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2022,Netherlands,Zandvoort,2022-09-04,conventional,True,zandvoort
+38,2022,16,Italian Grand Prix,FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2022,Italy,Monza,2022-09-11,conventional,True,monza
+39,2022,17,Singapore Grand Prix,FORMULA 1 SINGAPORE AIRLINES SINGAPORE GRAND PRIX 2022,Singapore,Marina Bay,2022-10-02,conventional,True,marina_bay
+40,2022,18,Japanese Grand Prix,FORMULA 1 HONDA JAPANESE GRAND PRIX 2022,Japan,Suzuka,2022-10-09,conventional,True,suzuka
+41,2022,19,United States Grand Prix,FORMULA 1 ARAMCO UNITED STATES GRAND PRIX 2022,United States,Austin,2022-10-23,conventional,True,cota
+42,2022,20,Mexico City Grand Prix,FORMULA 1 HEINEKEN GRAN PREMIO DE LA CIUDAD DE MÉXICO 2022,Mexico,Mexico City,2022-10-30,conventional,True,mexico_city
+43,2022,21,São Paulo Grand Prix,FORMULA 1 HEINEKEN GRANDE PRÊMIO DE SÃO PAULO 2022,Brazil,São Paulo,2022-11-13,sprint,True,interlagos
+44,2022,22,Abu Dhabi Grand Prix,FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2022,Abu Dhabi,Yas Island,2022-11-20,conventional,True,yas_marina

@@ -1,8 +1,19 @@
 from pathlib import Path
+import sys
 from typing import Any
 
 import pandas as pd
 
+
+PROJECT_ROOT = Path.cwd()
+
+if not (PROJECT_ROOT / "database").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+        "The project root must contain the database/ package."
+    )
+
+sys.path.insert(0, str(PROJECT_ROOT))
 
 def read_csv(path: Path, required: bool = True) -> pd.DataFrame:
     """
@@ -40,3 +51,17 @@ def safe_records(df: pd.DataFrame, max_rows: int | None = None) -> list[dict[str
     tmp = tmp.where(pd.notna(tmp), None)
     return tmp.to_dict(orient="records")
 
+
+
+def execute_sql_file(conn, sql_path: Path) -> None:
+    if not sql_path.exists():
+        raise FileNotFoundError(f"SQL file not found: {sql_path}")
+
+    print(f"EXECUTING SQL FILE: {sql_path.relative_to(PROJECT_ROOT)}")
+
+    sql = sql_path.read_text(encoding="utf-8")
+
+    if not sql.strip():
+        raise ValueError(f"SQL file is empty: {sql_path}")
+
+    conn.exec_driver_sql(sql)

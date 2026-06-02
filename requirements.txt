@@ -3,3 +3,4 @@ pandas
 sqlalchemy
 psycopg[binary]
 plotly
+pyyaml

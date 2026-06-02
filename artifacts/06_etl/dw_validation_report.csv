@@ -1,0 +1,2 @@
+severity,table_name,check_name,message,affected_rows
+OK,all,all_checks,No validation issues found.,0

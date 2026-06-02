@@ -16,15 +16,16 @@ if not (PROJECT_ROOT / "database").exists():
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# ============================================================
-# CONFIG
-# ============================================================
+from database.db_config import get_engine
+
 
 INPUT_SCHEMA = "reconciled"
-OUTPUT_DIR = Path("artifacts") / "03_data_quality" / "03_missing_values"
 
-MISSING_SUMMARY_FILE = OUTPUT_DIR / "focused_missing_summary.csv"
-MISSING_ROW_FLAGS_FILE = OUTPUT_DIR / "focused_missing_row_flags.csv"
+from pipeline.utils.file_names import (
+    MISSING_VALUES_OUTPUT_DIR,
+    FOCUSED_MISSING_SUMMARY_PATH,
+    FOCUSED_MISSING_ROW_FLAGS_PATH,
+)
 
 # If True, the script writes row-level flags also for explained expected nulls
 # with missing_information_area = NONE. This can generate many rows, especially
@@ -60,10 +61,6 @@ DERIVED_WEATHER_COLUMNS = [
 ]
 
 
-# ============================================================
-# DATABASE HELPERS
-# ============================================================
-
 _IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
@@ -73,35 +70,11 @@ def validate_identifier(identifier: str) -> str:
     return identifier
 
 
-def get_engine_and_schema(schema: str):
-    """
-    Uses database_utils.get_engine.
-
-    Expected behavior:
-        engine, schema_name = get_engine("reconciled")
-
-    The fallback supports older versions where get_engine returns only the engine.
-    """
-    from database.db_config import get_engine
-
-    result = get_engine(schema)
-
-    if isinstance(result, tuple):
-        return result
-
-    return result, schema
-
-
 def read_table(table_name: str, engine, schema: str) -> pd.DataFrame:
     table_name = validate_identifier(table_name)
     schema = validate_identifier(schema)
     query = f'SELECT * FROM "{schema}"."{table_name}"'
     return pd.read_sql_query(query, engine)
-
-
-# ============================================================
-# DATA STRUCTURES
-# ============================================================
 
 @dataclass
 class MissingFlag:
@@ -114,9 +87,6 @@ class MissingFlag:
     severity: str
 
 
-# ============================================================
-# GENERIC HELPERS
-# ============================================================
 
 def snake_case_columns(df: pd.DataFrame) -> pd.DataFrame:
     def to_snake(name: str) -> str:
@@ -409,7 +379,6 @@ def lap_is_deleted(row: pd.Series) -> bool:
 
 
 def classify_sector_missing(row: pd.Series, column_name: str) -> tuple[str, str]:
-    # Conservative rule from the report:
     # only sector3 missing with pit_in_time_ms is explained by pit entry.
     if column_name == "sector3_time_ms" and lap_has_pit_in(row):
         return (
@@ -424,7 +393,6 @@ def classify_sector_missing(row: pd.Series, column_name: str) -> tuple[str, str]
 
 
 def classify_speed_missing(row: pd.Series, column_name: str) -> tuple[str, str]:
-    # Conservative rule from the report:
     # pit information explains only selected speed attributes.
     pit_explainable_speeds = {"speed_i1", "speed_fl", "speed_st"}
 
@@ -466,7 +434,6 @@ def classify_lap_missing_values(lap_df: pd.DataFrame) -> list[MissingFlag]:
             )
 
         # Core lap time information.
-        # The revised report does not use pit information or is_accurate as an automatic explanation.
         if "lap_time_ms" in row.index and is_missing(row["lap_time_ms"]):
             add_flag(
                 flags,
@@ -525,7 +492,6 @@ def classify_lap_missing_values(lap_df: pd.DataFrame) -> list[MissingFlag]:
                 "track_status is missing, so track condition information is incomplete.",
             )
 
-        # Optional future derived weather attributes, if they exist in the lap table.
         for col in DERIVED_WEATHER_COLUMNS:
             if col in row.index and is_missing(row[col]):
                 add_flag(
@@ -540,10 +506,6 @@ def classify_lap_missing_values(lap_df: pd.DataFrame) -> list[MissingFlag]:
 
     return flags
 
-
-# ============================================================
-# SUMMARY
-# ============================================================
 
 def build_missing_summary(flags_df: pd.DataFrame, table_sizes: dict[str, int]) -> pd.DataFrame:
     base_columns = [
@@ -593,14 +555,11 @@ def build_missing_summary(flags_df: pd.DataFrame, table_sizes: dict[str, int]) -
     return pd.DataFrame(rows)[columns].sort_values(["table_name", "column_name"]).reset_index(drop=True)
 
 
-# ============================================================
-# MAIN
-# ============================================================
 
 def main() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    MISSING_VALUES_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    engine, schema = get_engine_and_schema(INPUT_SCHEMA)
+    engine, schema = get_engine(INPUT_SCHEMA)
 
     lap_df = snake_case_columns(read_table("lap", engine, schema))
     result_df = read_table("result", engine, schema)
@@ -633,11 +592,11 @@ def main() -> None:
 
     summary_df = build_missing_summary(flags_df, table_sizes)
 
-    flags_df.to_csv(MISSING_ROW_FLAGS_FILE, index=False)
-    summary_df.to_csv(MISSING_SUMMARY_FILE, index=False)
+    flags_df.to_csv(FOCUSED_MISSING_ROW_FLAGS_PATH, index=False)
+    summary_df.to_csv(FOCUSED_MISSING_SUMMARY_PATH, index=False)
 
-    print(f"Missing row flags written to: {MISSING_ROW_FLAGS_FILE}")
-    print(f"Missing summary written to: {MISSING_SUMMARY_FILE}")
+    print(f"Missing row flags written to: {FOCUSED_MISSING_ROW_FLAGS_PATH}")
+    print(f"Missing summary written to: {FOCUSED_MISSING_SUMMARY_PATH}")
 
 
 if __name__ == "__main__":

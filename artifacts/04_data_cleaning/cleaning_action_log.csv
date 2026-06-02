@@ -1,7 +1,5 @@
 source,table_name,row_identifier,target_column,quality_flag_column,check_id,issue_code,missing_class,information_area,outlier_metric,outlier_consensus_score,cleaning_action,old_value,new_value,reason
 general_dqa,result,result_id=180,,,result_required_structural_columns,MISSING_REQUIRED_VALUE,,,,,DROP_ROW,,,The DQA issue makes the row structurally unusable or unreliable for the cleaned schema.
-general_dqa,result,result_id=880,,,result_required_structural_columns,MISSING_REQUIRED_VALUE,,,,,DROP_ROW,,,The DQA issue makes the row structurally unusable or unreliable for the cleaned schema.
-general_dqa,result,result_id=960,,,result_required_structural_columns,MISSING_REQUIRED_VALUE,,,,,DROP_ROW,,,The DQA issue makes the row structurally unusable or unreliable for the cleaned schema.
 general_dqa,lap,lap_id=16331,compound,,compound_domain,INVALID_VALUE,,,,,SET_NULL,UNKNOWN,,Unknown compound value was set to NULL because it cannot be mapped deterministically.
 general_dqa,lap,lap_id=16331,compound,has_tyre_information_issue,compound_domain,INVALID_VALUE,,TYRE_INFORMATION,,,ADD_FLAG,False,True,TYRE_INFORMATION is affected after setting an invalid value to NULL.
 general_dqa,lap,lap_id=16332,compound,,compound_domain,INVALID_VALUE,,,,,SET_NULL,UNKNOWN,,Unknown compound value was set to NULL because it cannot be mapped deterministically.
@@ -5501,6 +5499,8 @@ missing_values,lap,lap_id=60079,,,,,,LAP_TIME_INFORMATION,,,DROP_ROW,,,Rows with
 missing_values,lap,lap_id=60082,,,,,,LAP_TIME_INFORMATION,,,DROP_ROW,,,Rows with missing lap time information are removed from the cleaned lap table.
 missing_values,lap,lap_id=60085,,,,,,LAP_TIME_INFORMATION,,,DROP_ROW,,,Rows with missing lap time information are removed from the cleaned lap table.
 missing_values,lap,lap_id=60088,,,,,,LAP_TIME_INFORMATION,,,DROP_ROW,,,Rows with missing lap time information are removed from the cleaned lap table.
+missing_values,result,result_id=880,,,,,,CLASSIFICATION_INFORMATION,,,DROP_ROW,,,Rows with missing classification information are removed from the cleaned result table.
+missing_values,result,result_id=960,,,,,,CLASSIFICATION_INFORMATION,,,DROP_ROW,,,Rows with missing classification information are removed from the cleaned result table.
 missing_values,lap,lap_id=252,sector1_time_ms,has_sector_information_issue,,,SUSPICIOUS_NULL,SECTOR_INFORMATION,,,ADD_FLAG,False,True,Focused missing value output indicates that SECTOR_INFORMATION is incomplete or unreliable.
 missing_values,lap,lap_id=308,sector1_time_ms,has_sector_information_issue,,,SUSPICIOUS_NULL,SECTOR_INFORMATION,,,ADD_FLAG,False,True,Focused missing value output indicates that SECTOR_INFORMATION is incomplete or unreliable.
 missing_values,lap,lap_id=364,sector1_time_ms,has_sector_information_issue,,,SUSPICIOUS_NULL,SECTOR_INFORMATION,,,ADD_FLAG,False,True,Focused missing value output indicates that SECTOR_INFORMATION is incomplete or unreliable.

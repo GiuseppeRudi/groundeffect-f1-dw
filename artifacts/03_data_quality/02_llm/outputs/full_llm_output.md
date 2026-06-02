@@ -1,46 +1,45 @@
 # Stakeholder Summary
 
-The data quality assessment for our Formula 1 project has been completed. The overall score is quite high, indicating that most tables are of good quality with only minor issues needing attention. 
+The data quality assessment for our Formula 1 project has been completed. Overall, the system is performing well with an average score of 0.999883 across all tables, indicating a very high level of accuracy and reliability. The strongest tables are `circuit`, `driver`, and `grand_prix`, which have perfect scores in most categories including completeness, uniqueness, validity, consistency, referential integrity, and timeliness.
 
-- **Strongest Tables:** 
-  - `driver`, `season`, and `team` have perfect scores (green status) and no reported issues.
-  
-- **Weakest Table:**
-  - `grand_prix` has a yellow status, indicating some completeness issues but overall good quality.
-
-The remaining tables (`lap`, `session`, `result`, `circuit`, and `weather`) are green with either no or minor issues. 
+The weakest table is `lap` with an overall score of 0.999972. This table has the highest number of issues (60) across various dimensions such as completeness, validity, and consistency. The majority of these issues are related to data validation checks where values do not conform to expected domains or requirements.
 
 # Technical Summary
 
-Our data quality assessment reveals several areas where the data needs further review:
+The main issues identified in our data quality assessment can be summarized by the following tables and dimensions:
 
-- **Completeness:** 
-  - The `grand_prix` table has a yellow status due to missing values in required columns like `circuit_id`. This suggests that some events might not have associated circuit information, which could be important for context.
+- **Table: lap**
+  - Completeness Score: 1.0 (No missing required columns)
+  - Validity Score: 0.999859 (60 out of 243 rows have issues related to invalid values or domains)
+  - Consistency Score: 1.0 (All data is consistent with expected patterns)
 
-- **Validity:**
-  - In the `lap` table, there are no reported validity issues. However, this does not mean all data is correct; it just means we haven't found any immediate problems with boolean attributes.
+- **Table: track_status**
+  - Completeness Score: 1.0 (No missing required columns)
+  - Uniqueness Score: 0.9946235 (Some rows might have duplicate identifiers, though this does not affect the overall quality significantly)
+  - Validity Score: 1.0 (All data is valid according to domain constraints)
+  - Consistency Score: 1.0 (Data values are consistent with expected patterns)
 
-- **Accuracy/Plausibility:** 
-  - The `grand_prix` table has a red status for missing circuit match results and duplicated keys in the primary key (`grand_prix_id`). These issues suggest that some events might not have been properly matched to circuits, or there are duplicate entries which could lead to inconsistencies.
+- **Table: result**
+  - Completeness Score: 0.999716 (A few rows might have missing required columns, but this does not affect the overall quality significantly)
+  - Validity Score: 1.0 (All data is valid according to domain constraints)
+  - Consistency Score: No score available
+  - Referential Integrity Score: 1.0 (Data references are consistent with expected relationships)
 
-- **Consistency:**
-  - No consistency issues were found across all tables. This is a positive sign as it indicates that data within each table adheres to the expected structure and relationships.
-
-- **Referential Integrity:**
-  - There are no referential integrity issues reported, meaning that foreign keys reference valid primary keys in other tables. However, this does not mean there aren't any potential problems; it just means we haven't found them yet.
+- **Other tables**:
+  - `driver`, `grand_prix`, and `season` have perfect scores in all dimensions, indicating they meet the highest standards of data quality.
 
 # Suggested Cleaning Priorities
 
-Based on the data quality assessment results, here are some suggested cleaning priorities for human review:
+Based on the issues identified, here are some suggestions for next steps:
 
-1. **Review and Populate Missing Circuit Information:** For `grand_prix` table rows where `circuit_id` is missing or null, ensure that circuit information is correctly populated to avoid any future issues related to event-to-circuit matching.
+1. **Review and Address Lap Data Issues**: Focus on understanding why 60 out of 243 rows (approximately 25%) have validation errors. This could involve checking if there is a specific pattern or reason for these errors, such as missing data in certain columns that are required by the domain constraints.
 
-2. **Check for Duplicated Records in `grand_prix`:** Verify the presence of duplicate entries with the same `grand_prix_id`. If duplicates are found, investigate their origins and decide whether they should be kept or removed based on context (e.g., multiple races at the same circuit).
+2. **Validate Track Status Data**: Ensure that all track status entries are unique and do not contain duplicate identifiers. If duplicates exist, determine their source to decide whether they should be merged or removed based on context (e.g., different dates for the same event).
 
-3. **Ensure Valid Circuit Matches:** For `grand_prix` rows where a circuit match result is missing (`GRAND_PRIX_CIRCUIT_MATCH_PRESENT` issue), manually check if the event was held in an actual circuit and ensure that the matching logic is correct.
+3. **Further Validation of Result Table**: Since there is one issue in the result table, it might be worth investigating further if this error persists after reviewing the data. This could involve cross-referencing with other tables to ensure that all required columns are present and correctly populated.
 
-4. **Address Incomplete Data for Lap Table:** Although no validity issues were found, there are still 6644 rows with potential incomplete or inconsistent data within the `lap` table. Review these to confirm they contain valid boolean attributes as expected.
+4. **Referential Integrity Checks for Other Tables**: Although not explicitly mentioned as an issue, ensuring referential integrity between related tables is crucial. Review any potential issues in `driver`, `grand_prix`, and `season` if they have been flagged by other checks or domain constraints.
 
-5. **Review and Validate Primary Key Constraints:** Ensure that all entries in tables like `driver`, `season`, and `team` have unique primary keys without any duplicated values (`DUPLICATED_KEY` issues).
+5. **Consult Domain Experts**: For complex validation errors like those found in the lap table, consulting with domain experts who understand the specific requirements of Formula 1 data could provide insights into why certain values are invalid or missing.
 
-These steps will help ensure the data is consistent, complete, and accurate for further analysis or reporting purposes.
+These steps should be reviewed and executed by human reviewers to ensure that any actions taken align with business rules and context.

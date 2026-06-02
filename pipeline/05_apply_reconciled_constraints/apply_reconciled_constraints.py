@@ -1,54 +1,30 @@
 from __future__ import annotations
 
 from pathlib import Path
-
-from sqlalchemy import create_engine
-
-
-# ============================================================
-# CONFIG
-# ============================================================
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project"
-
-SQL_FILE = (
-    PROJECT_ROOT
-    / "database"
-    / "reconciled"
-    / "schema"
-    / "03_apply_reconciled_constraints.sql"
-)
+import sys
 
 
-# ============================================================
-# HELPERS
-# ============================================================
+PROJECT_ROOT = Path.cwd()
 
-def execute_sql_file(conn, sql_path: Path) -> None:
-    if not sql_path.exists():
-        raise FileNotFoundError(f"SQL file not found: {sql_path}")
+if not (PROJECT_ROOT / "database").exists():
+    raise RuntimeError(
+        "This script must be executed from the project root directory.\n"
+        "The project root must contain the database/ package."
+    )
 
-    print(f"EXECUTING SQL FILE: {sql_path.relative_to(PROJECT_ROOT)}")
+sys.path.insert(0, str(PROJECT_ROOT))
 
-    sql = sql_path.read_text(encoding="utf-8")
-
-    if not sql.strip():
-        raise ValueError(f"SQL file is empty: {sql_path}")
-
-    conn.exec_driver_sql(sql)
+from pipeline.utils.input_utils import execute_sql_file
+from pipeline.utils.file_names import CONSTRAINTS_SQL_RECONCILED_CLEAN_FILE
+from database.db_config import get_engine
 
 
-# ============================================================
-# MAIN
-# ============================================================
 
 def main() -> None:
-    engine = create_engine(DATABASE_URL)
+    engine, schema = get_engine("reconciled_clean")
 
     with engine.begin() as conn:
-        execute_sql_file(conn, SQL_FILE)
+        execute_sql_file(conn, CONSTRAINTS_SQL_RECONCILED_CLEAN_FILE)
 
     print("\nDONE: RECONCILED DATABASE CONSTRAINTS APPLIED.")
 

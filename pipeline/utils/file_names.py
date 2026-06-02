@@ -38,16 +38,14 @@ CACHE_DIR = PROJECT_ROOT / "cache"
 # ============================================================
 
 
-SQL_RECONCILED_DIR = DATABASE_DIR / "reconciled" / "schema"
+SQL_RECONCILED_DIR = DATABASE_DIR / "reconciled" / "sql"
+SQL_RECONCILED_CLEAN_DIR = DATABASE_DIR / "reconciled_clean" / "sql"
+SQL_DW_DIR = DATABASE_DIR / "dw" / "sql"
 
-SQL_DW_DIR = DATABASE_DIR / "dw" / "schema"
-
-DROP_SQL_RECONCILED_DIR = SQL_RECONCILED_DIR / "00_drop_reconciled_tables.sql"
-DROP_SQL_DW_DIR = SQL_DW_DIR / "00_drop_dw_tables.sql"
-
+DROP_SQL_RECONCILED_FILE = SQL_RECONCILED_DIR / "00_drop_reconciled_tables.sql"
 CREATE_SQL_RECONCILED_FILE = SQL_RECONCILED_DIR / "01_create_reconciled_tables.sql"
-CREATE_SQL_DW_FILE = SQL_DW_DIR / "01_create_dw_tables.sql"
 
+CONSTRAINTS_SQL_RECONCILED_CLEAN_FILE = SQL_RECONCILED_CLEAN_DIR / "02_apply_reconciled_constraints.sql"
 
 TABLE_FILES = {
     "season": "season.csv",
@@ -83,7 +81,6 @@ EXTERNAL_DATA_DIR = DATA_DIR / "external"
 EXTRACTION_OUTPUT_DIR = ARTIFACT_DIR / "01_extraction_reengineering"
 
 LOAD_RECONCILED_OUTPUT_DIR = ARTIFACT_DIR / "02_load_reconciled_db"
-
 
 DATA_QUALITY_OUTPUT_DIR = ARTIFACT_DIR / "03_data_quality"
 
@@ -126,7 +123,6 @@ CONSTRAINTS_OUTPUT_DIR = ARTIFACT_DIR / "05_constraints"
 
 ETL_OUTPUT_DIR = ARTIFACT_DIR / "06_etl"
 
-LOAD_DW_OUTPUT_DIR = ARTIFACT_DIR / "07_load_dw"
 
 ##############################################################
 # ============================================================
@@ -190,3 +186,61 @@ LLM_INPUT_JSON_PATH = LLM_INPUT_DIR / LLM_INPUT_JSON_FILE
 LLM_PROMPT_PATH = LLM_PROMPTS_DIR / LLM_PROMPT_FILE
 
 LLM_FULL_OUTPUT_PATH = LLM_OUTPUTS_DIR / LLM_FULL_OUTPUT_FILE
+
+
+
+
+# ============================================================
+# DATA CLEANING OUTPUT FILE NAMES
+# ============================================================
+
+CLEANING_ACTION_LOG_FILE = "cleaning_action_log.csv"
+CLEANING_SUMMARY_BY_TABLE_FILE = "cleaning_summary_by_table.csv"
+CLEANING_SUMMARY_BY_DECISION_FILE = "cleaning_summary_by_decision.csv"
+REJECTED_ROWS_FILE = "rejected_rows.csv"
+BEFORE_AFTER_SCORECARD_FILE = "before_after_scorecard.csv"
+
+
+# ============================================================
+# DATA CLEANING OUTPUT FILE PATHS
+# ============================================================
+
+CLEANING_ACTION_LOG_PATH = DATA_CLEANING_OUTPUT_DIR / CLEANING_ACTION_LOG_FILE
+CLEANING_SUMMARY_BY_TABLE_PATH = DATA_CLEANING_OUTPUT_DIR / CLEANING_SUMMARY_BY_TABLE_FILE
+CLEANING_SUMMARY_BY_DECISION_PATH = DATA_CLEANING_OUTPUT_DIR / CLEANING_SUMMARY_BY_DECISION_FILE
+REJECTED_ROWS_PATH = DATA_CLEANING_OUTPUT_DIR / REJECTED_ROWS_FILE
+BEFORE_AFTER_SCORECARD_PATH = DATA_CLEANING_OUTPUT_DIR / BEFORE_AFTER_SCORECARD_FILE
+
+
+
+# ============================================================
+# FOCUSED DATA QUALITY OUTPUT DIRECTORIES
+# ============================================================
+
+MISSING_VALUES_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "03_missing_values"
+
+OUTLIER_DETECTION_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "04_outlier_detection"
+
+
+# ============================================================
+# FOCUSED DATA QUALITY FILE NAMES
+# ============================================================
+
+FOCUSED_MISSING_SUMMARY_FILE  = "focused_missing_summary.csv"
+FOCUSED_MISSING_ROW_FLAGS_FILE = "focused_missing_row_flags.csv"
+
+LAP_OUTLIER_FLAGS_FILE = "lap_outlier_flags.csv"
+OUTLIER_SUMMARY_FILE = "outlier_summary.csv"
+
+
+# ============================================================
+# DATA QUALITY FILE PATHS
+# ============================================================
+
+DQA_ISSUES_PATH = GENERAL_DQA_ISSUES_DIR / DQA_ISSUES_FILE
+
+FOCUSED_MISSING_ROW_FLAGS_PATH = MISSING_VALUES_OUTPUT_DIR / FOCUSED_MISSING_ROW_FLAGS_FILE
+FOCUSED_MISSING_SUMMARY_PATH = MISSING_VALUES_OUTPUT_DIR / FOCUSED_MISSING_SUMMARY_FILE
+
+LAP_OUTLIER_FLAGS_PATH = OUTLIER_DETECTION_OUTPUT_DIR / LAP_OUTLIER_FLAGS_FILE
+OUTLIER_SUMMARY_PATH = OUTLIER_DETECTION_OUTPUT_DIR / OUTLIER_SUMMARY_FILE
