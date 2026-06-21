@@ -104,7 +104,7 @@ TABLES_DIR_NAME = "tables"
 
 ######
 
-LLM_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "02_llm"
+LLM_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "04_llm"
 
 ######
 
@@ -143,9 +143,9 @@ REFERENTIAL_INTEGRITY_ISSUES_FILE = "referential_integrity_issues.csv"
 # LLM INTERPRETATION FILE NAMES
 # ============================================================
 
-LLM_INPUT_JSON_FILE = "dqa_llm_input.json"
-LLM_PROMPT_FILE = "dqa_interpretation_prompt.txt"
-LLM_FULL_OUTPUT_FILE = "full_llm_output.md"
+LLM_INPUT_JSON_FILE = "data_quality_llm_input.json"
+LLM_PROMPT_FILE = "data_quality_interpretation_prompt.txt"
+LLM_FULL_OUTPUT_FILE = "data_quality_interpretation.md"
 
 
 # ============================================================
@@ -217,9 +217,9 @@ BEFORE_AFTER_SCORECARD_PATH = DATA_CLEANING_OUTPUT_DIR / BEFORE_AFTER_SCORECARD_
 # FOCUSED DATA QUALITY OUTPUT DIRECTORIES
 # ============================================================
 
-MISSING_VALUES_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "03_missing_values"
+MISSING_VALUES_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "02_missing_values"
 
-OUTLIER_DETECTION_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "04_outlier_detection"
+OUTLIER_DETECTION_OUTPUT_DIR = DATA_QUALITY_OUTPUT_DIR / "03_outlier_detection"
 
 
 # ============================================================

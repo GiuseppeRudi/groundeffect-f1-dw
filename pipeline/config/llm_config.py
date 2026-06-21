@@ -4,7 +4,7 @@ from __future__ import annotations
 OLLAMA_HOST = "http://localhost:11434"
 
 # we use small model to be able to replicate also with a cpu 
-LLM_MODEL_NAME = "qwen2.5:3b"
+LLM_MODEL_NAME = "gpt-oss:120b-cloud"
 
 # 0.2 we don't want a modelo creative but reliable
 LLM_TEMPERATURE = 0.2
@@ -16,12 +16,15 @@ LLM_NUM_CTX = 8192
 MAX_ISSUES_IN_PROMPT = 30
 MAX_FAILED_CHECKS_IN_PROMPT = 30
 MAX_RI_ISSUES_IN_PROMPT = 20
+MAX_MISSING_FLAGS_IN_PROMPT = 30
+MAX_OUTLIER_SUMMARY_ROWS_IN_PROMPT = 40
+MAX_OUTLIER_FLAGS_IN_PROMPT = 30
 
-# file json where all the information from data quality csv came 
-LLM_INPUT_JSON = "dqa_llm_input.json"
+# file json where all the information from data quality csv came
+LLM_INPUT_JSON = "data_quality_llm_input.json"
 
-# the instruction + json file go in the prompt 
-LLM_PROMPT_TXT = "dqa_interpretation_prompt.txt"
+# the instruction + json file go in the prompt
+LLM_PROMPT_TXT = "data_quality_interpretation_prompt.txt"
 
 # the union of all the md files
-FULL_LLM_OUTPUT_MD = "full_llm_output.md"
+FULL_LLM_OUTPUT_MD = "data_quality_interpretation.md"

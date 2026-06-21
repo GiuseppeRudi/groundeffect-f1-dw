@@ -20,18 +20,18 @@ steps:
     enabled: true
 
   - number: 5
-    name: "LLM interpretation of DQA results"
-    script: "03_data_quality/02_llm/llm_dqa.py"
+    name: "Focused missing values analysis"
+    script: "03_data_quality/02_missing_values/missing_values_analysis.py"
     enabled: true
 
   - number: 6
-    name: "Focused missing values analysis"
-    script: "03_data_quality/03_missing_values/missing_values_analysis.py"
+    name: "Focused lap outlier detection"
+    script: "03_data_quality/03_outlier_detection/lap_outlier_detection.py"
     enabled: true
 
   - number: 7
-    name: "Focused lap outlier detection"
-    script: "03_data_quality/04_outlier_detection/lap_outlier_detection.py"
+    name: "LLM interpretation of complete data quality results"
+    script: "03_data_quality/04_llm/llm_data_quality_interpretation.py"
     enabled: true
 
   - number: 8
