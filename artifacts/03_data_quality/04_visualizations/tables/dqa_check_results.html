@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DQA Check Results</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #667085;
+      --line: #d9dee7;
+      --accent: #2f6f73;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+    h1, h2, h3 { margin: 0; }
+    h1 { font-size: 26px; letter-spacing: 0; }
+    h2 { font-size: 20px; margin: 30px 0 14px; }
+    h3 { font-size: 15px; margin: 0 0 10px; }
+    main { padding: 0 32px 40px; }
+    .subtitle { color: var(--muted); margin-top: 8px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .card span {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .card strong { font-size: 22px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 18px;
+    }
+    .figure, .table-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid #eef1f5;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .links { margin-top: 8px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eef3f4;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .table-wrap {
+      overflow: auto;
+      max-height: 72vh;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .note { color: var(--muted); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>DQA Check Results</h1>
+  <p class="subtitle">Generated from the data quality pipeline artifacts.</p>
+</header>
+<main>
+  
+  <div class="table-wrap"><table border="1" class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>table_name</th>
+      <th>dimension</th>
+      <th>check_id</th>
+      <th>check_description</th>
+      <th>passed_count</th>
+      <th>failed_count</th>
+      <th>total_count</th>
+      <th>score</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>season</td>
+      <td>Completeness</td>
+      <td>season_required_structural_columns</td>
+      <td>season_year must be present because it is the structural identifier of the season.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['season_year'] must be unique among complete key values.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>Validity</td>
+      <td>season_year_formula1_domain</td>
+      <td>season_year must be compatible with the Formula 1 historical domain, starting from 1950.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>Validity</td>
+      <td>number_of_events_positive</td>
+      <td>number_of_events must be greater than zero when present.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>Consistency</td>
+      <td>season_dates_order</td>
+      <td>season_start_date must be before season_end_date when both are present.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>season</td>
+      <td>Consistency</td>
+      <td>season_dates_match_year</td>
+      <td>The year component of season dates must be coherent with season_year.</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>team</td>
+      <td>Completeness</td>
+      <td>team_required_identification_columns</td>
+      <td>team_id and team_name must be present.</td>
+      <td>20</td>
+      <td>0</td>
+      <td>20</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>team</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['team_id'] must be unique among complete key values.</td>
+      <td>10</td>
+      <td>0</td>
+      <td>10</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>team</td>
+      <td>Validity</td>
+      <td>team_url_format</td>
+      <td>team_url must have a valid URL format when present.</td>
+      <td>10</td>
+      <td>0</td>
+      <td>10</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Completeness</td>
+      <td>grand_prix_required_structural_columns</td>
+      <td>grand_prix_id, season_year, round_number, event_name, event_format, and circuit_id must be present.</td>
+      <td>264</td>
+      <td>0</td>
+      <td>264</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['grand_prix_id'] must be unique among complete key values.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['season_year', 'round_number'] should be unique among complete key values.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Validity</td>
+      <td>round_number_positive</td>
+      <td>round_number must be greater than zero.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Validity</td>
+      <td>event_format_domain</td>
+      <td>event_format must belong to the allowed Grand Prix event format domain.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Consistency</td>
+      <td>grand_prix_event_date_matches_season_year</td>
+      <td>event_date must be coherent with season_year when present.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Referential Integrity</td>
+      <td>fk_grand_prix_season_year_to_season_season_year</td>
+      <td>grand_prix.season_year must reference season.season_year.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>grand_prix</td>
+      <td>Referential Integrity</td>
+      <td>fk_grand_prix_circuit_id_to_circuit_circuit_id</td>
+      <td>grand_prix.circuit_id must reference circuit.circuit_id.</td>
+      <td>44</td>
+      <td>0</td>
+      <td>44</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Completeness</td>
+      <td>session_required_structural_columns</td>
+      <td>session_id, grand_prix_id, and session_type must be present.</td>
+      <td>264</td>
+      <td>0</td>
+      <td>264</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['session_id'] must be unique among complete key values.</td>
+      <td>88</td>
+      <td>0</td>
+      <td>88</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['grand_prix_id', 'session_type'] should be unique among complete key values.</td>
+      <td>88</td>
+      <td>0</td>
+      <td>88</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Validity</td>
+      <td>session_type_domain</td>
+      <td>session_type must belong to the allowed session domain for this project: Q or R.</td>
+      <td>88</td>
+      <td>0</td>
+      <td>88</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Consistency</td>
+      <td>session_date_near_grand_prix_date</td>
+      <td>session_date should be coherent with the corresponding Grand Prix event_date. For Q and R sessions, it should normally fall between event_date minus two days and event_date.</td>
+      <td>88</td>
+      <td>0</td>
+      <td>88</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>session</td>
+      <td>Referential Integrity</td>
+      <td>fk_session_grand_prix_id_to_grand_prix_grand_prix_id</td>
+      <td>session.grand_prix_id must reference grand_prix.grand_prix_id.</td>
+      <td>88</td>
+      <td>0</td>
+      <td>88</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Completeness</td>
+      <td>result_required_structural_columns</td>
+      <td>result_id, session_id, driver_id, and team_id must be present.</td>
+      <td>7038</td>
+      <td>2</td>
+      <td>7040</td>
+      <td>0.999716</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['result_id'] must be unique among complete key values.</td>
+      <td>1760</td>
+      <td>0</td>
+      <td>1760</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['session_id', 'driver_id'] should be unique among complete key values.</td>
+      <td>1759</td>
+      <td>0</td>
+      <td>1759</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Validity</td>
+      <td>result_position_positive</td>
+      <td>position must be greater than zero when present.</td>
+      <td>1757</td>
+      <td>0</td>
+      <td>1757</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Validity</td>
+      <td>result_points_non_negative</td>
+      <td>points must be greater than or equal to zero when present.</td>
+      <td>880</td>
+      <td>0</td>
+      <td>880</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Validity</td>
+      <td>result_laps_non_negative</td>
+      <td>laps must be greater than or equal to zero when present.</td>
+      <td>880</td>
+      <td>0</td>
+      <td>880</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Validity</td>
+      <td>result_grid_position_non_negative</td>
+      <td>grid_position must be greater than or equal to zero when present.</td>
+      <td>878</td>
+      <td>0</td>
+      <td>878</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Referential Integrity</td>
+      <td>fk_result_session_id_to_session_session_id</td>
+      <td>result.session_id must reference session.session_id.</td>
+      <td>1760</td>
+      <td>0</td>
+      <td>1760</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Referential Integrity</td>
+      <td>fk_result_driver_id_to_driver_driver_id</td>
+      <td>result.driver_id must reference driver.driver_id.</td>
+      <td>1759</td>
+      <td>0</td>
+      <td>1759</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>Referential Integrity</td>
+      <td>fk_result_team_id_to_team_team_id</td>
+      <td>result.team_id must reference team.team_id.</td>
+      <td>1759</td>
+      <td>0</td>
+      <td>1759</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Completeness</td>
+      <td>lap_required_structural_columns</td>
+      <td>Structural lap identifiers and timeline attribute must be present.</td>
+      <td>367242</td>
+      <td>0</td>
+      <td>367242</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['lap_id'] must be unique among complete key values.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['session_id', 'driver_id', 'lap_number'] should be unique among complete key values.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>lap_number_positive</td>
+      <td>lap_number must be greater than zero.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>lap_time_positive</td>
+      <td>lap_time_ms must be positive when present.</td>
+      <td>55837</td>
+      <td>0</td>
+      <td>55837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>lap_sector_times_positive</td>
+      <td>Sector times must be positive when present.</td>
+      <td>61012</td>
+      <td>0</td>
+      <td>61012</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>lap_speeds_positive</td>
+      <td>Speed attributes must be positive when present.</td>
+      <td>61066</td>
+      <td>0</td>
+      <td>61066</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>stint_positive</td>
+      <td>stint must be positive when present.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>tyre_life_positive</td>
+      <td>tyre_life must be positive when present.</td>
+      <td>60687</td>
+      <td>0</td>
+      <td>60687</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Validity</td>
+      <td>compound_domain</td>
+      <td>compound must belong to the expected tyre compound domain when present.</td>
+      <td>60813</td>
+      <td>60</td>
+      <td>60873</td>
+      <td>0.999014</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Consistency</td>
+      <td>lap_sector_sum_matches_lap_time</td>
+      <td>For timed laps with complete sector information, the sum of sector times should be coherent with lap_time_ms.</td>
+      <td>48995</td>
+      <td>0</td>
+      <td>48995</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Referential Integrity</td>
+      <td>fk_lap_session_id_to_session_session_id</td>
+      <td>lap.session_id must reference session.session_id.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Referential Integrity</td>
+      <td>fk_lap_driver_id_to_driver_driver_id</td>
+      <td>lap.driver_id must reference driver.driver_id.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>Referential Integrity</td>
+      <td>fk_lap_team_id_to_team_team_id</td>
+      <td>lap.team_id must reference team.team_id.</td>
+      <td>61207</td>
+      <td>0</td>
+      <td>61207</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Completeness</td>
+      <td>weather_required_columns</td>
+      <td>Weather identifier, session timeline, and main weather measures must be present.</td>
+      <td>78239</td>
+      <td>0</td>
+      <td>78239</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['weather_id'] must be unique among complete key values.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['session_id', 'time_ms'] should be unique among complete key values.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>weather_time_non_negative</td>
+      <td>time_ms must be greater than or equal to zero.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>air_temp_broad_domain_range</td>
+      <td>air_temp must be within a broad Formula 1 weather domain range when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>track_temp_broad_domain_range</td>
+      <td>track_temp must be within a broad Formula 1 track temperature domain range when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>humidity_range</td>
+      <td>humidity must be between 0 and 100 when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>pressure_range</td>
+      <td>pressure must be within a broad realistic atmospheric range when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>wind_direction_range</td>
+      <td>wind_direction must be a degree value between 0 and 360 when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Validity</td>
+      <td>wind_speed_non_negative</td>
+      <td>wind_speed must be greater than or equal to zero when present.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Consistency</td>
+      <td>weather_track_air_temp_difference</td>
+      <td>track_temp should be reasonably coherent with air_temp.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>weather</td>
+      <td>Referential Integrity</td>
+      <td>fk_weather_session_id_to_session_session_id</td>
+      <td>weather.session_id must reference session.session_id.</td>
+      <td>11177</td>
+      <td>0</td>
+      <td>11177</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Completeness</td>
+      <td>track_status_required_columns</td>
+      <td>Track status identifier, session timeline, status, and message must be present.</td>
+      <td>4185</td>
+      <td>0</td>
+      <td>4185</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['track_status_id'] must be unique among complete key values.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Uniqueness</td>
+      <td>natural_key_1_unique</td>
+      <td>Natural key ['session_id', 'time_ms'] should be unique among complete key values.</td>
+      <td>828</td>
+      <td>9</td>
+      <td>837</td>
+      <td>0.989247</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Validity</td>
+      <td>track_status_time_non_negative</td>
+      <td>time_ms must be greater than or equal to zero.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Validity</td>
+      <td>track_status_code_domain</td>
+      <td>status must belong to the documented track status code domain.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Validity</td>
+      <td>track_status_message_domain</td>
+      <td>message must belong to the documented track status message domain.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Consistency</td>
+      <td>track_status_message_mapping</td>
+      <td>The numerical status code must correspond to the expected textual message.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>track_status</td>
+      <td>Referential Integrity</td>
+      <td>fk_track_status_session_id_to_session_session_id</td>
+      <td>track_status.session_id must reference session.session_id.</td>
+      <td>837</td>
+      <td>0</td>
+      <td>837</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Completeness</td>
+      <td>circuit_required_analytical_columns</td>
+      <td>Circuit identifier and analytical classification columns must be present.</td>
+      <td>130</td>
+      <td>0</td>
+      <td>130</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['circuit_id'] must be unique among complete key values.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Validity</td>
+      <td>global_circuit_category_domain</td>
+      <td>global_circuit_category must belong to the allowed global circuit category domain.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Validity</td>
+      <td>sector1_category_domain</td>
+      <td>sector1_category must belong to the allowed sector category domain.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Validity</td>
+      <td>sector2_category_domain</td>
+      <td>sector2_category must belong to the allowed sector category domain.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>circuit</td>
+      <td>Validity</td>
+      <td>sector3_category_domain</td>
+      <td>sector3_category must belong to the allowed sector category domain.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Completeness</td>
+      <td>driver_required_identification_columns</td>
+      <td>driver_id, abbreviation, and last_name must be present.</td>
+      <td>78</td>
+      <td>0</td>
+      <td>78</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Uniqueness</td>
+      <td>primary_key_unique</td>
+      <td>Primary key ['driver_id'] must be unique among complete key values.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Validity</td>
+      <td>driver_abbreviation_format</td>
+      <td>abbreviation must be a three-letter uppercase driver code.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Validity</td>
+      <td>driver_url_format</td>
+      <td>driver_url must have a valid URL format when present.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Validity</td>
+      <td>permanent_number_range</td>
+      <td>permanent_number must be between 1 and 99 when present.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+    <tr>
+      <td>driver</td>
+      <td>Accuracy</td>
+      <td>driver_age_plausible_2021_2022</td>
+      <td>Driver age during the selected 2021--2022 seasons should be within a broad plausible Formula 1 range.</td>
+      <td>26</td>
+      <td>0</td>
+      <td>26</td>
+      <td>1.000000</td>
+      <td>green</td>
+    </tr>
+  </tbody>
+</table></div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,4628 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focused Missing Row Flags</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #667085;
+      --line: #d9dee7;
+      --accent: #2f6f73;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+    h1, h2, h3 { margin: 0; }
+    h1 { font-size: 26px; letter-spacing: 0; }
+    h2 { font-size: 20px; margin: 30px 0 14px; }
+    h3 { font-size: 15px; margin: 0 0 10px; }
+    main { padding: 0 32px 40px; }
+    .subtitle { color: var(--muted); margin-top: 8px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .card span {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .card strong { font-size: 22px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 18px;
+    }
+    .figure, .table-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid #eef1f5;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .links { margin-top: 8px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eef3f4;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .table-wrap {
+      overflow: auto;
+      max-height: 72vh;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .note { color: var(--muted); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Focused Missing Row Flags</h1>
+  <p class="subtitle">Generated from the data quality pipeline artifacts.</p>
+</header>
+<main>
+  <p class="note">Showing first 500 of 18,794 rows. The CSV remains the authoritative full file.</p>
+  <div class="table-wrap"><table border="1" class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>table_name</th>
+      <th>row_identifier</th>
+      <th>column_name</th>
+      <th>missing_class</th>
+      <th>missing_information_area</th>
+      <th>explanation</th>
+      <th>severity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>result</td>
+      <td>result_id=32</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=33</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=34</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=35</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=36</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=37</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=38</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=39</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=40</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=50</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=60</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=74</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=75</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=76</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=77</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=78</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=79</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=80</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=112</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=113</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=114</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=115</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=116</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=117</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=118</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=119</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=120</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=148</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=149</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=150</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=151</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=152</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=153</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=154</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=155</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=156</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=157</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=158</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=159</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=160</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=180</td>
+      <td>position</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>CLASSIFICATION_INFORMATION</td>
+      <td>position is missing in a Qualifying session, so qualifying progression cannot be interpreted reliably.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=180</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=180</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=180</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=188</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=189</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=190</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=191</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=192</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=193</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=194</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=195</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=196</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=197</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=198</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=199</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=200</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=219</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=220</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=237</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=238</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=239</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=240</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=255</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=259</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=260</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=272</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=273</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=274</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=275</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=276</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=277</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=278</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=279</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=280</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=305</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=306</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=307</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=308</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=309</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=310</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=311</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=312</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=313</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=314</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=315</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=316</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=317</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=318</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=319</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=320</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=350</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=351</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=352</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=353</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=354</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=355</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=356</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=357</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=358</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=359</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=360</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=392</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=393</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=394</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=395</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=396</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=397</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=398</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=399</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=400</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=415</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=420</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=430</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=431</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=432</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=433</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=434</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=435</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=436</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=437</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=438</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=439</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=440</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=450</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=504</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=505</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=506</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=507</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=508</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=509</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=510</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=511</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=512</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=513</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=514</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=515</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=516</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=517</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=518</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=519</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=520</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=556</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=557</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=558</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=559</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=560</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=574</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=575</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=580</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=592</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=593</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=594</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=595</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=596</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=597</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=598</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=599</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=600</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=615</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=630</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=631</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=632</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=633</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=634</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=635</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=636</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=637</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=638</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=639</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=640</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=655</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=669</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=670</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=671</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=672</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=673</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=674</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=675</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=676</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=677</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=678</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=679</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=680</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=706</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=707</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=708</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=709</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=710</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=711</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=712</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=713</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=714</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=715</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=716</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=717</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=718</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=719</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=720</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=747</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=748</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=749</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=750</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=751</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=752</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=753</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=754</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=755</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=756</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=757</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=758</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=759</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=760</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=789</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=790</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=791</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=792</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=793</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=794</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=795</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=796</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=797</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=798</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=799</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=800</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=833</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=834</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=835</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=836</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=837</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=838</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=839</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=840</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=872</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=873</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=874</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=875</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=876</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=877</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=878</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=879</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=880</td>
+      <td>position</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>CLASSIFICATION_INFORMATION</td>
+      <td>position is expected in a Race session and is missing.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=880</td>
+      <td>grid_position</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>grid_position is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=880</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=918</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=919</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=920</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=940</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=953</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=954</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=955</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=956</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=957</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=958</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=959</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=960</td>
+      <td>position</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>CLASSIFICATION_INFORMATION</td>
+      <td>position is expected in a Race session and is missing.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=960</td>
+      <td>grid_position</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>grid_position is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=960</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=970</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=980</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=993</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=994</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=995</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=996</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=997</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=998</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=999</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1000</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1010</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1020</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1030</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1031</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1032</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1033</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1034</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1035</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1036</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1037</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1038</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1039</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1040</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1060</td>
+      <td>q1_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q1_ms is missing in a Qualifying session.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1076</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1077</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1078</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1079</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1080</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1109</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1110</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1111</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1112</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1113</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1114</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1115</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1116</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1117</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1118</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1119</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1120</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1155</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1156</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1157</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1158</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1159</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1160</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1191</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1192</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1193</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1194</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1195</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1196</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1197</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1198</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1199</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1200</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1214</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1215</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1238</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1239</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1240</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1275</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1276</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1277</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1278</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1279</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1280</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1290</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1306</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1307</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1308</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1309</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1310</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1311</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1312</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1313</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1314</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1315</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1316</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1317</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1318</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1319</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1320</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1329</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1330</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1356</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1357</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1358</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1359</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1360</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1388</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1389</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1390</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1391</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1392</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1393</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1394</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1395</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1396</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1397</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1398</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1399</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1400</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1436</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1437</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1438</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1439</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1440</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1450</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1478</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1479</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1480</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1490</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1495</td>
+      <td>q2_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q2_ms is missing although the position does not clearly explain elimination before Q2.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1513</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1514</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1515</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1516</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1517</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1518</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1519</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1520</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1553</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1554</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1555</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1556</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1557</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1558</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1559</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1560</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1599</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1600</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1638</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1639</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1640</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1667</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1668</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1669</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1670</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1671</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1672</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1673</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1674</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1675</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1676</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1677</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1678</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1679</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1680</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1690</td>
+      <td>q3_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>QUALIFYING_INFORMATION</td>
+      <td>q3_ms is missing although the position does not clearly explain elimination before Q3.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1717</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1718</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1719</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1720</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1752</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1753</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1754</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1755</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1756</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1757</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1758</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1759</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>result</td>
+      <td>result_id=1760</td>
+      <td>time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>RACE_CONTEXT_INFORMATION</td>
+      <td>time_ms is race-context information and is missing in a Race session.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=1</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=1</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=3</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=4</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=4</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=6</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=7</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=7</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=9</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=10</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=10</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=12</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=13</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=13</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=15</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=16</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=16</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=18</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=19</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=19</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=21</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=22</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=22</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=24</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=25</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=25</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=27</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=28</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=28</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=30</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=31</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=31</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=33</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=34</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=34</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=36</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=37</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=37</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=38</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=39</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=39</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=41</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=42</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=42</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=44</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=45</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=45</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=47</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=48</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=48</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=50</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=51</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=51</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=53</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=54</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=54</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=56</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=57</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=57</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=59</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=60</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=60</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=62</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=63</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=63</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=65</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=65</td>
+      <td>sector3_time_ms</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector3_time_ms is missing and pit_in_time_ms is present, so the lap is an in-lap.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=65</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=66</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=66</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=68</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=69</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=69</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=71</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=72</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=72</td>
+      <td>sector1_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>SECTOR_INFORMATION</td>
+      <td>sector1_time_ms is missing without a direct sector-specific explanation.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=74</td>
+      <td>speed_fl</td>
+      <td>EXPLAINED_NULL</td>
+      <td>SPEED_INFORMATION</td>
+      <td>speed_fl is missing and pit information is present.</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <td>lap</td>
+      <td>lap_id=75</td>
+      <td>lap_time_ms</td>
+      <td>SUSPICIOUS_NULL</td>
+      <td>LAP_TIME_INFORMATION</td>
+      <td>lap_time_ms is missing, so the row lacks the main lap time information.</td>
+      <td>red</td>
+    </tr>
+  </tbody>
+</table></div>
+</main>
+
+</body>
+</html>

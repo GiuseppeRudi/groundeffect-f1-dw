@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="576" viewBox="0 0 1120 576">
+  <style>
+    .title { font: 700 20px Arial, sans-serif; fill: #20242a; }
+    .axis { font: 12px Arial, sans-serif; fill: #4d5968; }
+    .label { font: 12px Arial, sans-serif; fill: #20242a; }
+    .value { font: 700 12px Arial, sans-serif; fill: #20242a; }
+    .small { font: 11px Arial, sans-serif; fill: #667085; }
+    .grid { stroke: #d9dee7; stroke-width: 1; stroke-dasharray: 4 4; }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="28" y="34">Outlier Detection Methods by Metric</text>
+<rect x="160" y="52" width="12" height="12" fill="#9a6fb0"/>
+<text class="small" x="178" y="63">IQR</text>
+<rect x="330" y="52" width="12" height="12" fill="#4f8c8f"/>
+<text class="small" x="348" y="63">Modified Z-score</text>
+<rect x="500" y="52" width="12" height="12" fill="#cf7f4f"/>
+<text class="small" x="518" y="63">Consensus</text>
+<line class="grid" x1="160.0" y1="74" x2="160.0" y2="522"/>
+<text class="small" x="160.0" y="546" text-anchor="middle">0</text>
+<line class="grid" x1="314.0" y1="74" x2="314.0" y2="522"/>
+<text class="small" x="314.0" y="546" text-anchor="middle">533</text>
+<line class="grid" x1="468.0" y1="74" x2="468.0" y2="522"/>
+<text class="small" x="468.0" y="546" text-anchor="middle">1,066</text>
+<line class="grid" x1="622.0" y1="74" x2="622.0" y2="522"/>
+<text class="small" x="622.0" y="546" text-anchor="middle">1,599</text>
+<line class="grid" x1="776.0" y1="74" x2="776.0" y2="522"/>
+<text class="small" x="776.0" y="546" text-anchor="middle">2,132</text>
+<line class="grid" x1="930.0" y1="74" x2="930.0" y2="522"/>
+<text class="small" x="930.0" y="546" text-anchor="middle">2,665</text>
+<text class="label" x="148" y="114" text-anchor="end">sector3_time_ms</text>
+<rect x="160" y="91" width="180.9" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="106" width="157.2" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="121" width="93.3" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="168" text-anchor="end">speed_i2</text>
+<rect x="160" y="145" width="240.7" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="160" width="99.4" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="175" width="99.4" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="222" text-anchor="end">sector1_time_ms</text>
+<rect x="160" y="199" width="222.7" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="214" width="185.5" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="229" width="114.4" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="276" text-anchor="end">sector2_time_ms</text>
+<rect x="160" y="253" width="209.7" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="268" width="173.1" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="283" width="121.3" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="330" text-anchor="end">speed_i1</text>
+<rect x="160" y="307" width="229.4" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="322" width="139.3" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="337" width="132.3" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="384" text-anchor="end">lap_time_ms</text>
+<rect x="160" y="361" width="213.8" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="376" width="209.7" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="391" width="141.0" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="438" text-anchor="end">speed_fl</text>
+<rect x="160" y="415" width="427.0" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="430" width="357.4" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="445" width="318.1" height="12" rx="2" fill="#cf7f4f"/>
+<text class="label" x="148" y="492" text-anchor="end">speed_st</text>
+<rect x="160" y="469" width="641.7" height="12" rx="2" fill="#9a6fb0"/>
+<rect x="160" y="484" width="492.3" height="12" rx="2" fill="#4f8c8f"/>
+<rect x="160" y="499" width="486.2" height="12" rx="2" fill="#cf7f4f"/>
+</svg>

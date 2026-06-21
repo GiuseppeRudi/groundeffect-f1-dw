@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complete Data Quality Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #667085;
+      --line: #d9dee7;
+      --accent: #2f6f73;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+    h1, h2, h3 { margin: 0; }
+    h1 { font-size: 26px; letter-spacing: 0; }
+    h2 { font-size: 20px; margin: 30px 0 14px; }
+    h3 { font-size: 15px; margin: 0 0 10px; }
+    main { padding: 0 32px 40px; }
+    .subtitle { color: var(--muted); margin-top: 8px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .card span {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .card strong { font-size: 22px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 18px;
+    }
+    .figure, .table-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid #eef1f5;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .links { margin-top: 8px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eef3f4;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .table-wrap {
+      overflow: auto;
+      max-height: 72vh;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .note { color: var(--muted); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Complete Data Quality Dashboard</h1>
+  <p class="subtitle">Global view across the general DQA, missing-value analysis, and lap outlier detection.</p>
+  <div class="cards"><div class="card"><span>Tables assessed</span><strong>10</strong></div>
+<div class="card"><span>Average DQA score</span><strong>0.999883</strong></div>
+<div class="card"><span>Worst DQA table</span><strong>track_status</strong></div>
+<div class="card"><span>General DQA issues</span><strong>70</strong></div>
+<div class="card"><span>Missing values</span><strong>18,794</strong></div>
+<div class="card"><span>Suspicious nulls</span><strong>11,842</strong></div>
+<div class="card"><span>Top missing area</span><strong>Speed</strong></div>
+<div class="card"><span>Consensus outliers</span><strong>5,213</strong></div>
+<div class="card"><span>Top outlier metric</span><strong>speed_st</strong></div></div>
+</header>
+<main>
+  <h2>Plots</h2>
+  <div class="grid">
+    
+      <section class="figure">
+        <h3>General DQA overall score by table</h3>
+        <img src="../figures/dqa_score_by_table.svg" alt="General DQA overall score by table">
+        <div class="links"><a href="../figures/dqa_score_by_table.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>General DQA issues by table</h3>
+        <img src="../figures/dqa_issues_by_table.svg" alt="General DQA issues by table">
+        <div class="links"><a href="../figures/dqa_issues_by_table.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>General DQA score heatmap</h3>
+        <img src="../figures/dqa_dimension_heatmap.svg" alt="General DQA score heatmap">
+        <div class="links"><a href="../figures/dqa_dimension_heatmap.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>Missing value distribution by class</h3>
+        <img src="../figures/missing_class_distribution.svg" alt="Missing value distribution by class">
+        <div class="links"><a href="../figures/missing_class_distribution.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>Missing values by information area</h3>
+        <img src="../figures/missing_information_area.svg" alt="Missing values by information area">
+        <div class="links"><a href="../figures/missing_information_area.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>Consensus outliers by metric</h3>
+        <img src="../figures/outlier_by_metric.svg" alt="Consensus outliers by metric">
+        <div class="links"><a href="../figures/outlier_by_metric.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>Consensus outlier rate by metric</h3>
+        <img src="../figures/outlier_rate_by_metric.svg" alt="Consensus outlier rate by metric">
+        <div class="links"><a href="../figures/outlier_rate_by_metric.svg">Open SVG</a></div>
+      </section>
+
+      <section class="figure">
+        <h3>Outlier detection methods by metric</h3>
+        <img src="../figures/outlier_methods_by_metric.svg" alt="Outlier detection methods by metric">
+        <div class="links"><a href="../figures/outlier_methods_by_metric.svg">Open SVG</a></div>
+      </section>
+
+  </div>
+
+  <h2>CSV Tables</h2>
+  <section class="table-panel">
+    <h3>Generated HTML tables</h3>
+    <ul><li><a href="../tables/dqa_scorecard_by_table.html">DQA scorecard by table</a></li>
+<li><a href="../tables/dqa_check_results.html">DQA check results</a></li>
+<li><a href="../tables/dqa_issues.html">DQA issues</a></li>
+<li><a href="../tables/focused_missing_summary.html">Focused missing summary</a></li>
+<li><a href="../tables/focused_missing_row_flags.html">Focused missing row flags</a></li>
+<li><a href="../tables/outlier_summary.html">Outlier summary</a></li>
+<li><a href="../tables/lap_outlier_flags.html">Lap outlier flags</a></li></ul>
+  </section>
+</main>
+
+</body>
+</html>

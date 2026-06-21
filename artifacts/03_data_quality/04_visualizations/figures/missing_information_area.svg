@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="366" viewBox="0 0 1100 366">
+  <style>
+    .title { font: 700 20px Arial, sans-serif; fill: #20242a; }
+    .axis { font: 12px Arial, sans-serif; fill: #4d5968; }
+    .label { font: 12px Arial, sans-serif; fill: #20242a; }
+    .value { font: 700 12px Arial, sans-serif; fill: #20242a; }
+    .small { font: 11px Arial, sans-serif; fill: #667085; }
+    .grid { stroke: #d9dee7; stroke-width: 1; stroke-dasharray: 4 4; }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="28" y="34">Missing Values by Information Area</text>
+<text class="axis" x="545.0" y="352" text-anchor="middle">Missing values</text>
+<line class="grid" x1="160.0" y1="58" x2="160.0" y2="318"/>
+<text class="small" x="160.0" y="334" text-anchor="middle">0</text>
+<line class="grid" x1="314.0" y1="58" x2="314.0" y2="318"/>
+<text class="small" x="314.0" y="334" text-anchor="middle">1,514</text>
+<line class="grid" x1="468.0" y1="58" x2="468.0" y2="318"/>
+<text class="small" x="468.0" y="334" text-anchor="middle">3,027</text>
+<line class="grid" x1="622.0" y1="58" x2="622.0" y2="318"/>
+<text class="small" x="622.0" y="334" text-anchor="middle">4,541</text>
+<line class="grid" x1="776.0" y1="58" x2="776.0" y2="318"/>
+<text class="small" x="776.0" y="334" text-anchor="middle">6,055</text>
+<line class="grid" x1="930.0" y1="58" x2="930.0" y2="318"/>
+<text class="small" x="930.0" y="334" text-anchor="middle">7,569</text>
+<text class="label" x="148" y="93" text-anchor="end">Classification</text>
+<rect x="160" y="78" width="0.3" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="168.3" y="93" text-anchor="start" fill="#20242a">3</text>
+<text class="label" x="148" y="127" text-anchor="end">Qualifying</text>
+<rect x="160" y="112" width="3.4" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="171.4" y="127" text-anchor="start" fill="#20242a">33</text>
+<text class="label" x="148" y="161" text-anchor="end">Race Context</text>
+<rect x="160" y="146" width="39.3" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="207.3" y="161" text-anchor="start" fill="#20242a">386</text>
+<text class="label" x="148" y="195" text-anchor="end">Tyre</text>
+<rect x="160" y="180" width="86.9" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="254.9" y="195" text-anchor="start" fill="#20242a">854</text>
+<text class="label" x="148" y="229" text-anchor="end">Lap Time</text>
+<rect x="160" y="214" width="546.3" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="714.3" y="229" text-anchor="start" fill="#20242a">5,370</text>
+<text class="label" x="148" y="263" text-anchor="end">Sector</text>
+<rect x="160" y="248" width="583.4" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="751.4" y="263" text-anchor="start" fill="#20242a">5,734</text>
+<text class="label" x="148" y="297" text-anchor="end">Speed</text>
+<rect x="160" y="282" width="652.5" height="22" rx="3" fill="#3f7c9a"/>
+<text class="value" x="820.5" y="297" text-anchor="start" fill="#20242a">6,414</text>
+</svg>
