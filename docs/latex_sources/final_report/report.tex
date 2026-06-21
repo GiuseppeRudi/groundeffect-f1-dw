@@ -25,6 +25,16 @@
 	citecolor=black
 }
 
+\usepackage{listings}
+
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	frame=single,
+	columns=fullflexible,
+	showstringspaces=false
+}
+
 
 \usepackage[table]{xcolor}
 
@@ -788,37 +798,27 @@
 	
 	\begin{figure}[H]
 		\centering
-		\figplaceholder{
-			General Data Quality Assessment score heatmap\\
-			Quality dimensions by table
-		}
+		\includegraphics[width=1\linewidth]{figures/dqa_dimension_heatmap.pdf}
 		\caption{General Data Quality Assessment score heatmap.}
 		\label{fig:dqa-dimension-heatmap}
 	\end{figure}
 	
 	The heatmap shows that the general DQA scores are very high across almost all tables and quality dimensions. 
 	This result should not be interpreted as the absence of data quality problems. 
-	The general assessment was intentionally based on deterministic and structural checks, such as completeness of key attributes, uniqueness, validity, consistency, and referential integrity. 
-	More domain-specific issues, especially missing values and numerical anomalies, are analysed separately through the focused missing-value interpretation and outlier detection procedures.
+	The general assessment was intentionally based on deterministic and structural checks.More domain-specific issues, especially missing values and numerical anomalies, are analysed separately through the focused missing-value interpretation and outlier detection procedures.
 	
 	\begin{figure}[H]
 		\centering
 		\begin{subfigure}{0.48\linewidth}
 			\centering
-			\figplaceholder{
-				Missing-value class distribution\\
-				Explained nulls vs suspicious nulls
-			}
+			\includegraphics[width=1\linewidth]{figures/missing_class_distribution.pdf}
 			\caption{Missing-value classes}
 			\label{fig:missing-class-distribution}
 		\end{subfigure}
 		\hfill
 		\begin{subfigure}{0.48\linewidth}
 			\centering
-			\figplaceholder{
-				Missing values by information area\\
-				Speed, sector, lap time, tyre, race context
-			}
+			\includegraphics[width=1\linewidth]{figures/missing_information_area.pdf}
 			\caption{Missing values by information area}
 			\label{fig:missing-information-area}
 		\end{subfigure}
@@ -827,29 +827,33 @@
 	\end{figure}
 	
 	The missing-value plots show that a relevant part of the null values is explained by the Formula One domain. 
-	Some attributes are not applicable in every context: for example, qualifying-related values are not expected in race-only situations, and race-related values are not always meaningful in qualifying sessions. 
-	For this reason, explained nulls are separated from suspicious nulls instead of treating all missing values as errors.
-	
+
 	The distribution by information area shows that missing values are mainly concentrated in speed, sector, and lap-time information. 
 	This is coherent with the structure of lap-level data: sector times are collected across three circuit sectors, while speed values can be recorded at multiple detection points within the same lap. 
 	Since these measurements are more granular, they also have more opportunities to contain incomplete information.
 	
 	\begin{figure}[H]
 		\centering
-		\figplaceholder{
-			Outlier detection methods by metric\\
-			IQR, Modified Z-score, and consensus outliers
-		}
+		\includegraphics[width=1\linewidth]{figures/outlier_methods_by_metric.pdf}
 		\caption{Outlier detection methods by metric.}
 		\label{fig:outlier-methods-by-metric}
 	\end{figure}
 	
-	The outlier plot compares the number of values flagged by the IQR method, the Modified Z-score, and the final consensus rule. 
-	The presence of many outliers is expected in Formula One data, because lap times, sector times, and speed values can vary significantly depending on traffic, pit events, tyres, weather, yellow flags, Safety Car phases, and race situations. 
-	For this reason, outliers are not automatically interpreted as wrong values.
 	
-	The consensus rule makes the detection more conservative: a value is considered more suspicious only when both methods agree. 
-	This reduces the risk of removing valid but unusual racing situations and supports the cleaning strategy adopted in the project, where only strong anomalies on key measures are removed, while other suspicious cases are mainly preserved with quality flags.
+	The outlier-method comparison shows that the consensus rule reduces the number of values treated as strong anomalies. 
+	Compared with the individual methods, especially the IQR method.
+	
+	\subsection{LLM-supported Interpretation of Data Quality Outputs}
+	
+	After the visual summaries, the artefacts produced by the Data Quality Assessment phase were also provided to a Large Language Model to support the interpretation of the detected issues. 
+	The input included the outputs of the General DQA checks, the focused missing-value analysis, and the outlier detection procedure.
+	
+	The LLM was not used to modify the data or to make automatic cleaning decisions. 
+	Its role was limited to producing a structured textual interpretation of the quality evidence. 
+	In particular, three outputs were generated: a natural-language stakeholder summary, a more technical summary for developers and analysts, and a list of suggested cleaning priorities.
+	
+	This step was used as an additional documentation and interpretation layer, useful to translate technical quality outputs into readable explanations. 
+	The prompt provided to the LLM, together with an example of the generated output, is reported in Appendix~\ref{appendix:llm-dqa-interpretation}.
 
 	\section{Data Cleaning}
 	
@@ -1810,7 +1814,7 @@
 
 	\section*{Repository and Supplementary Material}
 	Full code, detailed DQA outputs, cleaning logs, rejected rows, and full schema files are available in the project repository:
-	\url{https://github.com/GiuseppeRudi/f1-dw}
+	\url{https://github.com/GiuseppeRudi/ground_effect-dw}
 	
 
 	
@@ -2108,11 +2112,72 @@
 		
 	\end{table}
 
+
+	\newpage
+		
+	\subsection{LLM-supported Data Quality Interpretation}
+	\label{appendix:llm-dqa-interpretation}
+	
+	This appendix reports the prompt used to support the interpretation of the Data Quality Assessment outputs through a Large Language Model. 
+	The LLM was not used to perform the official DQA, clean the data, or make automatic decisions. 
+	Its role was limited to generating a readable interpretation of deterministic artefacts already produced by the project scripts.
+	
+	\subsubsection*{Prompt provided to the LLM}
+	
+	The following prompt was used to instruct the LLM about its role, the available inputs, the expected output structure, and the constraints to follow.
+	
+	\begin{lstlisting}
+		% Insert here the full prompt used for the LLM-supported interpretation.
+		% The prompt includes:
+		% - the role of the assistant;
+		% - the available deterministic DQA artefacts;
+		% - the required Markdown sections;
+		% - the instruction not to invent values or hidden causes;
+		% - the rule that all suggested actions must be manually reviewed.
+	\end{lstlisting}
+	
+	\subsubsection*{Compact Example of Generated Output}
+	
+	The following example shows the type of output generated by the LLM. 
+	The content is intentionally shortened because LLM responses are not deterministic and can vary across executions. 
+	The example is included only to document the expected structure of the response.
+	
+	\begin{lstlisting}
+		# Stakeholder Summary
+		
+		The Formula One data warehouse shows a very high general quality level. 
+		Most structural checks, such as uniqueness, validity, consistency, and referential integrity, report almost perfect scores.
+		
+		However, this does not mean that the data are free from quality issues. 
+		The most relevant problems are concentrated in focused analyses: missing values in lap-level timing, sector, speed, and tyre information, and numerical outliers in lap and speed metrics.
+		
+		Overall, the warehouse is suitable for analysis, but some lap-level measures should be interpreted with quality flags or filtered when the analysis depends on the affected data area.
+		
+		# Technical Summary
+		
+		The general DQA mainly highlights small issues in the lap, result, and track_status tables. 
+		The lap table contains most of the remaining validity warnings, while track_status shows a small uniqueness issue.
+		
+		The missing-value analysis shows that null values are not all equivalent. 
+		Some are explained by the Formula One domain, while others are suspicious and require review. 
+		The largest missing-value areas are speed information, sector information, and lap-time information.
+		
+		The outlier detection identifies several unusual values, especially for speed and lap-time metrics. 
+		These values are not automatically considered errors, because unusual racing situations can naturally produce extreme observations.
+		
+		# Suggested Cleaning Priorities
+		
+		1. Review suspicious missing lap-time values before using lap time as a core measure.
+		2. Check missing sector and speed information when the analysis depends on those metrics.
+		3. Inspect strong consensus outliers in speed and lap-time metrics.
+		4. Preserve uncertain records with quality flags when the issue cannot be corrected deterministically.
+		5. Manually review all LLM suggestions before applying any cleaning decision.
+	\end{lstlisting}
+	
+	
 	\newpage
 
-	% Add in the preamble if not already included:
-	% \usepackage{multirow}
-	
+
 	\section{Additional DQA-driven Cleaning Rules}
 	\label{appendix:dqa-cleaning-rules}
 	
@@ -2241,6 +2306,8 @@
 		& STANDARDIZE \\
 		
 	\end{longtable}
+	
+	
 	
 	\newpage
 	

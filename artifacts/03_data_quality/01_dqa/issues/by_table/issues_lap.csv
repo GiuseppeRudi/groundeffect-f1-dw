@@ -1,4 +1,5 @@
 table_name,row_identifier,dimension,check_id,issue_code,issue_description,severity
+lap,lap_id=16330,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16331,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16332,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16333,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
@@ -58,4 +59,3 @@ lap,lap_id=16386,Validity,compound_domain,INVALID_VALUE,compound must belong to 
 lap,lap_id=16387,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16388,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16389,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
-lap,lap_id=16390,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow

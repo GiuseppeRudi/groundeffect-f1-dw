@@ -389,6 +389,15 @@ Here is the aggregated complete data quality input:
       },
       {
         "table_name": "lap",
+        "row_identifier": "lap_id=16330",
+        "dimension": "Validity",
+        "check_id": "compound_domain",
+        "issue_code": "INVALID_VALUE",
+        "issue_description": "compound must belong to the expected tyre compound domain when present.",
+        "severity": "yellow"
+      },
+      {
+        "table_name": "lap",
         "row_identifier": "lap_id=16331",
         "dimension": "Validity",
         "check_id": "compound_domain",
@@ -638,15 +647,6 @@ Here is the aggregated complete data quality input:
         "issue_code": "INVALID_VALUE",
         "issue_description": "compound must belong to the expected tyre compound domain when present.",
         "severity": "yellow"
-      },
-      {
-        "table_name": "lap",
-        "row_identifier": "lap_id=16359",
-        "dimension": "Validity",
-        "check_id": "compound_domain",
-        "issue_code": "INVALID_VALUE",
-        "issue_description": "compound must belong to the expected tyre compound domain when present.",
-        "severity": "yellow"
       }
     ],
     "referential_integrity_issues": []
@@ -656,15 +656,15 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "lap_time_ms",
-        "total_rows": 61207,
-        "missing_count": 5370,
-        "missing_percentage": 0.087735,
+        "total_rows": 61205,
+        "missing_count": 5368,
+        "missing_percentage": 0.087705,
         "explained_null_count": 0,
-        "suspicious_null_count": 5370,
+        "suspicious_null_count": 5368,
         "main_missing_class": "SUSPICIOUS_NULL",
         "main_missing_information_area": "LAP_TIME_INFORMATION",
         "classification_information_count": 0,
-        "lap_time_information_count": 5370,
+        "lap_time_information_count": 5368,
         "none_count": 0,
         "pit_information_count": 0,
         "qualifying_information_count": 0,
@@ -678,11 +678,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "sector1_time_ms",
-        "total_rows": 61207,
-        "missing_count": 4255,
-        "missing_percentage": 0.069518,
+        "total_rows": 61205,
+        "missing_count": 4253,
+        "missing_percentage": 0.069488,
         "explained_null_count": 0,
-        "suspicious_null_count": 4255,
+        "suspicious_null_count": 4253,
         "main_missing_class": "SUSPICIOUS_NULL",
         "main_missing_information_area": "SECTOR_INFORMATION",
         "classification_information_count": 0,
@@ -691,7 +691,7 @@ Here is the aggregated complete data quality input:
         "pit_information_count": 0,
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
-        "sector_information_count": 4255,
+        "sector_information_count": 4253,
         "speed_information_count": 0,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
@@ -700,7 +700,7 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "tyre_life",
-        "total_rows": 61207,
+        "total_rows": 61205,
         "missing_count": 520,
         "missing_percentage": 0.008496,
         "explained_null_count": 0,
@@ -744,11 +744,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "sector2_time_ms",
-        "total_rows": 61207,
-        "missing_count": 337,
-        "missing_percentage": 0.005506,
+        "total_rows": 61205,
+        "missing_count": 335,
+        "missing_percentage": 0.005473,
         "explained_null_count": 0,
-        "suspicious_null_count": 337,
+        "suspicious_null_count": 335,
         "main_missing_class": "SUSPICIOUS_NULL",
         "main_missing_information_area": "SECTOR_INFORMATION",
         "classification_information_count": 0,
@@ -757,7 +757,7 @@ Here is the aggregated complete data quality input:
         "pit_information_count": 0,
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
-        "sector_information_count": 337,
+        "sector_information_count": 335,
         "speed_information_count": 0,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
@@ -766,7 +766,7 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "compound",
-        "total_rows": 61207,
+        "total_rows": 61205,
         "missing_count": 334,
         "missing_percentage": 0.005457,
         "explained_null_count": 0,
@@ -788,11 +788,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "speed_i2",
-        "total_rows": 61207,
-        "missing_count": 301,
-        "missing_percentage": 0.004918,
+        "total_rows": 61205,
+        "missing_count": 299,
+        "missing_percentage": 0.004885,
         "explained_null_count": 0,
-        "suspicious_null_count": 301,
+        "suspicious_null_count": 299,
         "main_missing_class": "SUSPICIOUS_NULL",
         "main_missing_information_area": "SPEED_INFORMATION",
         "classification_information_count": 0,
@@ -802,7 +802,7 @@ Here is the aggregated complete data quality input:
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
         "sector_information_count": 0,
-        "speed_information_count": 301,
+        "speed_information_count": 299,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
         "weather_information_count": 0
@@ -810,11 +810,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "sector3_time_ms",
-        "total_rows": 61207,
-        "missing_count": 1142,
-        "missing_percentage": 0.018658,
+        "total_rows": 61205,
+        "missing_count": 1140,
+        "missing_percentage": 0.018626,
         "explained_null_count": 1046,
-        "suspicious_null_count": 96,
+        "suspicious_null_count": 94,
         "main_missing_class": "EXPLAINED_NULL",
         "main_missing_information_area": "SECTOR_INFORMATION",
         "classification_information_count": 0,
@@ -823,7 +823,7 @@ Here is the aggregated complete data quality input:
         "pit_information_count": 0,
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
-        "sector_information_count": 1142,
+        "sector_information_count": 1140,
         "speed_information_count": 0,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
@@ -832,11 +832,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "speed_fl",
-        "total_rows": 61207,
-        "missing_count": 5536,
-        "missing_percentage": 0.090447,
+        "total_rows": 61205,
+        "missing_count": 5534,
+        "missing_percentage": 0.090417,
         "explained_null_count": 5467,
-        "suspicious_null_count": 69,
+        "suspicious_null_count": 67,
         "main_missing_class": "EXPLAINED_NULL",
         "main_missing_information_area": "SPEED_INFORMATION",
         "classification_information_count": 0,
@@ -846,7 +846,7 @@ Here is the aggregated complete data quality input:
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
         "sector_information_count": 0,
-        "speed_information_count": 5536,
+        "speed_information_count": 5534,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
         "weather_information_count": 0
@@ -854,11 +854,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "speed_st",
-        "total_rows": 61207,
-        "missing_count": 410,
-        "missing_percentage": 0.006699,
+        "total_rows": 61205,
+        "missing_count": 408,
+        "missing_percentage": 0.006666,
         "explained_null_count": 341,
-        "suspicious_null_count": 69,
+        "suspicious_null_count": 67,
         "main_missing_class": "EXPLAINED_NULL",
         "main_missing_information_area": "SPEED_INFORMATION",
         "classification_information_count": 0,
@@ -868,7 +868,7 @@ Here is the aggregated complete data quality input:
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
         "sector_information_count": 0,
-        "speed_information_count": 410,
+        "speed_information_count": 408,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
         "weather_information_count": 0
@@ -876,11 +876,11 @@ Here is the aggregated complete data quality input:
       {
         "table_name": "lap",
         "column_name": "speed_i1",
-        "total_rows": 61207,
-        "missing_count": 167,
-        "missing_percentage": 0.002728,
+        "total_rows": 61205,
+        "missing_count": 165,
+        "missing_percentage": 0.002696,
         "explained_null_count": 98,
-        "suspicious_null_count": 69,
+        "suspicious_null_count": 67,
         "main_missing_class": "EXPLAINED_NULL",
         "main_missing_information_area": "SPEED_INFORMATION",
         "classification_information_count": 0,
@@ -890,7 +890,7 @@ Here is the aggregated complete data quality input:
         "qualifying_information_count": 0,
         "race_context_information_count": 0,
         "sector_information_count": 0,
-        "speed_information_count": 167,
+        "speed_information_count": 165,
         "track_status_information_count": 0,
         "tyre_information_count": 0,
         "weather_information_count": 0
@@ -1009,8 +1009,8 @@ Here is the aggregated complete data quality input:
     "missing_by_table": [
       {
         "table_name": "lap",
-        "missing_count": 18372,
-        "suspicious_null_count": 11420,
+        "missing_count": 18356,
+        "suspicious_null_count": 11404,
         "explained_null_count": 6952
       },
       {
@@ -1023,15 +1023,15 @@ Here is the aggregated complete data quality input:
     "missing_by_information_area": [
       {
         "missing_information_area": "SPEED_INFORMATION",
-        "missing_count": 6414
+        "missing_count": 6406
       },
       {
         "missing_information_area": "SECTOR_INFORMATION",
-        "missing_count": 5734
+        "missing_count": 5728
       },
       {
         "missing_information_area": "LAP_TIME_INFORMATION",
-        "missing_count": 5370
+        "missing_count": 5368
       },
       {
         "missing_information_area": "TYRE_INFORMATION",
@@ -1053,11 +1053,11 @@ Here is the aggregated complete data quality input:
     "missing_by_severity": [
       {
         "severity": "yellow",
-        "num_flags": 12534
+        "num_flags": 12520
       },
       {
         "severity": "red",
-        "num_flags": 6260
+        "num_flags": 6258
       }
     ],
     "critical_missing_patterns": [
@@ -1067,7 +1067,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "LAP_TIME_INFORMATION",
         "severity": "red",
-        "num_flags": 5370
+        "num_flags": 5368
       },
       {
         "table_name": "lap",
@@ -1131,7 +1131,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SECTOR_INFORMATION",
         "severity": "yellow",
-        "num_flags": 4255
+        "num_flags": 4253
       },
       {
         "table_name": "lap",
@@ -1163,7 +1163,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SECTOR_INFORMATION",
         "severity": "yellow",
-        "num_flags": 337
+        "num_flags": 335
       },
       {
         "table_name": "lap",
@@ -1171,7 +1171,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SPEED_INFORMATION",
         "severity": "yellow",
-        "num_flags": 301
+        "num_flags": 299
       },
       {
         "table_name": "lap",
@@ -1187,7 +1187,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SECTOR_INFORMATION",
         "severity": "yellow",
-        "num_flags": 96
+        "num_flags": 94
       },
       {
         "table_name": "lap",
@@ -1195,7 +1195,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SPEED_INFORMATION",
         "severity": "yellow",
-        "num_flags": 69
+        "num_flags": 67
       },
       {
         "table_name": "lap",
@@ -1203,7 +1203,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SPEED_INFORMATION",
         "severity": "yellow",
-        "num_flags": 69
+        "num_flags": 67
       },
       {
         "table_name": "lap",
@@ -1211,7 +1211,7 @@ Here is the aggregated complete data quality input:
         "missing_class": "SUSPICIOUS_NULL",
         "missing_information_area": "SPEED_INFORMATION",
         "severity": "yellow",
-        "num_flags": 69
+        "num_flags": 67
       },
       {
         "table_name": "result",
@@ -1495,10 +1495,10 @@ Here is the aggregated complete data quality input:
       }
     ],
     "num_missing_summary_rows": 16,
-    "total_missing_values": 18794,
+    "total_missing_values": 18778,
     "total_explained_nulls": 6952,
-    "total_suspicious_nulls": 11842,
-    "num_missing_row_flags": 18794
+    "total_suspicious_nulls": 11826,
+    "num_missing_row_flags": 18778
   },
   "focused_outlier_detection": {
     "summary_rows": [

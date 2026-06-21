@@ -4,7 +4,7 @@ general_dqa,compound_domain,,,,SET_NULL,60
 general_dqa,natural_key_1_unique,,,,DROP_ROW,9
 general_dqa,result_required_structural_columns,,,,DROP_ROW,1
 missing_values,,CLASSIFICATION_INFORMATION,,,DROP_ROW,2
-missing_values,,LAP_TIME_INFORMATION,,,DROP_ROW,5370
+missing_values,,LAP_TIME_INFORMATION,,,DROP_ROW,5368
 missing_values,,QUALIFYING_INFORMATION,has_qualifying_information_issue,,ADD_FLAG,30
 missing_values,,RACE_CONTEXT_INFORMATION,has_race_context_information_issue,,ADD_FLAG,382
 missing_values,,SECTOR_INFORMATION,has_sector_information_issue,,ADD_FLAG,880

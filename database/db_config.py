@@ -13,8 +13,8 @@ from sqlalchemy.engine import Engine
 # ============================================================
 
 DATABASE_URL = os.getenv(
-    "F1_PROJECT_DATABASE_URL",
-    "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project",
+    "GROUND_EFFECT_DW_DATABASE_URL",
+    "postgresql+psycopg://postgres:rudi@localhost:5432/ground_effect_dw",
 )
 
 

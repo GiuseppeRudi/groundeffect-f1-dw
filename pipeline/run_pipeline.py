@@ -28,7 +28,7 @@ def load_yaml_config(config_path: Path) -> dict[str, Any]:
     except ModuleNotFoundError as exc:
         raise RuntimeError(
             "PyYAML is required to read pipeline_steps.yaml. "
-            "Install it with: pip install pyyaml"
+            "Install the Conda environment with: conda env create -f environment.yml"
         ) from exc
 
     if not config_path.exists():

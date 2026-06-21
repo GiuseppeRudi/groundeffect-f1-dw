@@ -1,4 +1,4 @@
-# F1 Data Warehouse Project - Environment Setup
+# Ground Effect DW Project - Environment Setup
 
 This project builds a Formula 1 Data Warehouse starting from FastF1 and Ergast/Jolpica data.
 
@@ -9,7 +9,7 @@ The workflow extracts raw Formula 1 data, re-engineers them into reconciled CSV 
 ## Project structure
 
 ```text
-F1_DW/
+ground_effect-dw/
 │
 ├── data/
 │   ├── external/              # Manual input data, such as season.csv and circuit.csv
@@ -51,36 +51,22 @@ F1_DW/
 It is recommended to use a dedicated Conda environment.
 
 ```bash
-conda creatE -n f1_dw python=3.11 -y
-conda activate f1_dw
+conda env create -f environment.yml
+conda activate ground_effect-dw
 ```
 
-Then upgrade `pip`:
-
-```bash
-python -m pip install --upgrade pip
-```
+The `environment.yml` file is the single source for Python and package dependencies.
 
 ---
 
-## 2. Install required packages
-
-From the project root:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 3. PostgreSQL prerequisites
+## 2. PostgreSQL prerequisites
 
 Before running the loading scripts, make sure PostgreSQL is installed and that the target databases exist.
 
 Example:
 
 ```sql
-CREATE DATABASE f1_project;
+CREATE DATABASE ground_effect_dw;
 ```
 
 The database connection string must be configured inside the Python scripts.
@@ -88,14 +74,14 @@ The database connection string must be configured inside the Python scripts.
 Example:
 
 ```python
-DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/f1_project"
+DATABASE_URL = "postgresql+psycopg://postgres:rudi@localhost:5432/ground_effect_dw"
 ```
 
 Update username, password, host, port and database name according to your local setup.
 
 ---
 
-## 4. Pipeline execution modes
+## 3. Pipeline execution modes
 
 The project can be executed in two ways:
 
@@ -110,7 +96,7 @@ etl_pipeline/run_pipeline.py
 
 ---
 
-## 5. Step-by-step execution
+## 4. Step-by-step execution
 
 ### Step 1 - Extraction and re-engineering
 
@@ -161,7 +147,7 @@ data/reconciled_csv/
 Output:
 
 ```text
-PostgreSQL database: f1_project
+PostgreSQL database: ground_effect_dw
 ```
 
 ---
@@ -241,7 +227,7 @@ python etl_pipeline/07_load_data_warehouse/load_data_warehouse.py
 Output:
 
 ```text
-PostgreSQL database: f1_dw
+PostgreSQL database: ground_effect_dw
 ```
 
 ---
@@ -262,7 +248,7 @@ data/warehouse_exports/tableau_csv/
 
 ---
 
-## 6. Run the full pipeline automatically
+## 5. Run the full pipeline automatically
 
 The whole workflow can be executed with a single command:
 
@@ -301,7 +287,7 @@ python etl_pipeline/run_pipeline.py --start-at 2 --stop-at 5
 
 ---
 
-## 7. Documentation
+## 6. Documentation
 
 Project documentation is stored in:
 
@@ -312,7 +298,7 @@ docs/
 The most important file for evaluation is:
 
 ```text
-docs/final_report/F1_DW_final_report.pdf
+docs/final_report/ground_effect_dw_final_report.pdf
 ```
 
 Detailed support documents are stored in:
@@ -329,7 +315,7 @@ docs/diagrams/
 
 ---
 
-## 8. Database material
+## 7. Database material
 
 The `database/` folder should contain SQL scripts, schema dumps and optional backup files.
 
@@ -350,7 +336,7 @@ The physical PostgreSQL database folder should not be uploaded to GitHub. The da
 
 ---
 
-## 9. Visualization
+## 8. Visualization
 
 The Tableau project and dashboard material are stored in:
 
@@ -366,7 +352,7 @@ data/warehouse_exports/tableau_csv/
 
 ---
 
-## 10. Notes
+## 9. Notes
 
 The FastF1 cache folder must not be uploaded to GitHub.
 

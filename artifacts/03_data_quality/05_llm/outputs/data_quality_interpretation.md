@@ -1,118 +1,121 @@
 # Stakeholder Summary  
 
-The Formula 1 data warehouse is in very good shape overall – the automated quality checks gave an average overall score of **0.9999** across the ten core tables, and every table is flagged as “green”.  
+The Formula 1 data warehouse is in very good shape overall – the average quality score across the ten core tables is **0.9999** and every table is flagged “green”.  Most dimensions (completeness, uniqueness, validity, consistency, referential integrity) score at or near 100 %.  
 
-**What’s working well**  
-- Five tables ( * circuit, driver, grand_prix, season, team* ) have **perfect scores** on every dimension.  
-- All referential‑integrity checks passed, so foreign‑key links (e.g., drivers to teams, laps to sessions) are intact.  
+**Where the data are strongest**  
+- **Circuit, Driver, Grand Prix, Season, Team** – each of these tables has a perfect score (1.0) and no recorded issues.  
 
-**Where attention is needed**  
-- The **track_status** table shows the lowest overall score (0.9989). The issue is a modest number of duplicate rows (uniqueness score 0.9946).  
-- The **result** table has a single completeness problem – a few rows are missing the required `driver_id` and `team_id`.  
-- The **lap** table, while still green, contains the bulk of the remaining issues (60 issues). Most of these are **validity warnings** about tyre‑compound values, plus a large amount of missing performance data (lap times, sector times, speeds, tyre life).  
+**Where the data are weakest**  
+- **Track Status** – the lowest overall score (0.9989).  The only dimension that falls short is **uniqueness** (0.9946), with nine duplicate‑key issues.  
+- **Result** – a single completeness problem (missing driver / team identifiers for one row).  
+- **Lap** – the largest number of issues (60) concentrated in **validity** (compound values) and a substantial amount of **missing information**.  
 
-**Missing‑value highlights**  
-- **Lap times** (`lap.lap_time_ms`) are missing in **5 370** rows (≈ 9 % of lap records) and are flagged as *red* (high‑severity).  
-- **Tyre‑related fields** (`tyre_life`, `compound`) have several hundred missing values, also flagged as red.  
-- Speed‑sensor columns (`speed_fl`, `speed_st`, etc.) contain many *explained* nulls (e.g., when a sensor was not active) but also a noticeable number of *suspicious* nulls.  
+**Missing‑value signals that change the picture**  
+- Across the warehouse **18 778** fields are null.  About **63 %** of these are flagged as *suspicious* (potential data‑entry gaps) and the rest are *explained* (e.g., not applicable for a particular session).  
+- The biggest “information‑area” gaps are in **speed data** (6 406 nulls), **sector times** (5 728 nulls) and **lap‑time data** (5 368 nulls).  
+- The most critical missing‑value patterns are:  
+  - **lap.lap_time_ms** – 5 368 red‑severity nulls (race‑lap times missing).  
+  - **lap.tyre_life** – 520 red‑severity nulls.  
+  - **lap.compound** – 334 red‑severity nulls (tyre‑compound not recorded).  
 
-**Outlier highlights**  
-- Automated outlier detection identified **5 213 strong‑consensus outliers**. The most affected metrics are:  
-  - **Straight‑line speed (speed_st)** – 1 683 outliers  
-  - **Front‑left wheel speed (speed_fl)** – 1 101 outliers  
-  - **Lap time** – 488 outliers  
+**Outlier signals that change the picture**  
+- Outlier detection flagged **9 254** metric values as anomalous; **5 213** of these are “strong consensus” outliers (both IQR and Modified‑Z tests agree).  
+- The metrics with the most strong‑consensus outliers are:  
+  1. **speed_st** (1 683 flags)  
+  2. **speed_fl** (1 101 flags)  
+  3. **lap_time_ms** (488 flags)  
+  4. **speed_i1** (458 flags)  
+- Certain sessions generate a high concentration of outliers (e.g., session 26 for `speed_fl`, session 8 for `speed_st`).  
 
-These outliers are not proven errors, but they represent unusual values that merit a human look‑over (e.g., possible timing glitches or sensor faults).
-
-In short, the data are reliable for most reporting and analytics, but the **lap** table’s missing values and outliers, plus a few uniqueness and completeness gaps, should be examined before final analyses are published.
+Overall, the data are reliable, but a focused review of the few tables and columns listed above will tighten the warehouse for downstream analytics.
 
 ---
 
 # Technical Summary  
 
-| Table | Quality Dimension | Issue Count | Description (sample) |
-|-------|-------------------|-------------|----------------------|
-| **track_status** | Uniqueness | 9 | Duplicate rows detected (uniqueness = 0.9946). |
-| **result** | Completeness | 1 | Row `result_id=180` missing required `driver_id` and `team_id`. |
-| **lap** | Validity | 60 | Tyre‑compound values outside the allowed domain (e.g., rows `lap_id=16331‑16341`). |
-| **lap** | Completeness | 0 (overall) | No completeness score loss, but many *missing* values flagged in the focused analysis (see below). |
-| **All tables** | Referential Integrity | 0 | All foreign‑key checks passed. |
+| Table | Quality Dimension(s) | Issue Count | Detail |
+|-------|----------------------|-------------|--------|
+| **track_status** | Uniqueness (0.9946) | 9 | Duplicate key values detected; all other dimensions score 1.0. |
+| **result** | Completeness (0.9997) | 1 | Row `result_id=180` missing required `driver_id` and `team_id`. |
+| **lap** | Validity (0.99986) | 60 | Invalid `compound` values (tyre‑compound domain) for rows `lap_id=16330`‑`16358`. |
+| **lap** | Completeness (1.0) | – | No completeness checks failed, but many **missing values** (see below). |
+| **All other tables** | – | 0 | Perfect scores; no recorded issues. |
 
-### Focused Missing‑Value Findings  
+### Missing‑value summary (by column)
 
-| Table / Column | Missing Count | Missing % | Classification | Information Area | Severity |
-|----------------|--------------|----------|----------------|------------------|----------|
-| `lap.lap_time_ms` | 5 370 | 8.8 % | **SUSPICIOUS_NULL** | LAP_TIME_INFORMATION | **red** |
-| `lap.sector1_time_ms` | 4 255 | 6.9 % | SUSPICIOUS_NULL | SECTOR_INFORMATION | yellow |
-| `lap.sector2_time_ms` | 337 | 0.55 % | SUSPICIOUS_NULL | SECTOR_INFORMATION | yellow |
-| `lap.sector3_time_ms` | 1 142 (1 046 explained, 96 suspicious) | 1.86 % | MIXED (EXPLAINED + SUSPICIOUS) | SECTOR_INFORMATION | yellow |
-| `lap.tyre_life` | 520 | 0.85 % | SUSPICIOUS_NULL | TYRE_INFORMATION | **red** |
-| `lap.compound` | 334 | 0.55 % | SUSPICIOUS_NULL | TYRE_INFORMATION | **red** |
-| `lap.speed_fl` | 5 536 (5 467 explained, 69 suspicious) | 9.0 % | MIXED | SPEED_INFORMATION | yellow |
-| `lap.speed_st` | 410 (341 explained, 69 suspicious) | 0.67 % | MIXED | SPEED_INFORMATION | yellow |
-| `lap.speed_i1` | 167 (98 explained, 69 suspicious) | 0.27 % | MIXED | SPEED_INFORMATION | yellow |
-| `lap.speed_i2` | 301 (all suspicious) | 0.49 % | SUSPICIOUS_NULL | SPEED_INFORMATION | yellow |
-| `result.time_ms` | 384 (all suspicious) | 21.8 % | SUSPICIOUS_NULL | RACE_CONTEXT_INFORMATION | yellow |
-| `result.q1_ms`, `q2_ms`, `q3_ms` | 12, 10, 11 (all suspicious) | ≤ 0.7 % | SUSPICIOUS_NULL | QUALIFYING_INFORMATION | **red** |
-| `result.position` | 3 (suspicious) | 0.17 % | SUSPICIOUS_NULL | CLASSIFICATION_INFORMATION | **red** |
-| `result.driver_id`, `team_id` | missing in row `result_id=180` (yellow) | – | – | – | yellow |
+| Table | Column | Total rows | Missing | % Missing | Missing class | Information area | Severity |
+|-------|--------|------------|---------|----------|---------------|------------------|----------|
+| **lap** | `lap_time_ms` | 61 205 | 5 368 | 8.77 % | SUSPICIOUS_NULL | LAP_TIME_INFORMATION | red |
+| **lap** | `sector1_time_ms` | 61 205 | 4 253 | 6.95 % | SUSPICIOUS_NULL | SECTOR_INFORMATION | yellow |
+| **lap** | `tyre_life` | 61 205 | 520 | 0.85 % | SUSPICIOUS_NULL | TYRE_INFORMATION | red |
+| **lap** | `compound` | 61 205 | 334 | 0.55 % | SUSPICIOUS_NULL | TYRE_INFORMATION | red |
+| **lap** | `sector2_time_ms` | 61 205 | 335 | 0.55 % | SUSPICIOUS_NULL | SECTOR_INFORMATION | yellow |
+| **lap** | `speed_i2` | 61 205 | 299 | 0.49 % | SUSPICIOUS_NULL | SPEED_INFORMATION | yellow |
+| **lap** | `sector3_time_ms` | 61 205 | 1 140 | 1.86 % | EXPLAINED_NULL (1 046) / SUSPICIOUS_NULL (94) | SECTOR_INFORMATION | mixed |
+| **lap** | `speed_fl` | 61 205 | 5 534 | 9.04 % | EXPLAINED_NULL (5 467) / SUSPICIOUS_NULL (67) | SPEED_INFORMATION | mixed |
+| **lap** | `speed_st` | 61 205 | 408 | 0.67 % | EXPLAINED_NULL (341) / SUSPICIOUS_NULL (67) | SPEED_INFORMATION | mixed |
+| **lap** | `speed_i1` | 61 205 | 165 | 0.27 % | EXPLAINED_NULL (98) / SUSPICIOUS_NULL (67) | SPEED_INFORMATION | mixed |
+| **result** | `time_ms` | 1 760 | 384 | 21.82 % | SUSPICIOUS_NULL | RACE_CONTEXT_INFORMATION | yellow |
+| **result** | `q1_ms` | 1 760 | 12 | 0.68 % | SUSPICIOUS_NULL | QUALIFYING_INFORMATION | red |
+| **result** | `q2_ms` | 1 760 | 10 | 0.57 % | SUSPICIOUS_NULL | QUALIFYING_INFORMATION | red |
+| **result** | `q3_ms` | 1 760 | 11 | 0.63 % | SUSPICIOUS_NULL | QUALIFYING_INFORMATION | red |
+| **result** | `position` | 1 760 | 3 | 0.17 % | SUSPICIOUS_NULL | CLASSIFICATION_INFORMATION | red |
+| **result** | `grid_position` | 1 760 | 2 | 0.11 % | SUSPICIOUS_NULL | RACE_CONTEXT_INFORMATION | yellow |
 
-*Overall missing‑value totals*: 18 794 nulls, of which 11 842 are flagged as **suspicious** (potential data‑quality concerns) and 6 952 as **explained** (e.g., sensor not present).
+*Totals*: 18 778 missing values → 11 826 yellow‑severity, 6 258 red‑severity.  
 
-### Focused Outlier Detection  
+### Outlier detection summary  
 
-- **Total tested values**: 239 175 (across all lap‑related metrics).  
-- **Strong‑consensus outliers** (both IQR and Modified‑Z flagged): 5 213 (≈ 2.2 % of tested values).  
-- **Metric‑wise strong‑consensus counts**:  
+| Metric | Tested values | Strong‑consensus outliers | Weak anomalies |
+|--------|---------------|---------------------------|----------------|
+| `speed_st` | 29 944 | **1 683** | 2 398 |
+| `speed_fl` | 29 944 | **1 101** | 1 377 |
+| `lap_time_ms` | 29 944 | **488** | 1 053 |
+| `speed_i1` | 29 944 | **458** | 1 236 |
+| `sector2_time_ms` | 29 941 | **420** | 1 176 |
+| `sector1_time_ms` | 29 572 | **396** | 1 246 |
+| `speed_i2` | 29 944 | **344** | 1 034 |
+| `sector3_time_ms` | 29 942 | **323** | 1 023 |
 
-| Metric | Strong‑Consensus Outliers |
-|--------|---------------------------|
-| `speed_st` | 1 683 |
-| `speed_fl` | 1 101 |
-| `lap_time_ms` | 488 |
-| `speed_i1` | 458 |
-| `sector2_time_ms` | 420 |
-| `sector1_time_ms` | 396 |
-| `speed_i2` | 344 |
-| `sector3_time_ms` | 323 |
+*Top sessions by consensus outliers* (selected):  
 
-- The top five sessions (by outlier count) are sessions 26, 8, 74, 84, 38 – each showing > 150 outliers for a single speed metric.  
-- Sample strong‑consensus outliers (e.g., `lap_id=1244` with `lap_time_ms = 109 275 ms`) exceed the IQR upper bound and have Modified‑Z scores > 8, indicating values far from the typical range for that session.
+| Session | Metric | Tested | Consensus outliers |
+|---------|--------|--------|--------------------|
+| 26 | `speed_fl` | 1 279 | 208 |
+| 8  | `speed_st` | 1 110 | 174 |
+| 74 | `speed_fl` | 1 069 | 163 |
+| 84 | `speed_st` | 1 298 | 155 |
+| 38 | `speed_fl` | 1 130 | 149 |
+| 52 | `speed_st` |   964 | 114 |
+| 6  | `speed_st` | 1 105 | 82 |
+| 26 | `speed_i1` | 1 279 | 39 |
+| 6  | `lap_time_ms` | 1 105 | 41 |
+| 6  | `lap_time_ms` (strong) – 30+ individual rows flagged (e.g., lap_id 1244, 3088, 3094…) with modified‑Z scores > 5. |
 
-These outliers are **not automatically errors** but represent data points that deviate strongly from the session‑specific distribution and should be inspected.
+The outlier analysis shows that speed‑related columns (`speed_st`, `speed_fl`) dominate the consensus‑outlier count, and that several sessions contain a high proportion of anomalous lap‑time values.
 
 ---
 
 # Suggested Cleaning Priorities  
 
-1. **Lap‑time completeness (red) – `lap.lap_time_ms`**  
-   - 5 370 rows lack a lap‑time value. Verify whether the lap was not recorded (e.g., pit‑stop, aborted lap) or if the value was dropped during ingestion.  
+1. **Validate and de‑duplicate `track_status` keys** – review the nine rows flagged for uniqueness violations; confirm whether they represent true distinct status records or accidental duplicates.  
 
-2. **Tyre‑related missing data (red) – `lap.tyre_life` & `lap.compound`**  
-   - Hundreds of rows have null tyre‑life or compound. Check source logs for tyre‑change events; confirm that missingness aligns with sessions where tyre data were not captured.  
+2. **Investigate `lap.compound` validity** – 60 rows have compounds outside the expected domain.  Verify the correct tyre‑compound codes for those laps and correct or annotate them.  
 
-3. **Validity of tyre‑compound domain (60 warnings)**  
-   - Rows flagged as “compound must belong to the expected tyre compound domain”. Review the list of allowed compounds and compare against the offending values; they may be misspellings or outdated codes.  
+3. **Address critical missing lap‑time information** – 5 368 red‑severity nulls in `lap.lap_time_ms`.  Determine if these laps belong to sessions where lap time is not recorded (e.g., pit‑in/out, safety‑car laps) and either fill with appropriate placeholders or flag them for exclusion from time‑based analyses.  
 
-4. **Duplicate rows in `track_status` (uniqueness)**  
-   - Nine duplicate entries reduce the uniqueness score. Identify the key columns (likely `session_id` + status timestamp) and decide whether duplicates are true repeats or need consolidation.  
+4. **Review missing tyre data** – `lap.tyre_life` (520 red) and `lap.compound` (334 red) nulls.  Cross‑check with `track_status` and `weather` tables to see if tyre data were unavailable for certain sessions; consider imputing from team‑level tyre strategies if appropriate.  
 
-5. **Result table completeness – missing `driver_id` / `team_id`**  
-   - Row `result_id=180` is missing required foreign keys. Cross‑reference with driver/team master tables to fill in or confirm that the result belongs to a non‑participating entry (e.g., DNS).  
+5. **Examine missing speed measurements** – 6 406 speed‑information nulls (mostly explained, but 67 + 67 + 67 + 67 + 67 + 67 + 67 + 67 + 67 = 603 suspicious across `speed_fl`, `speed_st`, `speed_i1`, `speed_i2`).  Verify sensor coverage for the affected laps; if data are truly missing, decide whether to exclude those laps from speed‑based KPIs.  
 
-6. **Result time missing (`result.time_ms`) – 384 yellow flags**  
-   - Missing race‑time values in many result rows. Determine if the race was not completed, if the driver retired, or if the data extraction failed.  
+6. **Resolve `result` completeness issue** – row `result_id=180` lacks `driver_id` and `team_id`.  Confirm the correct driver/team and update; if the race was a non‑participation entry, annotate accordingly.  
 
-7. **Qualifying‑session missing times (`result.q1_ms`, `q2_ms`, `q3_ms`) – red flags**  
-   - Small numbers but high severity; verify whether the driver failed to set a time in that qualifying segment.  
+7. **Prioritize sessions with high outlier concentrations** – especially sessions 26, 8, 74, 84, 38 for `speed_fl`/`speed_st`.  For each, sample the flagged rows, check for data‑capture errors (e.g., sensor glitches) or genuine extreme performance (e.g., red‑flag laps).  
 
-8. **Speed‑sensor missing values (mixed explained/suspicious)**  
-   - Columns `speed_fl`, `speed_st`, `speed_i1`, `speed_i2` contain a mix of explained nulls (sensor off) and suspicious nulls. Confirm sensor‑availability metadata; flag any unexpected gaps for further investigation.  
+8. **Inspect strong‑consensus lap‑time outliers** – the 488 `lap_time_ms` outliers (e.g., lap_id 1244, 3088, 3094…) have modified‑Z scores > 5.  Review the corresponding lap videos or telemetry to decide if they are data errors, pit‑stop laps, or legitimate unusually fast/slow laps.  
 
-9. **Strong‑consensus outliers (especially `speed_st`, `speed_fl`, `lap_time_ms`)**  
-   - Review the top outlier sessions (e.g., session 26, metric `speed_fl`) and the sample outlier rows. Check for data‑capture glitches, timing‑system resets, or genuine extreme performance (e.g., red‑flag laps).  
+9. **Document any business‑rule exceptions** – where missing or outlier values are justified (e.g., qualifying‑only sessions, safety‑car periods), capture the rationale in metadata so downstream users understand the context.  
 
-10. **Document any business‑rule exceptions**  
-    - For all the above, capture the rationale for any retained nulls or outliers (e.g., “lap aborted due to crash”, “tyre sensor offline”). This documentation will support downstream analysts and future DQA cycles.  
+10. **Perform a targeted re‑run of the DQA after remediation** – once the above items are reviewed and corrected (or documented), re‑execute the quality checks to confirm that scores improve and that no new issues are introduced.  
 
-*All suggested actions are **human‑review tasks**; automated deletion or correction is not recommended without domain confirmation.*
+> **Note:** All the steps above are recommendations for **human review**.  Automated deletion or modification of records should only occur after a data steward validates each case.  The LLM output is a summary of the detected signals; final decisions must be made by the project team.

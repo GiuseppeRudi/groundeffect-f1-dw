@@ -1,5 +1,6 @@
 table_name,row_identifier,dimension,check_id,issue_code,issue_description,severity
 result,result_id=180,Completeness,result_required_structural_columns,MISSING_REQUIRED_VALUE,"Missing required values in columns: ['driver_id', 'team_id']",yellow
+lap,lap_id=16330,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16331,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16332,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16333,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
@@ -59,7 +60,6 @@ lap,lap_id=16386,Validity,compound_domain,INVALID_VALUE,compound must belong to 
 lap,lap_id=16387,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16388,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 lap,lap_id=16389,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
-lap,lap_id=16390,Validity,compound_domain,INVALID_VALUE,compound must belong to the expected tyre compound domain when present.,yellow
 track_status,track_status_id=131,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
 track_status,track_status_id=132,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red
 track_status,track_status_id=144,Uniqueness,natural_key_1_unique,DUPLICATED_KEY,"Key ['session_id', 'time_ms'] is duplicated among complete key values.",red

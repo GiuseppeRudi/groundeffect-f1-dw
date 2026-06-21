@@ -32,20 +32,20 @@ result,Validity,result_grid_position_non_negative,grid_position must be greater 
 result,Referential Integrity,fk_result_session_id_to_session_session_id,result.session_id must reference session.session_id.,1760,0,1760,1.0,green
 result,Referential Integrity,fk_result_driver_id_to_driver_driver_id,result.driver_id must reference driver.driver_id.,1759,0,1759,1.0,green
 result,Referential Integrity,fk_result_team_id_to_team_team_id,result.team_id must reference team.team_id.,1759,0,1759,1.0,green
-lap,Completeness,lap_required_structural_columns,Structural lap identifiers and timeline attribute must be present.,367242,0,367242,1.0,green
-lap,Uniqueness,primary_key_unique,Primary key ['lap_id'] must be unique among complete key values.,61207,0,61207,1.0,green
-lap,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'driver_id', 'lap_number'] should be unique among complete key values.",61207,0,61207,1.0,green
-lap,Validity,lap_number_positive,lap_number must be greater than zero.,61207,0,61207,1.0,green
+lap,Completeness,lap_required_structural_columns,Structural lap identifiers and timeline attribute must be present.,367230,0,367230,1.0,green
+lap,Uniqueness,primary_key_unique,Primary key ['lap_id'] must be unique among complete key values.,61205,0,61205,1.0,green
+lap,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'driver_id', 'lap_number'] should be unique among complete key values.",61205,0,61205,1.0,green
+lap,Validity,lap_number_positive,lap_number must be greater than zero.,61205,0,61205,1.0,green
 lap,Validity,lap_time_positive,lap_time_ms must be positive when present.,55837,0,55837,1.0,green
 lap,Validity,lap_sector_times_positive,Sector times must be positive when present.,61012,0,61012,1.0,green
 lap,Validity,lap_speeds_positive,Speed attributes must be positive when present.,61066,0,61066,1.0,green
-lap,Validity,stint_positive,stint must be positive when present.,61207,0,61207,1.0,green
-lap,Validity,tyre_life_positive,tyre_life must be positive when present.,60687,0,60687,1.0,green
-lap,Validity,compound_domain,compound must belong to the expected tyre compound domain when present.,60813,60,60873,0.999014,green
+lap,Validity,stint_positive,stint must be positive when present.,61205,0,61205,1.0,green
+lap,Validity,tyre_life_positive,tyre_life must be positive when present.,60685,0,60685,1.0,green
+lap,Validity,compound_domain,compound must belong to the expected tyre compound domain when present.,60811,60,60871,0.999014,green
 lap,Consistency,lap_sector_sum_matches_lap_time,"For timed laps with complete sector information, the sum of sector times should be coherent with lap_time_ms.",48995,0,48995,1.0,green
-lap,Referential Integrity,fk_lap_session_id_to_session_session_id,lap.session_id must reference session.session_id.,61207,0,61207,1.0,green
-lap,Referential Integrity,fk_lap_driver_id_to_driver_driver_id,lap.driver_id must reference driver.driver_id.,61207,0,61207,1.0,green
-lap,Referential Integrity,fk_lap_team_id_to_team_team_id,lap.team_id must reference team.team_id.,61207,0,61207,1.0,green
+lap,Referential Integrity,fk_lap_session_id_to_session_session_id,lap.session_id must reference session.session_id.,61205,0,61205,1.0,green
+lap,Referential Integrity,fk_lap_driver_id_to_driver_driver_id,lap.driver_id must reference driver.driver_id.,61205,0,61205,1.0,green
+lap,Referential Integrity,fk_lap_team_id_to_team_team_id,lap.team_id must reference team.team_id.,61205,0,61205,1.0,green
 weather,Completeness,weather_required_columns,"Weather identifier, session timeline, and main weather measures must be present.",78239,0,78239,1.0,green
 weather,Uniqueness,primary_key_unique,Primary key ['weather_id'] must be unique among complete key values.,11177,0,11177,1.0,green
 weather,Uniqueness,natural_key_1_unique,"Natural key ['session_id', 'time_ms'] should be unique among complete key values.",11177,0,11177,1.0,green
