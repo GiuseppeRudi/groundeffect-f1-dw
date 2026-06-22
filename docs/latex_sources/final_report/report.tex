@@ -10,21 +10,13 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{enumitem}
-\usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{multicol}
 \usepackage{tikz}
-
-\hypersetup{
-	colorlinks=true,
-	linkcolor=black,
-	urlcolor=blue,
-	citecolor=black
-}
-
+\usepackage{pdflscape}
 \usepackage{listings}
 
 \lstset{
@@ -37,6 +29,16 @@
 
 
 \usepackage[table]{xcolor}
+
+
+
+\usepackage[
+colorlinks=true,
+linkcolor=blue!60!black,
+urlcolor=blue!60!black,
+citecolor=blue!60!black
+]{hyperref}
+
 
 \definecolor{derivedblue}{HTML}{B2CBFF}
 \definecolor{pruninggreen}{HTML}{73B14C}
@@ -86,6 +88,7 @@
 		after skip=0pt
 	}
 }
+
 
 \newcommand{\customtitle}{%
 	\begin{center}
@@ -141,7 +144,7 @@
 	
 	\noindent\textbf{Document scope.}
 	The report highlights the most relevant decisions of the Formula 1 Data Warehouse pipeline.
-	More detailed documentation for each stage is provided in the project repository.
+	More detailed documentation for each stage is provided in ~\hyperref[sec:repository-material]{ Supplementary Material}.
 
 	
 	\tableofcontents
@@ -154,16 +157,13 @@
 	This comparison is particularly meaningful because the 2022 season introduced a new technical framework, with a stronger emphasis on ground-effect aerodynamics leading to a substantial change in car design philosophy.
 	
 	Within this context, the goal of the project is to analyse how team performance changed across the two seasons and to observe how the new regulations influenced the balance of competitiveness. 
-	The interest is therefore not only in absolute performance, but also in the relative changes that emerged across sessions, circuits, sectors, tyre conditions, and race contexts.
+	The interest is therefore not only in absolute performance, but also in the relative changes that emerged across sessions, circuits, sectors, tyre conditions, and race contexts. This report focuses on the design and engineering choices, while the final visual exploration is developed separately in Tableau.
 	
-	This report focuses on the design and engineering choicesn, while the final visual exploration is developed separately in Tableau.
-	
-	\vspace{2em}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.50\linewidth]{figures/ground_effect.jpg}
-		\caption{Conceptual representation of the 2022 regulatory change in Formula 1 car aerodynamics.}
+		\caption{Conceptual representation of the 2022 regulatory change in car aerodynamics.}
 		\label{fig:f1-regulation-change}
 	\end{figure}
 
@@ -178,7 +178,7 @@
 	\end{quote}
 	
 	This main question is then divided into more specific business questions. 
-	Each of them focuses on a different analytical perspective, so that the final interpretation can be built by combining multiple pieces of evidence:
+	Each of them focuses on a different analytical perspective, so that the final interpretation can be built by combining :
 	
 	\begin{itemize}
 		\item Did the performance differences emerge more clearly in qualifying sessions or race sessions?
@@ -194,7 +194,7 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1\linewidth]{figures/roadmap.pdf}
-		\caption{Project-specific roadmap from Formula 1 data sources to the final Data Warehouse.}
+		\caption{Project-specific roadmap}
 		\label{fig:project-roadmap}
 	\end{figure}
 
@@ -208,7 +208,7 @@
 	\subsection{Source Layer}
 	
 	The project mainly relies on API-based sources to extract structured Formula 1 data. 
-	Additional analytical information not directly available from the APIs was introduced through manually built domain tables, supported by domain knowledge and external descriptive sources. 
+	Additional analytical information was introduced through manually built domain tables, supported by domain knowledge and external descriptive sources. 
 	The source layer is summarized in Table~\ref{tab:sources}.
 
 	\begin{table}[H]
@@ -217,10 +217,10 @@
 		\label{tab:sources}
 		\begin{tabularx}{\linewidth}{p{3.6cm}X}
 			\toprule
-			\textbf{Source} & \textbf{Information extracted or introduced} \\
+			\textbf{Source} & \textbf{Information extracted} \\
 			\toprule
 			FastF1 API 
-			& Event schedule, race weekends, Qualifying and Race sessions, session results, lap-level data, sector times, weather, and track status. \\
+			& Event schedule, race weekends, Qualifying and Race sessions, session results, lap-level data, sector times, weather and track status. \\
 			\midrule
 			Ergast/Jolpica API 
 			& Driver and constructor master data \\
@@ -238,16 +238,15 @@
 	
 	The raw structures extracted from the APIs were not directly suitable for the construction of a reconciled relational database. 
 	They were designed as API outputs and Python data structures, not as stable database relations for analytical use. 
-	For this reason, the re-engineering phase transformed the extracted data into a coherent relational structure with explicit keys, clearer granularities, standardized names, and meaningful links between tables.
+	For this reason, the re-engineering phase transformed the extracted data into a coherent relational structure.
 	
 	Only the most relevant re-engineering decisions are reported in this section. 
-	The complete re-engineered table structures and the complete logical schema are reported in Appendix~\ref{appendix:reengineered-tables} and Appendix~\ref{appendix:logical-schema}.
-	
+
 
 	\subsubsection{Domain Tables}
 	
 	Two domain tables: \texttt{season} and \texttt{circuit} provide the season-level context and the circuit-level technical classification.
-	Their attributes are shown in Figure~\ref{fig:domain-tables}, while the external sources used to populate and validate them are reported in the references.
+	Their attributes are shown in Figure~\ref{fig:domain-tables}, while the external sources used to populate and validate them are reported in the references~\cite{f1calendars,f1standings,formulaTimerCircuits}.
 
 	
 	\begin{figure}[H]
@@ -259,9 +258,9 @@
 	\end{figure}
 	
 
-	
 	\begin{table}[H]
 		\centering
+		\caption{Domain values for circuit and sector categories.}
 		\label{tab:circuit-sector-categories}
 		
 		\begin{minipage}{0.46\linewidth}
@@ -333,19 +332,15 @@
 	
 	\paragraph{Separation of event-level and session-level information.}
 	The raw event schedule returned by FastF1 contains both Grand Prix information and session-related information in the same structure. 
-	This organization is not suitable for a relational schema because it mixes two different semantic levels.
-	
-	For this reason, the raw schedule was split into two relations: \texttt{grand\_prix} and \texttt{session}. 
+	This organization is not suitable for a relational schema because it mixes two different semantic levels. For this reason, the raw schedule was split into two relations: \texttt{grand\_prix} and \texttt{session}. 
 	The \texttt{grand\_prix} table represents the event-level context of a race weekend, while the \texttt{session} table represents the lower-level sessions associated with that event. 
-	This split makes the reconciled schema closer to the real Formula 1 structure: one season contains several Grand Prix weekends, and each Grand Prix contains multiple sessions.
+	This split makes the reconciled schema closer to the real Formula 1 structure: one season contains Grand Prix weekends, and each Grand Prix contains multiple sessions.
 	
 
 	\paragraph{Driver/team integration and redundancy control.}
 	Driver and team identifiers were propagated into the performance-related tables, especially \texttt{lap} and \texttt{result}. 
 	While \texttt{result} already provides the driver and team context at session level, raw lap data did not directly expose the official \texttt{driver\_id} and \texttt{team\_id}. 
-	For this reason, lap records were enriched by matching them with the corresponding session result information.
-	
-	A separate \texttt{driver\_team\_season} association was also considered but not materialized. 
+	For this reason, lap records were enriched by matching them with the corresponding session result information. A separate \texttt{driver\_team\_season} association was also considered but not materialized. 
 	The relationship can still be reconstructed through the existing links:
 	
 	\[
@@ -363,7 +358,7 @@
 	Adding an explicit association table would therefore introduce redundancy without supporting the main analytical goal of the project, which focuses on performance analysis rather than driver-team career reconstruction.
 	
 	\begin{longtable}{p{4.2cm}p{\dimexpr\linewidth-4.2cm-4\tabcolsep\relax}}
-		
+		\caption{Additional re-engineering decisions.}
 		\label{tab:reengineering-summary} \\
 		
 		\toprule
@@ -384,15 +379,15 @@
 		\midrule
 		
 		Surrogate PKs and FKs
-		& Surrogate primary keys were introduced to provide stable row identifiers, while foreign keys were used to make table relationships explicit and enforceable. \\
+		& Surrogate primary keys were introduced to provide stable row identifiers, while foreign keys were used to make table relationships explicit. \\
 		\midrule
 		
 		Time conversion to \texttt{ms}
-		& Time-related values returned by the APIs as timedelta objects were converted into integer milliseconds with the suffix \texttt{\_ms} to simplify numerical comparison. \\
+		& Time-related values returned by the APIs as timedelta were converted into integer milliseconds with the suffix \texttt{\_ms} to simplify numerical comparison. \\
 		\midrule
 		
 		Removal of duplicated descriptors
-		& Repeated driver, team, event, or session descriptors were removed when the same information could be recovered through joins with reference tables. \\
+		& Repeated driver, team, event, or session descriptors were removed when the same info could be recovered through joins with reference tables. \\
 		
 	\end{longtable}
 
@@ -404,7 +399,11 @@
 	\subsubsection{Reconciled Database Overview}
 	
 	The output of the re-engineering phase is the reconciled PostgreSQL schema. 
-	For readability, the E/R diagram in Figure~\ref{fig:reconciled-er-diagram} reports only the most relevant attributes. The complete logical schema is reported in Appendix~\ref{appendix:logical-schema}.
+	For readability, the E/R diagram in Figure~\ref{fig:reconciled-er-diagram} reports only the most relevant attributes. 
+	
+	The complete logical schema is reported in Appendix~\ref{appendix:logical-schema}.
+	
+	\vspace{2em}
 	
 	\begin{figure}[H]
 		\centering
@@ -415,28 +414,22 @@
 	\end{figure}
 
 	
-	% =========================================================
-	% 3. DATA QUALITY ASSESSMENT
-	% =========================================================
+
 	\section{Data Quality Assessment}
 	
 	\subsection{Type Validation Scope}
 	
 	In a generic Data Quality Assessment workflow, type validation is an important preliminary step. The fact that a column is named as a date, a number, or a boolean attribute does not guarantee that its values actually follow the expected type.
 	
-	In this project, however, the source data are mainly obtained from API-based Python structures returned by FastF1. Therefore, the input is not an uncontrolled textual source: each column already has an expected computational representation.
-	
-	For this reason, the Data Quality Assessment does not focus on generic type-parseability checks. Instead, it focuses on quality problems that can still exist after typed loading.
+	In this project, however, the source data are mainly obtained from API-based Python structures. Therefore, the input is not an uncontrolled textual source: each column already has an expected computational representation. For this reason, the Data Quality Assessment does not focus on generic type-parseability checks. Instead, it focuses on quality problems that can still exist after typed loading.
 	
 	\subsection{General Data Quality Assessment}
 	
-	The General Data Quality Assessment is applied to the reconciled schema in order to evaluate its structural and semantic quality, producing deterministic evidence for the following cleaning workflow without modifying the data.
-	
-	
-	The assessment is organized according to the following data quality dimensions.
+	The General Data Quality Assessment is applied to the reconciled schema in order to evaluate its structural and semantic quality, producing deterministic evidence for the following cleaning workflow without modifying the data.The assessment is organized according to the following data quality dimensions.
 	
 	\begin{table}[H]
 		\centering
+		\caption{DQA dimensions considered in the project.}
 		\label{tab:dqa-dimensions}
 		\renewcommand{\arraystretch}{1.35}
 		\begin{tabularx}{0.85\linewidth}{
@@ -461,14 +454,14 @@
 	
 	
 
-	Since the complete set of rules is too detailed for the main report, this section presents only the most relevant assessment choices. A summarized dimension-by-dimension view of the applied rules is reported in Appendix~\ref{appendix:dqa-rules}.
+	Since the complete set of rules is too detailed for the main report, this section presents only the most relevant assessment choices. A summarized dimension-by-dimension view is reported in Appendix~\ref{appendix:dqa-rules}.
 	
 	
 
 	\begin{table}[H]
 		\centering
 		\small
-		\caption{}
+		\caption{Representative Data Quality Assessment checks.}
 		\label{tab:representative-dqa-checks}
 		\begin{tabularx}{\linewidth}{p{5cm}X}
 			\toprule
@@ -477,7 +470,7 @@
 			\midrule
 			
 			Lap timing coherence
-			& Verifies that the sum of the three sector times is coherent with the total lap time, allowing a small tolerance for source precision. Pit-in and pit-out laps are excluded from this rule because they may distort normal lap-time interpretation. \\
+			& Verifies that the sum of the three sector times is coherent with the total lap time, allowing a small tolerance for source precision. Pit-in and pit-out laps are excluded because they may distort normal lap-time interpretation. \\
 			
 			\midrule
 			
@@ -486,7 +479,7 @@
 			\midrule
 			
 			Track-status semantic coherence
-			& Verifies that each numerical track-status code always corresponds to the expected textual message. For example, the same status code must always be associated with the same meaning, such as \texttt{0} with \texttt{AllClear}. \\
+			& Verifies that each numerical track-status code always corresponds to the expected textual message. For example, the same status code must always be associated with the same meaning, such as \texttt{1} with \texttt{AllClear}. \\
 			
 			\midrule
 			
@@ -496,7 +489,7 @@
 			\midrule
 			
 			Circuit classification coverage
-			& Verifies that circuit and sector classification attributes are present, since they are required to compare performance across circuit types. \\
+			& Verifies that circuit and sector classification attributes are present. \\
 			
 			\midrule
 			
@@ -540,7 +533,6 @@
 	
 	The missing information area describes which type of analysis is affected by the missing value.
 	A row may have issues in one or more areas, but it can still be used for analyses that do not depend on the affected information.
-	
 	The final interpretation of each missing value is obtained by combining the missing class and the missing information area.
 	
 	\begin{table}[!htbp]
@@ -608,10 +600,10 @@
 	\end{table}
 	
 	In Race sessions, qualifying-related attributes are not applicable. 
-	Therefore, missing values in the qualifying attributes are classified as \texttt{EXPLAINED NULL}, with no missing analytical information. 
+	Therefore, missing values in the qualifying attributes are classified as \texttt{EXPLAINED NULL}, with \texttt{NONE} in missing information area. 
 	By contrast, missing values in race-related attributes are classified as \texttt{SUSPICIOUS NULL}: missing position or classification information affects \texttt{CLASSIFICATION INFORMATION}, while missing race context values affect \texttt{RACE CONTEXT INFORMATION}.
 	
-	\vspace{2em}
+	\vspace{1.5em}
 	In Qualifying sessions, \texttt{position} is the control attribute used to interpret missing qualifying times. 
 	If \texttt{position} is missing, qualifying progression cannot be reconstructed reliably; therefore, the value is classified as \texttt{SUSPICIOUS NULL} with \texttt{CLASSIFICATION INFORMATION}.
 	
@@ -788,13 +780,12 @@
 	\end{table}
 	
 	For each checked value, the script assigns a consensus score from 0 to 2 according to how many methods flag the value. 
-	A score of 0 means that no method flags the value, a score of 1 indicates a weak anomaly flagged by only one method, and a score of 2 identifies a stronger suspicious value flagged by both methods.
 
 	
 	\subsection{Visual Summary of Data Quality Outputs}
 	
 	The Data Quality Assessment phase also produced visual outputs to summarize the evidence generated by the scripts. 
-	These plots are reported before the cleaning phase because they describe the detected issues, while the following section explains how these issues are treated.
+
 	
 	\begin{figure}[H]
 		\centering
@@ -809,26 +800,19 @@
 	
 	\begin{figure}[H]
 		\centering
-		\begin{subfigure}{0.48\linewidth}
-			\centering
-			\includegraphics[width=1\linewidth]{figures/missing_class_distribution.pdf}
-			\caption{Missing-value classes}
-			\label{fig:missing-class-distribution}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{0.48\linewidth}
-			\centering
-			\includegraphics[width=1\linewidth]{figures/missing_information_area.pdf}
-			\caption{Missing values by information area}
-			\label{fig:missing-information-area}
-		\end{subfigure}
-		\caption{Visual summary of the focused missing-value interpretation.}
-		\label{fig:missing-values-summary}
+		\includegraphics[width=0.90\linewidth]{figures/missing_class_distribution.pdf}
+		\caption{Missing-value class distribution.}
+		\label{fig:missing-class-distribution}
 	\end{figure}
 	
-	The missing-value plots show that a relevant part of the null values is explained by the Formula One domain. 
-
-	The distribution by information area shows that missing values are mainly concentrated in speed, sector, and lap-time information. 
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.90\linewidth]{figures/missing_information_area.pdf}
+		\caption{Missing values by information area.}
+		\label{fig:missing-information-area}
+	\end{figure}
+	
+	The missing-value plots show that a relevant part of the null values is explained by the Formula One domain. The distribution by information area shows that missing values are mainly concentrated in speed, sector, and lap-time information. 
 	This is coherent with the structure of lap-level data: sector times are collected across three circuit sectors, while speed values can be recorded at multiple detection points within the same lap. 
 	Since these measurements are more granular, they also have more opportunities to contain incomplete information.
 	
@@ -843,16 +827,14 @@
 	The outlier-method comparison shows that the consensus rule reduces the number of values treated as strong anomalies. 
 	Compared with the individual methods, especially the IQR method.
 	
-	\subsection{LLM-supported Interpretation of Data Quality Outputs}
+	\subsection{LLM-supported Interpretation}
 	
 	After the visual summaries, the artefacts produced by the Data Quality Assessment phase were also provided to a Large Language Model to support the interpretation of the detected issues. 
-	The input included the outputs of the General DQA checks, the focused missing-value analysis, and the outlier detection procedure.
-	
+
 	The LLM was not used to modify the data or to make automatic cleaning decisions. 
 	Its role was limited to producing a structured textual interpretation of the quality evidence. 
 	In particular, three outputs were generated: a natural-language stakeholder summary, a more technical summary for developers and analysts, and a list of suggested cleaning priorities.
-	
-	This step was used as an additional documentation and interpretation layer, useful to translate technical quality outputs into readable explanations. 
+
 	The prompt provided to the LLM, together with an example of the generated output, is reported in Appendix~\ref{appendix:llm-dqa-interpretation}.
 
 	\section{Data Cleaning}
@@ -865,6 +847,7 @@
 	\begin{table}[H]
 		\centering
 		\small
+		\caption{Cleaning actions.}
 		\label{tab:cleaning-actions}
 		\begin{tabularx}{0.95\linewidth}{
 				>{\raggedright\arraybackslash}p{3.2cm}
@@ -899,7 +882,6 @@
 	
 	
 	Before applying issue-specific policies, two common cleaning rules are applied to textual attributes. 
-	These rules are safe because they standardize representation without changing the semantic meaning of the data.
 	
 	\begin{table}[H]
 		\centering
@@ -922,7 +904,7 @@
 	
 	\subsection{Cleaning Policies from General DQA}
 	
-	Only the most representative policies are reported in the main text. The complete DQA-driven cleaning rules are reported in Appendix~\ref{appendix:dqa-cleaning-rules}.
+	Only the most representative policies are reported. The complete DQA-driven cleaning rules are reported in Appendix~\ref{appendix:dqa-cleaning-rules}.
 	
 	
 	\begin{table}[H]
@@ -931,9 +913,9 @@
 		\caption{Representative cleaning policies driven by General DQA.}
 		\label{tab:dqa-cleaning-examples}
 		\begin{tabular}{
-				>{\centering\arraybackslash}m{2.2cm}
-				>{\raggedright\arraybackslash}m{7.1cm}
-				>{\raggedright\arraybackslash}m{5.4cm}
+				>{\centering\arraybackslash}m{2cm}
+				>{\raggedright\arraybackslash}m{9.1cm}
+				>{\raggedright\arraybackslash}m{5cm}
 			}
 			\toprule
 			\textbf{Table}
@@ -1220,7 +1202,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.90\linewidth]{figures/season-grandprix-session.pdf}
+		\includegraphics[width=1\linewidth]{figures/season-grandprix-session.pdf}
 		\caption{Editing decisions for the shared race-weekend branches.}
 		\label{fig:shared-race-weekend-editing}
 	\end{figure}
@@ -1240,13 +1222,13 @@
 	For the \texttt{session} node, \texttt{session\_date} and \texttt{session\_name} are pruned because the analysis only requires the session type. 
 	The \texttt{session\_id} node is then grafted: the technical identifier is removed and as a result, \texttt{session\_type} becomes directly connected to the fact root, either \textit{Lap Performance} or \textit{Session Result}.
 	
-	\medskip
+	\vspace{7em}
 	\noindent\textbf{Participant branch: Driver and Team.}
 	\par\smallskip
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.75\linewidth]{figures/driver-team.pdf}
+		\includegraphics[width=1\linewidth]{figures/driver-team.pdf}
 		
 		\caption{Editing decisions for the shared Driver and Team branches.}
 		\label{fig:shared-driver-team-editing}
@@ -1292,7 +1274,29 @@
 	
 	\begin{figure}[H]
 		\centering
-		 \includegraphics[width=1\linewidth]{figures/lap_focus.pdf}
+		
+		\begin{subfigure}{0.495\linewidth}
+			\centering
+			\includegraphics[
+			width=\linewidth,
+			trim=1.0cm 1.0cm 1.0cm 1.0cm,
+			clip
+			]{figures/lap_focus1.pdf}
+			\caption{Pruning decisions}
+			\label{fig:lap-pruning-editing-summary}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.495\linewidth}
+			\centering
+			\includegraphics[
+			width=\linewidth,
+			trim=1.0cm 1.0cm 1.0cm 1.0cm,
+			clip
+			]{figures/lap_focus2.pdf}
+			\caption{Derived-attribute decisions}
+			\label{fig:lap-derived-editing-summary}
+		\end{subfigure}
+		
 		\caption{Compact view of pruning and derived-attribute decisions for the Lap Performance fact.}
 		\label{fig:lap-node-editing-summary}
 	\end{figure}
@@ -1451,7 +1455,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.60\linewidth]{figures/result_focus.pdf}
+		\includegraphics[width=0.70\linewidth]{figures/result_focus.pdf}
 		\caption{Compact view of pruning and derived-attribute decisions for the Session Result fact.}
 		\label{fig:result-node-editing-summary}
 	\end{figure}
@@ -1581,13 +1585,21 @@
 		\footnotesize
 		\caption{Legend for dimensional mapping diagrams.}
 		\label{tab:dimensional-mapping-legend}
-		\setlength{\tabcolsep}{5pt}
-		\begin{tabular}{@{}c l !{\vrule width 0.5pt} c l !{\vrule width 0.5pt} c l !{\vrule width 0.5pt} c l@{}}
+		\renewcommand{\arraystretch}{1.25}
+		\setlength{\tabcolsep}{8pt}
+		\begin{tabular}{@{}c l c l@{}}
 			\toprule
-			\legendbox{directdimensioncolor} & Direct dimension
-			& \legendbox{measurecolor} & Measure
-			& \outlinedlegendbox{contextualboxcolor}{dashed} & Contextual/composite dimension
-			& \outlinedlegendbox{junkboxcolor}{densely dotted} & Junk dimension \\
+			\legendbox{directdimensioncolor} 
+			& Direct dimension
+			& \legendbox{measurecolor} 
+			& Measure \\
+			
+			\addlinespace[0.15cm]
+			
+			\outlinedlegendbox{contextualboxcolor}{dashed} 
+			& Contextual/composite dimension
+			& \outlinedlegendbox{junkboxcolor}{densely dotted} 
+			& Junk dimension \\
 			\bottomrule
 		\end{tabular}
 	\end{table}
@@ -1730,6 +1742,7 @@
 		\end{tabularx}
 	\end{table}
 	
+	\newpage
 	\subsection{Final DFM Fact Schemas}
 	
 	The conceptual design phase ends with the definition of the two final DFM fact schemas. 
@@ -1737,14 +1750,14 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.70\linewidth]{figures/lap_fact_schema.pdf}
+		\includegraphics[width=0.65\linewidth]{figures/lap_fact_schema.pdf}
 		\caption{Final DFM fact schema for the Lap Performance fact.}
 		\label{fig:dfm-lap-performance}
 	\end{figure}
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.70\linewidth]{figures/result_fact_schema.pdf}
+		\includegraphics[width=0.65\linewidth]{figures/result_fact_schema.pdf}
 		\caption{Final DFM fact schema for the Session Result fact.}
 		\label{fig:dfm-session-result}
 	\end{figure}
@@ -1800,7 +1813,7 @@
 	\end{table}
 
 	
-	
+	\newpage
 	\section{Conclusion}
 	
 	This report documented the construction of a Formula 1 Data Warehouse starting from heterogeneous API-based and manually curated sources. 
@@ -1812,9 +1825,12 @@
 	The resulting warehouse provides a structured and OLAP-ready basis for the next phase of the project, where the star schema can be used in Tableau to analyse performance differences across seasons, teams, drivers, sessions, circuits, tyres, and race conditions.
 	
 
-	\section*{Repository and Supplementary Material}
+
+	\section{Repository}
+	\label{sec:repository-material}
+	
 	Full code, detailed DQA outputs, cleaning logs, rejected rows, and full schema files are available in the project repository:
-	\url{https://github.com/GiuseppeRudi/ground_effect-dw}
+	\url{https://github.com/GiuseppeRudi/groundeffect-dw}
 	
 
 	
@@ -1856,32 +1872,26 @@
 	\section{Additional Re-engineering Material}
 	\label{appendix:reengineering-material}
 	
-	This appendix contains additional technical material related to the re-engineering phase. 
-	
-	
+
 	\vspace{3em}
 	\subsection{Complete Raw API Structures}
 	\label{appendix:raw-api-structures}
 	
-	Figure~\ref{fig:appendix-raw-api-structures} reports the complete raw API structures used as input for the re-engineering phase. 
 	
 	\vspace{5em}
 	\begin{figure}[H]
 		\centering
-		% Replace with the complete Draw.io export
 		\includegraphics[width=0.90\linewidth,height=0.88\textheight,keepaspectratio]{figures/raw_tables.pdf}
 		\caption{Complete raw API structures with original attributes.}
 		\label{fig:appendix-raw-api-structures}
 	\end{figure}
 	
-	
 	\newpage
 	
+	\vspace{3em}
 	\subsection{Complete Logical Schema}
 	\label{appendix:logical-schema}
 	
-	Figure~\ref{fig:appendix-logical-schema} reports the complete logical schema of the reconciled PostgreSQL database. 
-	This figure provides the full technical view of the schema, including detailed table structures and relationships.
 	
 	\vspace{7em}
 	\begin{figure}[H]
@@ -1896,7 +1906,10 @@
 	\section{Additional Data Quality Material}
 	\label{appendix:data-quality-details}
 	
+	\vspace{3em}
 	\subsection{Detailed DQA Rules}
+	
+	\vspace{1.5em}
 	\label{appendix:dqa-rules}
 	
 
@@ -1965,7 +1978,7 @@
 	
 	\newpage
 	
-	\subsection{Additional Lap-table Missing Rules}
+	\subsection{Lap-table Missing Rules}
 	\label{appendix:missing-rules}
 	
 	The main report reports only the pit-related cases and the missing \texttt{lap\_time\_ms} rule.
@@ -2115,34 +2128,85 @@
 
 	\newpage
 		
-	\subsection{LLM-supported Data Quality Interpretation}
+	\subsection{LLM-supported I/O}
 	\label{appendix:llm-dqa-interpretation}
 	
-	This appendix reports the prompt used to support the interpretation of the Data Quality Assessment outputs through a Large Language Model. 
-	The LLM was not used to perform the official DQA, clean the data, or make automatic decisions. 
-	Its role was limited to generating a readable interpretation of deterministic artefacts already produced by the project scripts.
+	\vspace{3em}
 	
 	\subsubsection*{Prompt provided to the LLM}
 	
-	The following prompt was used to instruct the LLM about its role, the available inputs, the expected output structure, and the constraints to follow.
+	\vspace{4em}
 	
 	\begin{lstlisting}
-		% Insert here the full prompt used for the LLM-supported interpretation.
-		% The prompt includes:
-		% - the role of the assistant;
-		% - the available deterministic DQA artefacts;
-		% - the required Markdown sections;
-		% - the instruction not to invent values or hidden causes;
-		% - the rule that all suggested actions must be manually reviewed.
+		
+		
+		You are an assistant supporting a Data Warehouse project about Formula 1 data.
+		
+		You receive only aggregated outputs from deterministic data quality analyses:
+		- the general Data Quality Assessment,
+		- the focused missing-values analysis,
+		- the focused lap outlier detection.
+		
+		You do NOT have access to the database.
+		You must NOT invent values, rules, or hidden causes.
+		You must explain only what is supported by the provided scorecards, missing-value summaries, and outlier summaries.
+		
+		The DQA dimensions are:
+		- Completeness
+		- Uniqueness
+		- Validity
+		- Consistency
+		- Accuracy/Plausibility
+		- Timeliness
+		- Referential Integrity
+		
+		Generate exactly these three Markdown sections:
+		
+		# Stakeholder Summary
+		Write a clear, non-technical explanation of the general data quality situation.
+		Mention the strongest and weakest tables if supported by the data.
+		Include the focused missing-value and outlier signals when they materially change the interpretation.
+		
+		# Technical Summary
+		Explain the main issues by table, quality dimension, missing information area, and outlier metric.
+		Use precise language and avoid claiming that a value is wrong when it is only suspicious.
+		
+		# Suggested Cleaning Priorities
+		Provide a prioritized list of next steps.
+		The list must be framed as suggestions for human review, not automatic actions.
+		
+		Important rules:
+		- Do not say that the LLM performed the official DQA.
+		- Do not say that data were cleaned.
+		- Do not recommend deleting records automatically.
+		- Treat suspicious missing values and strong consensus outliers as human-review priorities, not proven errors.
+		- Mention that the LLM output must be manually reviewed.
+		- Keep the explanation useful for a final project report.
+		
+		Here is the aggregated complete data quality input:
+		
+		```json
+		{{DATA_QUALITY_INPUT_JSON}}
+		```
+		
+		
+		
 	\end{lstlisting}
 	
+	\newpage
+	
+	\vspace{2em}
 	\subsubsection*{Compact Example of Generated Output}
 	
+	\vspace{2em}
 	The following example shows the type of output generated by the LLM. 
 	The content is intentionally shortened because LLM responses are not deterministic and can vary across executions. 
 	The example is included only to document the expected structure of the response.
 	
+	\vspace{4em}
 	\begin{lstlisting}
+		
+		
 		# Stakeholder Summary
 		
 		The Formula One data warehouse shows a very high general quality level. 
@@ -2172,6 +2236,8 @@
 		3. Inspect strong consensus outliers in speed and lap-time metrics.
 		4. Preserve uncertain records with quality flags when the issue cannot be corrected deterministically.
 		5. Manually review all LLM suggestions before applying any cleaning decision.
+		
+		
 	\end{lstlisting}
 	
 	
