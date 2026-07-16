@@ -10,7 +10,6 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{enumitem}
-\usepackage{xcolor}
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{amsmath}
@@ -111,7 +110,7 @@ citecolor=blue!60!black
 		
 		\vspace{0.15cm}
 		
-		{\large A Data Warehouse for Formula One Performance Analysis\par}
+		{\large A Data Warehouse for Formula 1 Performance Analysis\par}
 		
 		\vspace{0.10cm}
 		
@@ -147,7 +146,8 @@ citecolor=blue!60!black
 	
 	\noindent\textbf{Document scope.}
 	The report highlights the most relevant decisions of the Formula 1 Data Warehouse pipeline.
-	More detailed documentation for each stage is provided in ~\hyperref[sec:repository-material]{ Supplementary Material}.
+	More detailed documentation for each stage is provided in the
+	\hyperref[sec:repository-material]{Supplementary Material}.
 
 	
 	\tableofcontents
@@ -157,7 +157,7 @@ citecolor=blue!60!black
 	\section{Project Goal}
 	
 	The project studies Formula 1 performance across the 2021 and 2022 seasons in order to understand how the regulatory change affected the competitive balance among teams. 
-	This comparison is particularly meaningful because the 2022 season introduced a new technical framework centred on ground-effect aerodynamics, which led to a substantial shift in car design philosophy.
+	This comparison is particularly meaningful because the 2022 season introduced a new technical framework centred on ground-effect aerodynamics, which led to a substantial shift in car design philosophy. \cite{fia2022TechnicalRegulations,f12021vs2022}
 	
 	Within this context, the goal of the project is to analyse how team performance changed across the two seasons and to observe how the new regulations influenced the balance of competitiveness. 
 	The interest is therefore not only in absolute performance, but also in the relative changes that emerged across sessions, circuits, sectors, tyre conditions, and race contexts. This report focuses on the design and engineering choices, while the final visual exploration is developed separately in Tableau.
@@ -166,7 +166,7 @@ citecolor=blue!60!black
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.50\linewidth]{figures/ground_effect.jpg}
-		\caption{Conceptual representation of the 2022 regulatory change in car aerodynamics.}
+		\caption{Conceptual representation of the 2022 regulatory change in car aerodynamics. Source: \cite{therace}}
 		\label{fig:f1-regulation-change}
 	\end{figure}
 
@@ -180,8 +180,8 @@ citecolor=blue!60!black
 		\textit{How did the 2022 regulatory change affect the competitive balance in Formula 1 between the 2021 and 2022 seasons?}
 	\end{quote}
 	
-	This main question is then divided into more specific business questions. 
-	Each of them focuses on a different analytical perspective, so that the final interpretation can be built by combining :
+	This question is then divided into more business questions. 
+	Each of them focuses on a different analytical perspective, so that the final interpretation can be built by combining the following perspectives:
 	
 	\begin{itemize}
 		\item Did the performance differences emerge more clearly in qualifying sessions or race sessions?
@@ -218,14 +218,14 @@ citecolor=blue!60!black
 		\centering
 		\caption{Source layer used in the project.}
 		\label{tab:sources}
-		\begin{tabularx}{\linewidth}{p{3.6cm}X}
+		\begin{tabularx}{\linewidth}{p{5cm}X}
 			\toprule
 			\textbf{Source} & \textbf{Information extracted} \\
 			\toprule
-			FastF1 API 
+			FastF1 API~\cite{fastf1docs} 
 			& Event schedule, race weekends, Qualifying and Race sessions, session results, lap-level data, sector times, weather and track status. \\
 			\midrule
-			Ergast/Jolpica API 
+			Ergast/Jolpica API~\cite{jolpicaDocs} 
 			& Driver and constructor master data \\
 			\midrule
 		
@@ -303,7 +303,7 @@ citecolor=blue!60!black
 	\subsubsection{Raw API Structures}
 	
 	Figure~\ref{fig:raw-api-overview} provides an aggregated overview of the raw structures obtained from the API-based sources. 
-	The objective is to show that these information were not directly database-friendly. 
+	The objective is to show that these information was not directly database-friendly. 
 	The complete raw structures, including all original attributes, are reported in Appendix~\ref{appendix:raw-api-structures}.
 	
 	\begin{figure}[H]
@@ -394,7 +394,7 @@ citecolor=blue!60!black
 		\midrule
 		
 		Removal of duplicated descriptors
-		& Repeated driver, team, event, or session descriptors were removed when the same info could be recovered through joins with reference tables. \\
+		& Repeated driver, team, event, or session were removed when the same information could be recovered through joins with reference tables. \\
 		
 	\end{longtable}
 
@@ -432,7 +432,7 @@ citecolor=blue!60!black
 	
 	\subsection{General Data Quality Assessment}
 	
-	The General Data Quality Assessment is applied to the reconciled schema in order to evaluate its structural and semantic quality, producing deterministic evidence for the following cleaning workflow without modifying the data.The assessment is organized according to the following data quality dimensions.
+	The General Data Quality Assessment is applied to the reconciled schema in order to evaluate its structural and semantic quality, producing deterministic evidence for the following cleaning workflow without modifying the data. The assessment is organized according to the following data quality dimensions.
 	
 	\begin{table}[H]
 		\centering
@@ -803,7 +803,7 @@ citecolor=blue!60!black
 	
 	The heatmap shows that the general DQA scores are very high across almost all tables and quality dimensions. 
 	This result should not be interpreted as the absence of data quality problems. 
-	The general assessment was intentionally based on deterministic and structural checks.More domain-specific issues, especially missing values and numerical anomalies, are analysed separately through the focused missing-value interpretation and outlier detection procedures.
+	The general assessment was intentionally based on deterministic and structural checks. More domain-specific issues, especially missing values and numerical anomalies, are analysed separately through the focused missing-value interpretation and outlier detection procedures.
 	
 	\begin{figure}[H]
 		\centering
@@ -819,7 +819,7 @@ citecolor=blue!60!black
 		\label{fig:missing-information-area}
 	\end{figure}
 	
-	The missing-value plots show that a relevant part of the null values is explained by the Formula One domain. The distribution by information area shows that missing values are mainly concentrated in speed, sector, and lap-time information. 
+	The missing-value plots show that a relevant part of the null values is explained by the Formula 1 domain. The distribution by information area shows that missing values are mainly concentrated in speed, sector, and lap-time information. 
 	This is coherent with the structure of lap-level data: sector times are collected across three circuit sectors, while speed values can be recorded at multiple detection points within the same lap. 
 	Since these measurements are more granular, they also have more opportunities to contain incomplete information.
 	
@@ -831,8 +831,7 @@ citecolor=blue!60!black
 	\end{figure}
 	
 	
-	The outlier-method comparison shows that the consensus rule reduces the number of values treated as strong anomalies. 
-	Compared with the individual methods, especially the IQR method.
+	The comparison shows that the consensus rule identifies fewer strong anomalies than either individual method, particularly the IQR method.
 	
 	\subsection{LLM-supported Interpretation}
 	
@@ -849,7 +848,7 @@ citecolor=blue!60!black
 	The Data Cleaning phase uses the evidence produced by the previous Data Quality Assessment section. 
 	Unlike that phase, this step produces a new cleaned analytical layer derived from the reconciled database.
 	
-	The cleaning process follows a conservative approach using the following action types : 
+	The cleaning process follows a conservative approach using the following action types: 
 	
 	\begin{table}[H]
 		\centering
@@ -931,7 +930,7 @@ citecolor=blue!60!black
 			\midrule
 			
 			lap
-			& Missing structural identifiers, invalid lap number, or invalid lap time.
+			& Missing structural identifiers.
 			& DROP ROW \\
 			
 			\midrule
@@ -1222,7 +1221,7 @@ citecolor=blue!60!black
 	
 	\medskip
 	
-	For the \texttt{season} node,all the attribute are pruned because they are contextual attributes that are not needed as aggregation levels. After this pruning, the season branch is reduced to \texttt{season\_year} directly associated with the \texttt{grand\_prix} branch.
+	For the \texttt{season} node, all the attribute are pruned because they are contextual attributes that are not needed as aggregation levels. After this pruning, the season branch is reduced to \texttt{season\_year} directly associated with the \texttt{grand\_prix} branch.
 	
 	\medskip
 	
@@ -1242,7 +1241,7 @@ citecolor=blue!60!black
 	\end{figure}
 	
 	
-	For the Driver branch, permanent number are pruned because they are not analytically significant. 
+	For the Driver branch, the permanent number are pruned because they are not analytically significant. 
 	The raw date of birth is not retained as an analytical level, but it is used to derive \texttt{driver\_age\_class}, a categorical attribute that can assume three values:
 	\vspace{0.5em}
 	
@@ -1252,20 +1251,53 @@ citecolor=blue!60!black
 	
 	\vspace{0.5em}
 	
-	Team and Driver URL is pruned because it is only an external reference. 
+	The team and driver URLs are pruned because it is only an external reference. 
 	Nationality attributes are retained in both the Driver and Team branches, although they are more relevant for result-oriented analysis than for detailed lap-performance analysis.
 	
 	
 	\subsubsection{Treatment of Time-dependent Context}
 	
-	The \texttt{weather} and \texttt{track\_status} tables require a separate treatment because they are not static descriptors of a session. 
-	Both tables contain the attribute \texttt{time\_ms}, which identifies the time instant within the session at which the observation or status change is recorded.
 	
-	For this reason, a single session can be associated with multiple weather observations and multiple track-status records. 
-	Therefore, these tables cannot be inserted as normal static branches of the attribute tree: their values are not determined only by the session, but also by the time instant inside the session.
+	The \texttt{weather} and \texttt{track\_status} tables require a
+	separate treatment because they are not static descriptors of a
+	session. Both tables contain the attribute \texttt{time\_ms}, which
+	identifies the time instant within the session at which an observation
+	or status change is recorded.
 	
-	Instead, their information is transformed into derived contextual attributes, defined according to the grain of each fact. 
-	For the \textit{Lap Performance} fact, the time-dependent context is aligned with each lap, while for the \textit{Session Result} fact it is summarized at session level when useful for result interpretation.
+	For this reason, a single session can be associated with multiple
+	weather observations and multiple track-status records. Therefore,
+	these tables cannot be inserted as normal static branches of the
+	attribute tree: their values are determined not only by the session,
+	but also by the corresponding time instant within the session.
+	
+	Instead, their information is transformed into derived contextual
+	attributes whose grain is coherent with each fact. For the
+	\textit{Lap Performance} fact, each lap is associated with the most
+	recent valid contextual observation recorded in the same session at
+	or before the lap completion time. Formally, for a lap $l$ and the set
+	$C_l$ of contextual observations belonging to the same session, the
+	selected record is:
+	
+	\[
+	c^{*}(l)=
+	\arg\max_{c \in C_l}
+	\left\{
+	c.\texttt{time\_ms}
+	\;\middle|\;
+	c.\texttt{time\_ms} \leq l.\texttt{time\_ms}
+	\right\}.
+	\]
+	
+	The selected weather values are subsequently transformed into
+	categorical attributes, while the selected track-status record is
+	mapped to its corresponding analytical category. For the
+	\textit{Session Result} fact, valid weather observations are instead
+	aggregated at session level, while track-status information is used
+	only when relevant to the interpretation of the session outcome.
+	
+	The complete fallback rules, aggregation procedures, and
+	classification thresholds are reported in
+	Appendix~\ref{appendix:derived-attribute-rules}.
 	
 	\subsection{Fact-specific Attribute Tree Editing}
 	
@@ -1277,7 +1309,8 @@ citecolor=blue!60!black
 	The \textit{Lap Performance} fact is rooted in the \texttt{lap} relation. Table~\ref{tab:lap-pruning-representative} reports the pruning decisions.
 	After pruning, several derived attributes are introduced. 
 	These attributes transform technical, time-dependent, or overly granular information into categories that are coherent with the lap-level grain. 
-	Table~\ref{tab:lap-derived-representative} reports the main derived attributes used in the edited \textit{Lap Performance} tree.
+	Table~\ref{tab:lap-derived-representative} reports the main derived attributes used in the edited \textit{Lap Performance} tree.The complete transformation rules and categorical thresholds are
+	reported in Appendix~\ref{appendix:derived-attribute-rules}.
 	
 	\begin{figure}[H]
 		\centering
@@ -1286,7 +1319,6 @@ citecolor=blue!60!black
 			\centering
 			\includegraphics[
 			width=\linewidth,
-			trim=1.0cm 1.0cm 1.0cm 1.0cm,
 			clip
 			]{figures/lap_focus1.pdf}
 			\caption{Pruning decisions}
@@ -1297,7 +1329,6 @@ citecolor=blue!60!black
 			\centering
 			\includegraphics[
 			width=\linewidth,
-			trim=1.0cm 1.0cm 1.0cm 1.0cm,
 			clip
 			]{figures/lap_focus2.pdf}
 			\caption{Derived-attribute decisions}
@@ -1450,6 +1481,7 @@ citecolor=blue!60!black
 		\end{longtable}
 	}
 	
+	\vspace{2em}
 	\subsubsection{Session Result Editing}
 	
 	The \textit{Session Result} fact is rooted in the \texttt{result} relation. 
@@ -1458,11 +1490,11 @@ citecolor=blue!60!black
 	
 	Table~\ref{tab:result-pruning-representative} reports the pruning decisions applied to the \texttt{result} node. 
 	After pruning, several derived attributes are introduced to transform heterogeneous or textual information into cleaner analytical attributes. 
-	Table~\ref{tab:result-derived-representative} reports the main derived attributes used in the edited \textit{Session Result} tree.
+	Table~\ref{tab:result-derived-representative} reports the main derived attributes used in the edited \textit{Session Result} tree. 
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.70\linewidth]{figures/result_focus.pdf}
+		\includegraphics[width=0.75\linewidth]{figures/result_focus.pdf}
 		\caption{Compact view of pruning and derived-attribute decisions for the Session Result fact.}
 		\label{fig:result-node-editing-summary}
 	\end{figure}
@@ -1499,7 +1531,6 @@ citecolor=blue!60!black
 		\end{tabularx}
 	\end{table}
 	
-	\vspace{3em}
 	
 	{\footnotesize
 		\renewcommand{\arraystretch}{1.15}
@@ -1579,7 +1610,7 @@ citecolor=blue!60!black
 		\end{longtable}
 	}
 	
-	\vspace{2em}
+
 	
 	\subsection{Dimensions, Measures, and Aggregation Semantics}
 	
@@ -1589,7 +1620,7 @@ citecolor=blue!60!black
 	
 	In this project, two cases are distinguished: contextual dimensions, which group related descriptive attributes into a single analytical context, and junk dimensions, which collect low-cardinality flags and quality indicators into dedicated dimensions, avoiding unnecessary fragmentation of the fact tables while supporting filtering and OLAP analysis.
 	
-	\vspace{3em}
+	\vspace{1em}
 	\begin{table}[H]
 		\centering
 		\footnotesize
@@ -1664,18 +1695,8 @@ citecolor=blue!60!black
 			& Driver position during the lap.
 			& \texttt{MIN}, \texttt{MAX}; \texttt{AVG} only with caution. Not additive. \\
 			
-			\midrule
-			
-			\texttt{lap\_number}
-			& Lap ordinal number within the session.
-			& Used mainly for filtering or ordering; \texttt{MAX} can indicate the last observed lap. \\
-			
-			\midrule
-			
-			\texttt{lap\_count}
-			& Number of lap records.
-			& \texttt{COUNT}. Useful for counting analysed laps. \\
-			
+				
+
 			\bottomrule
 		\end{tabularx}
 	\end{table}
@@ -1742,12 +1763,7 @@ citecolor=blue!60!black
 			& Time gap from the session or race leader, when comparable.
 			& \texttt{AVG}, \texttt{MIN}, \texttt{MAX}. Not additive. \\
 			
-			\midrule
-			
-			\texttt{result\_count}
-			& Number of session-result records.
-			& \texttt{COUNT}. Useful for counting analysed results. \\
-			
+
 			\bottomrule
 		\end{tabularx}
 	\end{table}
@@ -1787,53 +1803,47 @@ citecolor=blue!60!black
 	\vspace{2em}
 	\subsection{Integrated Logical Star Schema}
 	
-	For readability, Figure~\ref{fig:integrated-star-schema} presents a simplified logical star schema showing only table names. The complete star schema diagrams with all attributes are reported in Appendix~\ref{appendix:star-schema-details}.
+	For readability, Figure~\ref{fig:integrated-star-schema} provides an
+	implementation-oriented overview of the two integrated star schemas.
+	Only physical tables are represented as independent boxes.
+	Degenerate dimensions are reported inside the corresponding fact
+	table because they do not have a separate dimension table.
+	
+	The complete logical schemas, including attributes, primary keys,
+	foreign keys, measures, and degenerate dimensions, are reported in
+	Appendix~\ref{appendix:star-schema-details}.
 	
 	
-	\vspace{2em}
+	\vspace{4em}
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=1\linewidth]{figures/integrated_star_schema.pdf}
+		\includegraphics[width=0.90\linewidth]{figures/integrated_star_schema.png}
 		\caption{Integrated logical star schema with shared and fact-specific dimensions.}
 		\label{fig:integrated-star-schema}
 	\end{figure}
 	
-	\vspace{2em}
-	\begin{table}[H]
-		\centering
-		\caption{Logical star schema summary.}
-		\label{tab:star-summary}
-		\begin{tabularx}{\linewidth}{p{4.5cm}X}
-			\toprule
-			\textbf{Table type} & \textbf{Tables} \\
-			\midrule
-			Fact tables 
-			& \texttt{fact\_lap\_performance}, \texttt{fact\_session\_result} \\
-			\midrule
-			Shared dimensions 
-			& \texttt{dim\_driver}, \texttt{dim\_team}, \texttt{dim\_grand\_prix}, \texttt{dim\_circuit}, \texttt{dim\_season}, \texttt{dim\_session\_type} \\
-			\midrule
-			Lap-specific dimensions 
-			& \texttt{dim\_tyre\_context}, \texttt{dim\_weather\_context}, \texttt{dim\_track\_status}, \texttt{dim\_lap\_type}, \texttt{dim\_lap\_data\_quality} \\
-			\midrule
-			Result-specific dimensions 
-			& \texttt{dim\_result\_status}, \texttt{dim\_result\_data\_quality} \\
-			\bottomrule
-		\end{tabularx}
-	\end{table}
-
+	\noindent
+	\textit{Note: DD denotes a degenerate dimension, namely a dimensional
+		attribute stored directly in the corresponding fact table without a
+		separate dimension table.}
 	
 	\newpage
 	\section{Conclusion}
 	
-	This report documented the construction of a Formula 1 Data Warehouse starting from heterogeneous API-based and manually curated sources. 
-	The raw data were first re-engineered into a reconciled PostgreSQL schema, then assessed through data quality checks, missing-value interpretation, outlier detection, and conservative cleaning rules.
+	This report documented the construction of a Formula 1 Data Warehouse starting from API-based data and manually created domain data.
+	The raw data were first re-engineered into a reconciled PostgreSQL schema, then evaluated through data quality checks, missing-value analysis, outlier detection, and conservative cleaning rules.
 	
-	The cleaned layer was used to design two complementary analytical facts: \textit{Lap Performance}, focused on lap-level performance, and \textit{Session Result}, focused on driver outcomes at session level. 
-	The conceptual design produced two DFM fact schemas, while the logical design translated them into an integrated star schema with shared dimensions and fact-specific analytical contexts.
+	The cleaned data were used to design two complementary analytical facts: \textit{Lap Performance}, focused on lap-level performance, and \textit{Session Result}, focused on driver results at session level.
+	The conceptual design produced two DFM fact schemas, while the logical design translated them into an integrated star schema with shared dimensions and specific analytical elements for each fact.
 	
-	The resulting warehouse provides a structured and OLAP-ready basis for the next phase of the project, where the star schema can be used in Tableau to analyse performance differences across seasons, teams, drivers, sessions, circuits, tyres, and race conditions.
+	The choice of the 2021 and 2022 seasons provides a useful comparison before and after the introduction of the 2022 technical regulations.
+	Regulatory changes are particularly interesting because they can reduce the importance of previous technical advantages and change the competitive balance among teams.
+	At the same time, a team that understands the new regulations more effectively from the beginning may gain useful knowledge and development experience for the following seasons of the same regulatory cycle.
 	
+	Although the warehouse contains data for all Formula 1 teams, the Tableau storytelling will focus on Ferrari, Red Bull, and Mercedes, which occupied the top three positions in the Constructors' standings in both seasons.
+	This choice is an analytical scope decision and not a limitation of the warehouse, which can still support broader analyses involving all teams.
+	
+	The resulting warehouse provides a structured and OLAP-ready basis for the next phase of the project.
 
 	\section{Repository}
 	\label{sec:repository-material}
@@ -1845,27 +1855,63 @@ citecolor=blue!60!black
 	
 	\begin{thebibliography}{9}
 		
+		\bibitem{fia2022TechnicalRegulations}
+		Fédération Internationale de l'Automobile.
+		\textit{2022 Formula 1 Technical Regulations, Issue 11}.
+		29 April 2022.
+		Available at:
+		\url{https://api.fia.com/sites/default/files/formula_1_-_technical_regulations_-_2022_-_iss_11_-_2022-04-29.pdf}.
+		
+		\bibitem{f12021vs2022}
+		Formula 1 Official Website.
+		\textit{2021 vs 2022: What's changed on Formula 1's all-new cars
+			for this season}.
+		22 February 2022.
+		Available at:
+		\url{https://www.formula1.com/en/latest/article/2021-vs-2022-whats-changed-on-formula-1s-all-new-cars-for-this-season.1SrJj7fQgv4Iw2IxCTnb1l}.
+		
+		\bibitem{therace}
+		G. Anderson.
+		\textit{Gary Anderson: What 2022-style F1 ground effect looks like}.
+		The Race, 25 January 2022.
+		Illustrations by Rosario Giuliana.
+		Available at:
+		\url{https://www.the-race.com/formula-1/gary-anderson-what-2022-style-f1-ground-effect-looks-like/}.
+		
+		\bibitem{fastf1docs}
+		FastF1 Project.
+		\textit{FastF1 Documentation}.
+		Available at:
+		\url{https://docs.fastf1.dev/}.
+		
+		\bibitem{jolpicaDocs}
+		Jolpica F1 Project.
+		\textit{Jolpica F1 API Documentation}.
+		Available at:
+		\url{https://github.com/jolpica/jolpica-f1/blob/main/docs/README.md}.
+		
 		\bibitem{f1calendars}
 		Formula 1 Official Website.
 		\textit{Formula 1 Calendars for the 2021 and 2022 seasons}.
 		Available at:
 		\url{https://www.formula1.com/en/racing/2021},
-		\url{https://www.formula1.com/en/racing/2022}
+		\url{https://www.formula1.com/en/racing/2022}.
 		
 		\bibitem{f1standings}
 		Formula 1 Official Website.
-		\textit{Formula 1 Drivers' and Constructors' Standings for the 2021 and 2022 seasons}.
+		\textit{Formula 1 Drivers' and Constructors' Standings for the
+			2021 and 2022 seasons}.
 		Available at:
 		\url{https://www.formula1.com/en/results/2021/drivers},
 		\url{https://www.formula1.com/en/results/2022/drivers},
 		\url{https://www.formula1.com/en/results/2021/team},
-		\url{https://www.formula1.com/en/results/2022/team}
+		\url{https://www.formula1.com/en/results/2022/team}.
 		
 		\bibitem{formulaTimerCircuits}
 		Formula Timer.
 		\textit{Formula 1 Circuit Information}.
 		Available at:
-		\url{https://formula-timer.com/circuit}
+		\url{https://formula-timer.com/circuit}.
 		
 	\end{thebibliography}
 
@@ -1992,7 +2038,7 @@ citecolor=blue!60!black
 	
 	\vspace{2em}
 	
-	The main report reports only the pit-related cases and the missing \texttt{lap\_time\_ms} rule.
+	The main report presents only the pit-related cases and the missing \texttt{lap\_time\_ms} rule.
 	The remaining lap-level rules are reported here because they affect more specific analytical areas.
 	
 	\vspace{2em}
@@ -2132,13 +2178,7 @@ citecolor=blue!60!black
 			& \texttt{SUSPICIOUS NULL}
 			& \texttt{TRACK STATUS INFORMATION} \\
 			
-			\midrule
-			
-			Future derived weather context is missing.
-			& Weather-derived lap attribute
-			& \texttt{SUSPICIOUS NULL}
-			& \texttt{WEATHER INFORMATION} \\
-			
+		
 			\bottomrule
 		\end{tabularx}
 
@@ -2177,7 +2217,7 @@ citecolor=blue!60!black
 		- Uniqueness
 		- Validity
 		- Consistency
-		- Accuracy/Plausibility
+		- Accuracy
 		- Timeliness
 		- Referential Integrity
 		
@@ -2230,7 +2270,7 @@ citecolor=blue!60!black
 		
 		# Stakeholder Summary
 		
-		The Formula One data warehouse shows a very high general quality level. 
+		The Formula 1 data warehouse shows a very high general quality level. 
 		Most structural checks, such as uniqueness, validity, consistency, and referential integrity, report almost perfect scores.
 		
 		However, this does not mean that the data are free from quality issues. 
@@ -2244,7 +2284,7 @@ citecolor=blue!60!black
 		The lap table contains most of the remaining validity warnings, while track_status shows a small uniqueness issue.
 		
 		The missing-value analysis shows that null values are not all equivalent. 
-		Some are explained by the Formula One domain, while others are suspicious and require review. 
+		Some are explained by the Formula  domain, while others are suspicious and require review. 
 		The largest missing-value areas are speed information, sector information, and lap-time information.
 		
 		The outlier detection identifies several unusual values, especially for speed and lap-time metrics. 
@@ -2397,15 +2437,164 @@ citecolor=blue!60!black
 	\end{longtable}
 	
 	
+
 	
 	\newpage
+	\section{Additional Derived-Attribute Rules}
+	\label{appendix:derived-attribute-rules}
 	
+	This appendix documents the deterministic rules used to transform
+	raw or cleaned source attributes into the categorical and contextual
+	attributes stored in the Data Warehouse.
+	
+	Unless otherwise stated, missing or unreliable source values produce
+	the category \texttt{Unknown}. These rules are project-specific
+	analytical conventions and do not represent official Formula 1
+	classifications.
+	
+	
+	\subsection{Driver Age Classification}
+	
+	Driver age is computed using the fixed reference date
+	1 January 2022. A fixed date is used because the current
+	\texttt{dim\_driver} contains one row per driver and does not
+	implement a time-varying driver dimension.
+	
+	\[
+	\text{ageYears} =
+	\left\lfloor
+	\frac{\text{2022-01-01} - \text{dateOfBirth}}
+	{365.2425}
+	\right\rfloor
+	\]
+	
+	\begin{table}[H]
+		\centering
+		\caption{Rules for \texttt{driver\_age\_class}.}
+		\begin{tabularx}{0.80\linewidth}{p{3.5cm}X}
+			\toprule
+			\textbf{Class} & \textbf{Rule} \\
+			\midrule
+			\texttt{Young} & $\text{ageYears} < 25$ \\
+			\texttt{Intermediate} & $25 \leq \text{ageYears} < 30$ \\
+			\texttt{Senior} & $\text{ageYears} \geq 30$ \\
+			\texttt{Unknown} & Date of birth missing or unreliable \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	
+	\subsection{Tyre-Context Classification}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Rules for tyre-context derived attributes.}
+		\begin{tabularx}{\linewidth}{p{5.5cm}p{4cm}X}
+			\toprule
+			\textbf{Derived attribute}
+			& \textbf{Value}
+			& \textbf{Rule} \\
+			\midrule
+			
+			\texttt{starting\_tyre\_set\_status}
+			& \texttt{New}
+			& \texttt{fresh\_tyre = TRUE} \\
+			
+			\texttt{starting\_tyre\_set\_status}
+			& \texttt{Used}
+			& \texttt{fresh\_tyre = FALSE} \\
+			
+			\texttt{starting\_tyre\_set\_status}
+			& \texttt{Unknown}
+			& \texttt{fresh\_tyre} is missing or unreliable \\
+			
+			\midrule
+			
+			\texttt{tyre\_life\_class}
+			& \texttt{Low}
+			& $0 \leq \texttt{tyre\_life} \leq 5$ \\
+			
+			\texttt{tyre\_life\_class}
+			& \texttt{Medium}
+			& $5 < \texttt{tyre\_life} \leq 15$ \\
+			
+			\texttt{tyre\_life\_class}
+			& \texttt{High}
+			& $\texttt{tyre\_life} > 15$ \\
+			
+			\texttt{tyre\_life\_class}
+			& \texttt{Unknown}
+			& Value missing, negative, or unreliable \\
+			
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsection{Weather Classification}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Thresholds for weather-derived classes.}
+		\begin{tabularx}{\linewidth}{p{4cm}p{3cm}X}
+			\toprule
+			\textbf{Attribute} & \textbf{Class} & \textbf{Rule} \\
+			\midrule
+			
+			\texttt{air\_temp\_class}
+			& \texttt{Low}
+			& $\texttt{air\_temp} < 20\,^{\circ}\mathrm{C}$ \\
+			
+			\texttt{air\_temp\_class}
+			& \texttt{Medium}
+			& $20 \leq \texttt{air\_temp} < 28\,^{\circ}\mathrm{C}$ \\
+			
+			\texttt{air\_temp\_class}
+			& \texttt{High}
+			& $\texttt{air\_temp} \geq 28\,^{\circ}\mathrm{C}$ \\
+			
+			\midrule
+			
+			\texttt{track\_temp\_class}
+			& \texttt{Low}
+			& $\texttt{track\_temp} < 30\,^{\circ}\mathrm{C}$ \\
+			
+			\texttt{track\_temp\_class}
+			& \texttt{Medium}
+			& $30 \leq \texttt{track\_temp} < 42\,^{\circ}\mathrm{C}$ \\
+			
+			\texttt{track\_temp\_class}
+			& \texttt{High}
+			& $\texttt{track\_temp} \geq 42\,^{\circ}\mathrm{C}$ \\
+			
+			\midrule
+			
+			\texttt{wind\_speed\_class}
+			& \texttt{Low}
+			& $\texttt{wind\_speed} < 2$ \\
+			
+			\texttt{wind\_speed\_class}
+			& \texttt{Medium}
+			& $2 \leq \texttt{wind\_speed} < 5$ \\
+			
+			\texttt{wind\_speed\_class}
+			& \texttt{High}
+			& $\texttt{wind\_speed} \geq 5$ \\
+			
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	For each weather attribute, the value \texttt{Unknown} is assigned
+	when the corresponding numerical observation is missing or has been
+	marked as unreliable during Data Quality Assessment or Data Cleaning.
+	
+	\newpage
 
 	\section{Additional Logical Star Schema Material}
 	\label{appendix:star-schema-details}
 	
 	\vspace{2em}
-	This appendix section can be used to report full-size versions of the star schema diagrams.
+	This appendix section reports full-size versions of the star schema diagrams.
 	
 	\vspace{2em}
 	\noindent\textit{Note:} In the star schema diagrams, \texttt{DD} denotes a degenerate dimension included directly in the corresponding fact table.
