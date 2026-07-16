@@ -14,6 +14,8 @@
 \usepackage{enumitem}
 \usepackage{multicol}
 
+\newcommand{\codebreak}[1]{\nolinkurl{#1}}
+
 \setcounter{secnumdepth}{0}
 
 \hypersetup{
@@ -623,7 +625,9 @@
 		
 		\small{result\_grid\_position\_non\_negative}
 		& \texttt{SET\_NULL}
-		& Starting-grid information is contextual. Invalid values are set to \texttt{NULL}. \\
+		& Starting-grid information is contextual. Invalid values are set to \texttt{NULL};
+		for Race rows the script also activates
+		\texttt{has\_race\_context\_information\_issue}. \\
 		\bottomrule
 	\end{longtable}
 	
@@ -845,8 +849,8 @@
 	\subsection{Missing Value Actions for the Lap Table}
 	% ------------------------------------------------------------
 	
-	For the \texttt{lap} table, the cleaning script creates a set of boolean quality
-	flags.
+	For the \texttt{lap} table, the cleaning script creates the following six boolean
+	quality flags.
 	
 	\begin{longtable}{p{6cm}p{4cm}p{5cm}}
 		\toprule
@@ -859,33 +863,33 @@
 		\midrule
 		\endhead
 		
-		\texttt{has\_sector\_information\_issue}
-		& \texttt{SECTOR\_INFORMATION}
+		\codebreak{has_sector_information_issue}
+		& \codebreak{SECTOR_INFORMATION}
 		& Sector information is missing or unreliable. The row should not be used for complete sector analysis. \\
 		\midrule
 		
-		\texttt{has\_speed\_information\_issue}
-		& \texttt{SPEED\_INFORMATION}
+		\codebreak{has_speed_information_issue}
+		& \codebreak{SPEED_INFORMATION}
 		& Speed information is missing or unreliable. The row should not be used for speed-based analysis. \\
 		\midrule
 		
-		\texttt{has\_tyre\_information\_issue}
-		& \texttt{TYRE\_INFORMATION}
+		\codebreak{has_tyre_information_issue}
+		& \codebreak{TYRE_INFORMATION}
 		& Tyre information is missing or unreliable. The row should not be used for tyre-based comparison without caution. \\
 		\midrule
 		
-		\texttt{has\_weather\_information\_issue}
-		& \texttt{WEATHER\_INFORMATION}
+		\codebreak{has_weather_information_issue}
+		& \codebreak{WEATHER_INFORMATION}
 		& Weather context information is missing or unreliable. Weather-based comparison is limited. \\
 		\midrule
 		
-		\texttt{has\_track\_status\_information\_issue}
-		& \texttt{TRACK\_STATUS\_INFORMATION}
+		\codebreak{has_track_status_information_issue}
+		& \codebreak{TRACK_STATUS_INFORMATION}
 		& Track status information is missing or not interpretable. Clean-lap filtering is limited. \\
 		\midrule
 		
-		\texttt{has\_pit\_information\_issue}
-		& \texttt{PIT\_INFORMATION}
+		\codebreak{has_pit_information_issue}
+		& \codebreak{PIT_INFORMATION}
 		& Pit-related interpretation is incomplete. Special-lap analysis is limited. \\
 		\bottomrule
 	\end{longtable}
@@ -895,7 +899,7 @@
 	Instead, the row is removed from the cleaned \texttt{lap} table, because
 	\texttt{lap\_time\_ms} is the core measure of the Lap Performance fact.
 	
-	\begin{longtable}{p{4cm}p{5cm}p{4cm}p{4cm}}
+	\begin{longtable}{p{3.5cm}p{4cm}p{2.3cm}p{4.4cm}}
 		\toprule
 		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
 		\midrule
@@ -906,43 +910,43 @@
 		\midrule
 		\endhead
 		
-		\texttt{LAP\_TIME\_INFORMATION}
+		\codebreak{LAP_TIME_INFORMATION}
 		& \texttt{lap\_time\_ms} is missing
 		& \texttt{DROP\_ROW}
 		& The row cannot support the main lap performance analysis without the lap time. \\
 		\midrule
 		
-		\texttt{TYRE\_INFORMATION}
+		\codebreak{TYRE_INFORMATION}
 		& \texttt{compound} or \texttt{tyre\_life} is missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_tyre\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{SECTOR\_INFORMATION}
+		\codebreak{SECTOR_INFORMATION}
 		& One or more sector times are missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_sector\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{SPEED\_INFORMATION}
+		\codebreak{SPEED_INFORMATION}
 		& One or more speed values are missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_speed\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{TRACK\_STATUS\_INFORMATION}
+		\codebreak{TRACK_STATUS_INFORMATION}
 		& \texttt{track\_status} is missing or not interpretable
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_track\_status\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{WEATHER\_INFORMATION}
+		\codebreak{WEATHER_INFORMATION}
 		& Lap-level weather context is missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_weather\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{PIT\_INFORMATION}
+		\codebreak{PIT_INFORMATION}
 		& Pit interpretation is incomplete
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_pit\_information\_issue} is set to true. \\
@@ -961,7 +965,7 @@
 	\subsection{Missing Value Actions for the Result Table}
 	% ------------------------------------------------------------
 	
-	For the \texttt{result} table, the same principle is used.
+	For the \texttt{result} table, the same principle is used through two boolean flags.
 	The cleaned table does not store a combined textual list of missing information areas.
 	Instead, it stores one boolean flag for each relevant result information area.
 	
@@ -976,13 +980,13 @@
 		\midrule
 		\endhead
 		
-		\texttt{has\_qualifying\_information\_issue}
-		& \texttt{QUALIFYING\_INFORMATION}
+		\codebreak{has_qualifying_information_issue}
+		& \codebreak{QUALIFYING_INFORMATION}
 		& Qualifying information is incomplete or suspicious. The row should not be used directly for complete qualifying time analysis. \\
 		\midrule
 		
-		\texttt{has\_race\_context\_information\_issue}
-		& \texttt{RACE\_CONTEXT\_INFORMATION}
+		\codebreak{has_race_context_information_issue}
+		& \codebreak{RACE_CONTEXT_INFORMATION}
 		& Race context information is incomplete. The row may still be usable for classification analysis, but not for all race-context analyses. \\
 		\bottomrule
 	\end{longtable}
@@ -990,7 +994,7 @@
 	The information area \texttt{CLASSIFICATION\_INFORMATION} is handled more strictly.
 	If position or classified position information is missing when required, the row is removed from the cleaned \texttt{result} table.
 	
-	\begin{longtable}{p{5cm}p{4cm}p{2.5cm}p{4cm}}
+	\begin{longtable}{p{4.2cm}p{3.6cm}p{2.2cm}p{4.3cm}}
 		\toprule
 		\textbf{Missing Information} & \textbf{Condition} & \textbf{Action} & \textbf{Reason} \\
 		\midrule
@@ -1001,19 +1005,19 @@
 		\midrule
 		\endhead
 		
-		\texttt{CLASSIFICATION\_INFORMATION}
+		\codebreak{CLASSIFICATION_INFORMATION}
 		& Position or classified position is missing when required
 		& \texttt{DROP\_ROW}
 		& The result cannot support the Session Result fact without classification information. \\
 		\midrule
 		
-		\texttt{QUALIFYING\_INFORMATION}
+		\codebreak{QUALIFYING_INFORMATION}
 		& Required qualifying time is missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_qualifying\_information\_issue} is set to true. \\
 		\midrule
 		
-		\texttt{RACE\_CONTEXT\_INFORMATION}
+		\codebreak{RACE_CONTEXT_INFORMATION}
 		& Race context attributes are missing
 		& \texttt{ADD\_FLAG}
 		& The row is preserved and \texttt{has\_race\_context\_information\_issue} is set to true. \\
@@ -1141,6 +1145,9 @@
 	\begin{center}
 		\texttt{cleaning\_action\_log.csv}
 	\end{center}
+	It is accompanied by \texttt{cleaning\_summary\_by\_table.csv} and the canonical
+	\texttt{cleaning\_summary\_by\_decision.csv}; no
+	\texttt{cleaning\_summary\_by\_policy.csv} file is produced.
 	
 	The audit log records only the information needed to understand what triggered the cleaning action and what the script did.
 	

@@ -168,6 +168,14 @@ def to_numeric(series: pd.Series) -> pd.Series:
     return pd.to_numeric(series, errors="coerce")
 
 
+def cast_nullable_integer_columns(df: pd.DataFrame, columns: Iterable[str]) -> pd.DataFrame:
+    """Keep integral warehouse values integral in PostgreSQL and CSV exports."""
+    out = df.copy()
+    for col in existing_columns(out, columns):
+        out[col] = pd.to_numeric(out[col], errors="coerce").astype("Int64")
+    return out
+
+
 def build_composite_id(df: pd.DataFrame, cols: list[str], prefix: str) -> pd.Series:
     available = existing_columns(df, cols)
     if not available:
@@ -250,10 +258,9 @@ def output_table_order(dimensions: dict[str, pd.DataFrame]) -> list[str]:
     preferred = [
         "dim_driver",
         "dim_team",
-        "dim_circuit",
         "dim_grand_prix",
         "dim_tyre_context",
-        "dim_weather_context",
+        "dim_lap_weather_context",
         "dim_lap_data_quality",
         "dim_result_outcome",
         "dim_result_weather_context",
@@ -468,8 +475,13 @@ def derive_starting_tyre_set_status(value: object) -> str:
 def derive_tyre_life_class(value: object) -> str:
     if pd.isna(value):
         return "Unknown"
-    value = float(value)
-    if value <= 3:
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return "Unknown"
+    if not np.isfinite(value) or value < 0:
+        return "Unknown"
+    if value <= 5:
         return "Low"
     if value <= 15:
         return "Medium"
@@ -481,10 +493,13 @@ def derive_driver_age_class(date_of_birth: object) -> str:
     ref = pd.to_datetime(DRIVER_AGE_REFERENCE_DATE, errors="coerce")
     if pd.isna(dob) or pd.isna(ref):
         return "Unknown"
-    age = (ref - dob).days / 365.25
+    age_days = (ref - dob).days
+    if age_days < 0:
+        return "Unknown"
+    age = np.floor(age_days / 365.2425)
     if age < 25:
         return "Young"
-    if age < 32:
+    if age < 30:
         return "Intermediate"
     return "Senior"
 
@@ -579,8 +594,9 @@ def derive_gap_to_leader_ms(df: pd.DataFrame) -> pd.Series:
     The raw result time_ms is not homogeneous. For race results, FastF1 usually
     stores 0/missing for the leader and gaps for other drivers. This function
     applies the project-level modeling decision:
-    - P1 gets 0;
-    - other comparable drivers keep time_ms if available;
+    - Qualifying rows remain null;
+    - Race P1 gets 0;
+    - other finished Race drivers keep time_ms if available;
     - non-comparable rows remain null.
     """
     if "time_ms" not in df.columns:
@@ -588,8 +604,23 @@ def derive_gap_to_leader_ms(df: pd.DataFrame) -> pd.Series:
 
     time_ms = to_numeric(df["time_ms"])
     position = to_numeric(df["position"]) if "position" in df.columns else pd.Series(np.nan, index=df.index)
-    gap = time_ms.copy()
-    gap[position == 1] = 0
+    session_type = (
+        df["session_type"].astype("string").str.upper()
+        if "session_type" in df.columns
+        else pd.Series(pd.NA, index=df.index, dtype="string")
+    )
+    status = (
+        df["status"].astype("string").str.strip().str.lower()
+        if "status" in df.columns
+        else pd.Series(pd.NA, index=df.index, dtype="string")
+    )
+
+    is_race = session_type.eq("R")
+    is_winner = is_race & position.eq(1)
+    is_comparable = is_race & status.eq("finished") & time_ms.notna()
+
+    gap = time_ms.where(is_comparable)
+    gap[is_winner] = 0
     return gap.astype("Int64")
 
 
@@ -599,15 +630,13 @@ def derive_gap_to_leader_ms(df: pd.DataFrame) -> pd.Series:
 
 def context_time_col_for_lap(lap_df: pd.DataFrame) -> pd.Series:
     """
-    Choose the lap timestamp used for contextual alignment.
+    Return the session-relative lap start used for contextual alignment.
 
-    Prefer lap_start_time_ms if available; otherwise use time_ms, which usually
-    represents elapsed session time at the lap record / lap completion.
+    The weather and track-status joins must not use lap duration or completion
+    fields as a substitute when lap_start_time_ms is unavailable.
     """
     if "lap_start_time_ms" in lap_df.columns:
         return to_numeric(lap_df["lap_start_time_ms"])
-    if "time_ms" in lap_df.columns:
-        return to_numeric(lap_df["time_ms"])
     return pd.Series(np.nan, index=lap_df.index)
 
 
@@ -786,6 +815,7 @@ def add_lap_weather_context(lap_df: pd.DataFrame, weather_df: pd.DataFrame) -> p
         out["track_temp_class"] = "Unknown"
         out["rain_flag"] = pd.NA
         out["wind_speed_class"] = "Unknown"
+        out["has_weather_information_issue"] = True
         return out
 
     weather = weather.rename(columns={"time_ms": "weather_time_ms"})
@@ -807,6 +837,16 @@ def add_lap_weather_context(lap_df: pd.DataFrame, weather_df: pd.DataFrame) -> p
     else:
         out["rain_flag"] = pd.NA
 
+    matched_weather = out.get(
+        "weather_time_ms",
+        pd.Series(pd.NA, index=out.index),
+    ).notna()
+    existing_issue = out.get(
+        "has_weather_information_issue",
+        pd.Series(False, index=out.index),
+    ).apply(normalize_bool_or_false)
+    out["has_weather_information_issue"] = (existing_issue | ~matched_weather).astype(bool)
+
     return out
 
 
@@ -821,6 +861,7 @@ def add_lap_track_status_context(lap_df: pd.DataFrame, track_status_df: pd.DataF
 
     if "time_ms" not in track.columns:
         out["track_status_category"] = "Unknown"
+        out["has_track_status_information_issue"] = True
         return out
 
     track = track.rename(columns={"time_ms": "track_status_time_ms"})
@@ -839,6 +880,15 @@ def add_lap_track_status_context(lap_df: pd.DataFrame, track_status_df: pd.DataF
         derive_track_status_category(message, status)
         for message, status in zip(message_series, status_series)
     ]
+    matched_track_status = out.get(
+        "track_status_time_ms",
+        pd.Series(pd.NA, index=out.index),
+    ).notna()
+    existing_issue = out.get(
+        "has_track_status_information_issue",
+        pd.Series(False, index=out.index),
+    ).apply(normalize_bool_or_false)
+    out["has_track_status_information_issue"] = (existing_issue | ~matched_track_status).astype(bool)
     return out
 
 
@@ -989,6 +1039,30 @@ def build_dim_grand_prix(
             prefix="grand_prix",
         )
 
+    circuit_attributes = [
+        "circuit_id",
+        "circuit_name",
+        "country",
+        "location",
+        "global_circuit_category",
+        "sector1_category",
+        "sector2_category",
+        "sector3_category",
+    ]
+    if "circuit_id" in work.columns and "circuit_id" in dim_circuit.columns:
+        circuit_lookup = dim_circuit[existing_columns(dim_circuit, circuit_attributes)].copy()
+        circuit_lookup = dedupe(circuit_lookup, ["circuit_id"])
+        attributes_to_add = [
+            col for col in circuit_lookup.columns
+            if col == "circuit_id" or col not in work.columns
+        ]
+        work = work.merge(
+            circuit_lookup[attributes_to_add],
+            on="circuit_id",
+            how="left",
+            validate="m:1",
+        )
+
     columns = [
         "grand_prix_id",
         "season_year",
@@ -997,6 +1071,13 @@ def build_dim_grand_prix(
         "event_name",
         "event_date",
         "event_format",
+        "circuit_name",
+        "country",
+        "location",
+        "global_circuit_category",
+        "sector1_category",
+        "sector2_category",
+        "sector3_category",
     ]
     dim = work[existing_columns(work, columns)].copy()
     dim = dedupe(dim, ["grand_prix_id"])
@@ -1070,7 +1151,6 @@ def build_shared_dimensions(tables: dict[str, pd.DataFrame]) -> dict[str, pd.Dat
     return {
         "dim_driver": dim_driver,
         "dim_team": dim_team,
-        "dim_circuit": dim_circuit,
         "dim_grand_prix": dim_grand_prix,
     }
 
@@ -1093,10 +1173,10 @@ def build_lap_specific_dimensions(lap_work: pd.DataFrame) -> dict[str, pd.DataFr
             ["compound", "starting_tyre_set_status", "tyre_life_class"],
             "tyre_context_key",
         ),
-        "dim_weather_context": build_low_cardinality_dimension(
+        "dim_lap_weather_context": build_low_cardinality_dimension(
             lap_work,
             ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
-            "weather_context_key",
+            "lap_weather_context_key",
             bool_columns=["rain_flag"],
         ),
         "dim_lap_data_quality": build_low_cardinality_dimension(
@@ -1344,9 +1424,9 @@ def finalize_lap_performance_fact(
     )
     lap = map_dimension_key(
         lap,
-        dimensions["dim_weather_context"],
+        dimensions["dim_lap_weather_context"],
         ["rain_flag", "air_temp_class", "track_temp_class", "wind_speed_class"],
-        "weather_context_key",
+        "lap_weather_context_key",
     )
     lap = map_dimension_key(
         lap,
@@ -1356,14 +1436,13 @@ def finalize_lap_performance_fact(
     )
 
     final_columns = [
-        "lap_id",
         # Reused shared dimension identifiers kept in the fact.
         "driver_id",
         "team_id",
         "grand_prix_id",
         # New keys only for derived context / junk dimensions.
         "tyre_context_key",
-        "weather_context_key",
+        "lap_weather_context_key",
         "lap_data_quality_key",
         # Degenerate dimensions.
         "session_type",
@@ -1385,6 +1464,22 @@ def finalize_lap_performance_fact(
     lap = ensure_columns(lap, final_columns)
     fact = lap[final_columns].copy()
     fact = add_surrogate_key(fact, "lap_performance_key")
+    fact = cast_nullable_integer_columns(
+        fact,
+        [
+            "lap_performance_key",
+            "grand_prix_id",
+            "tyre_context_key",
+            "lap_weather_context_key",
+            "lap_data_quality_key",
+            "lap_number",
+            "lap_time_ms",
+            "sector1_time_ms",
+            "sector2_time_ms",
+            "sector3_time_ms",
+            "position",
+        ],
+    )
     return fact
 
 
@@ -1421,7 +1516,6 @@ def finalize_session_result_fact(
     )
 
     final_columns = [
-        "result_id",
         # Reused shared dimension identifiers kept in the fact.
         "driver_id",
         "team_id",
@@ -1446,6 +1540,23 @@ def finalize_session_result_fact(
     result = ensure_columns(result, final_columns)
     fact = result[final_columns].copy()
     fact = add_surrogate_key(fact, "session_result_key")
+    fact = cast_nullable_integer_columns(
+        fact,
+        [
+            "session_result_key",
+            "grand_prix_id",
+            "result_outcome_key",
+            "result_weather_context_key",
+            "result_data_quality_key",
+            "position",
+            "grid_position",
+            "q1_ms",
+            "q2_ms",
+            "q3_ms",
+            "gap_to_leader_ms",
+            "laps",
+        ],
+    )
     return fact
 
 def build_lap_performance_fact(
@@ -1455,7 +1566,7 @@ def build_lap_performance_fact(
     lap_work = prepare_lap_performance_work(tables, dimensions)
     missing = {
         "dim_tyre_context",
-        "dim_weather_context",
+        "dim_lap_weather_context",
         "dim_lap_data_quality",
     } - set(dimensions)
     if missing:
@@ -1600,18 +1711,49 @@ def validate_outputs(
 ) -> pd.DataFrame:
     issues: list[ValidationIssue] = []
 
+    allowed_dimension_tables = {
+        "dim_driver",
+        "dim_team",
+        "dim_grand_prix",
+        "dim_tyre_context",
+        "dim_lap_weather_context",
+        "dim_lap_data_quality",
+        "dim_result_outcome",
+        "dim_result_weather_context",
+        "dim_result_data_quality",
+    }
+    unexpected_dimensions = sorted(set(dimensions) - allowed_dimension_tables)
+    missing_dimensions = sorted(allowed_dimension_tables - set(dimensions))
+    if unexpected_dimensions:
+        add_issue(
+            issues,
+            "ERROR",
+            "warehouse",
+            "unexpected_dimension_tables",
+            f"Unexpected dimensions found: {unexpected_dimensions}",
+            len(unexpected_dimensions),
+        )
+    if missing_dimensions:
+        add_issue(
+            issues,
+            "ERROR",
+            "warehouse",
+            "missing_dimension_tables",
+            f"Required dimensions missing: {missing_dimensions}",
+            len(missing_dimensions),
+        )
+
     # Fact identifier checks.
-    validate_no_duplicates(fact_lap_performance, "fact_lap_performance", ["lap_id"], issues)
-    validate_no_duplicates(fact_session_result, "fact_session_result", ["result_id"], issues)
+    validate_no_duplicates(fact_lap_performance, "fact_lap_performance", ["lap_performance_key"], issues)
+    validate_no_duplicates(fact_session_result, "fact_session_result", ["session_result_key"], issues)
 
     # Retained dimensions only. dim_season and dim_session are intentionally absent.
     dimension_keys = {
         "dim_driver": ["driver_id"],
         "dim_team": ["team_id"],
-        "dim_circuit": ["circuit_id"],
         "dim_grand_prix": ["grand_prix_id"],
         "dim_tyre_context": ["tyre_context_key"],
-        "dim_weather_context": ["weather_context_key"],
+        "dim_lap_weather_context": ["lap_weather_context_key"],
         "dim_lap_data_quality": ["lap_data_quality_key"],
         "dim_result_outcome": ["result_outcome_key"],
         "dim_result_weather_context": ["result_weather_context_key"],
@@ -1622,13 +1764,35 @@ def validate_outputs(
             validate_no_duplicates(dimensions[table_name], table_name, key_cols, issues)
             validate_no_missing_keys(dimensions[table_name], table_name, key_cols, issues)
 
+    grand_prix_required_columns = {
+        "circuit_name",
+        "country",
+        "location",
+        "global_circuit_category",
+        "sector1_category",
+        "sector2_category",
+        "sector3_category",
+    }
+    missing_grand_prix_columns = sorted(
+        grand_prix_required_columns - set(dimensions.get("dim_grand_prix", pd.DataFrame()).columns)
+    )
+    if missing_grand_prix_columns:
+        add_issue(
+            issues,
+            "ERROR",
+            "dim_grand_prix",
+            "missing_circuit_attributes",
+            f"Circuit-level attributes missing: {missing_grand_prix_columns}",
+            len(missing_grand_prix_columns),
+        )
+
     # Fact foreign-key columns. session_type is degenerate, not a foreign key.
     lap_fk_cols = [
         "driver_id",
         "team_id",
         "grand_prix_id",
         "tyre_context_key",
-        "weather_context_key",
+        "lap_weather_context_key",
         "lap_data_quality_key",
     ]
     result_fk_cols = [
@@ -1647,7 +1811,7 @@ def validate_outputs(
         "fact_lap_performance": fact_lap_performance,
         "fact_session_result": fact_session_result,
     }.items():
-        forbidden = ["session_id", "circuit_id", "season_year"]
+        forbidden = ["session_id", "circuit_id", "season_year", "lap_id", "result_id"]
         present = [col for col in forbidden if col in fact_df.columns]
         if present:
             add_issue(
@@ -1658,6 +1822,20 @@ def validate_outputs(
                 f"Forbidden columns found in fact table: {present}",
                 len(fact_df),
             )
+
+    qualifying_gap = (
+        fact_session_result["session_type"].astype("string").str.upper().eq("Q")
+        & fact_session_result["gap_to_leader_ms"].notna()
+    )
+    if qualifying_gap.any():
+        add_issue(
+            issues,
+            "ERROR",
+            "fact_session_result",
+            "qualifying_gap_must_be_null",
+            "gap_to_leader_ms must be NULL for Qualifying results.",
+            int(qualifying_gap.sum()),
+        )
 
     # Degenerate dimension domain checks.
     validate_domain(
@@ -1690,11 +1868,11 @@ def validate_outputs(
     )
 
     # Dimension-level domain checks.
-    if "dim_weather_context" in dimensions:
-        dim = dimensions["dim_weather_context"]
-        validate_domain(dim, "dim_weather_context", "air_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
-        validate_domain(dim, "dim_weather_context", "track_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
-        validate_domain(dim, "dim_weather_context", "wind_speed_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+    if "dim_lap_weather_context" in dimensions:
+        dim = dimensions["dim_lap_weather_context"]
+        validate_domain(dim, "dim_lap_weather_context", "air_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_lap_weather_context", "track_temp_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
+        validate_domain(dim, "dim_lap_weather_context", "wind_speed_class", LOW_MEDIUM_HIGH_UNKNOWN, issues)
 
     if "dim_tyre_context" in dimensions:
         dim = dimensions["dim_tyre_context"]
@@ -1812,10 +1990,9 @@ def collect_output_tables(
     preferred_order = [
         "dim_driver",
         "dim_team",
-        "dim_circuit",
         "dim_grand_prix",
         "dim_tyre_context",
-        "dim_weather_context",
+        "dim_lap_weather_context",
         "dim_lap_data_quality",
         "dim_result_outcome",
         "dim_result_weather_context",
@@ -1835,6 +2012,11 @@ def export_csvs(
     validation_report: pd.DataFrame,
 ) -> None:
     ensure_dirs([WAREHOUSE_DATA_DIR, ETL_OUTPUT_DIR])
+
+    # The warehouse is a full refresh. Remove stale table exports so renamed or
+    # retired dimensions cannot survive a successful pipeline run.
+    for stale_csv in WAREHOUSE_DATA_DIR.glob("*.csv"):
+        stale_csv.unlink()
 
     for table_name, df in output_tables.items():
         export_csv(df, f"{table_name}.csv")
@@ -1975,10 +2157,9 @@ def add_warehouse_constraints(engine: Engine) -> None:
     primary_keys = {
         "dim_driver": "driver_id",
         "dim_team": "team_id",
-        "dim_circuit": "circuit_id",
         "dim_grand_prix": "grand_prix_id",
         "dim_tyre_context": "tyre_context_key",
-        "dim_weather_context": "weather_context_key",
+        "dim_lap_weather_context": "lap_weather_context_key",
         "dim_lap_data_quality": "lap_data_quality_key",
         "dim_result_outcome": "result_outcome_key",
         "dim_result_weather_context": "result_weather_context_key",
@@ -1992,7 +2173,7 @@ def add_warehouse_constraints(engine: Engine) -> None:
         "team_id": ("dim_team", "team_id"),
         "grand_prix_id": ("dim_grand_prix", "grand_prix_id"),
         "tyre_context_key": ("dim_tyre_context", "tyre_context_key"),
-        "weather_context_key": ("dim_weather_context", "weather_context_key"),
+        "lap_weather_context_key": ("dim_lap_weather_context", "lap_weather_context_key"),
         "lap_data_quality_key": ("dim_lap_data_quality", "lap_data_quality_key"),
     }
 
@@ -2008,9 +2189,6 @@ def add_warehouse_constraints(engine: Engine) -> None:
     with engine.begin() as conn:
         for table_name, key_col in primary_keys.items():
             add_primary_key(conn, table_name, key_col)
-
-        # Dimension hierarchy: Grand Prix carries the circuit relationship.
-        add_foreign_key(conn, "dim_grand_prix", "circuit_id", "dim_circuit", "circuit_id")
 
         for child_col, (parent_table, parent_col) in fact_lap_fks.items():
             add_foreign_key(conn, "fact_lap_performance", child_col, parent_table, parent_col)

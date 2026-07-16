@@ -1,45 +1,45 @@
-grand_prix_id,season_year,round_number,circuit_id,event_name,event_date,event_format
-1,2021,1,bahrain,Bahrain Grand Prix,2021-03-28,conventional
-2,2021,2,imola,Emilia Romagna Grand Prix,2021-04-18,conventional
-3,2021,3,portimao,Portuguese Grand Prix,2021-05-02,conventional
-4,2021,4,barcelona,Spanish Grand Prix,2021-05-09,conventional
-5,2021,5,monaco,Monaco Grand Prix,2021-05-23,conventional
-6,2021,6,baku,Azerbaijan Grand Prix,2021-06-06,conventional
-7,2021,7,paul_ricard,French Grand Prix,2021-06-20,conventional
-8,2021,8,red_bull_ring,Styrian Grand Prix,2021-06-27,conventional
-9,2021,9,red_bull_ring,Austrian Grand Prix,2021-07-04,conventional
-10,2021,10,silverstone,British Grand Prix,2021-07-18,sprint
-11,2021,11,hungaroring,Hungarian Grand Prix,2021-08-01,conventional
-12,2021,12,spa,Belgian Grand Prix,2021-08-29,conventional
-13,2021,13,zandvoort,Dutch Grand Prix,2021-09-05,conventional
-14,2021,14,monza,Italian Grand Prix,2021-09-12,sprint
-15,2021,15,sochi,Russian Grand Prix,2021-09-26,conventional
-16,2021,16,istanbul,Turkish Grand Prix,2021-10-10,conventional
-17,2021,17,cota,United States Grand Prix,2021-10-24,conventional
-18,2021,18,mexico_city,Mexico City Grand Prix,2021-11-07,conventional
-19,2021,19,interlagos,São Paulo Grand Prix,2021-11-14,sprint
-20,2021,20,losail,Qatar Grand Prix,2021-11-21,conventional
-21,2021,21,jeddah,Saudi Arabian Grand Prix,2021-12-05,conventional
-22,2021,22,yas_marina,Abu Dhabi Grand Prix,2021-12-12,conventional
-23,2022,1,bahrain,Bahrain Grand Prix,2022-03-20,conventional
-24,2022,2,jeddah,Saudi Arabian Grand Prix,2022-03-27,conventional
-25,2022,3,albert_park,Australian Grand Prix,2022-04-10,conventional
-26,2022,4,imola,Emilia Romagna Grand Prix,2022-04-24,sprint
-27,2022,5,miami,Miami Grand Prix,2022-05-08,conventional
-28,2022,6,barcelona,Spanish Grand Prix,2022-05-22,conventional
-29,2022,7,monaco,Monaco Grand Prix,2022-05-29,conventional
-30,2022,8,baku,Azerbaijan Grand Prix,2022-06-12,conventional
-31,2022,9,gilles_villeneuve,Canadian Grand Prix,2022-06-19,conventional
-32,2022,10,silverstone,British Grand Prix,2022-07-03,conventional
-33,2022,11,red_bull_ring,Austrian Grand Prix,2022-07-10,sprint
-34,2022,12,paul_ricard,French Grand Prix,2022-07-24,conventional
-35,2022,13,hungaroring,Hungarian Grand Prix,2022-07-31,conventional
-36,2022,14,spa,Belgian Grand Prix,2022-08-28,conventional
-37,2022,15,zandvoort,Dutch Grand Prix,2022-09-04,conventional
-38,2022,16,monza,Italian Grand Prix,2022-09-11,conventional
-39,2022,17,marina_bay,Singapore Grand Prix,2022-10-02,conventional
-40,2022,18,suzuka,Japanese Grand Prix,2022-10-09,conventional
-41,2022,19,cota,United States Grand Prix,2022-10-23,conventional
-42,2022,20,mexico_city,Mexico City Grand Prix,2022-10-30,conventional
-43,2022,21,interlagos,São Paulo Grand Prix,2022-11-13,sprint
-44,2022,22,yas_marina,Abu Dhabi Grand Prix,2022-11-20,conventional
+grand_prix_id,season_year,round_number,circuit_id,event_name,event_date,event_format,circuit_name,country,location,global_circuit_category,sector1_category,sector2_category,sector3_category
+1,2021,1,bahrain,Bahrain Grand Prix,2021-03-28,conventional,Bahrain International Circuit,Bahrain,Sakhir,PowerSensitive,Power,Technical,Power
+2,2021,2,imola,Emilia Romagna Grand Prix,2021-04-18,conventional,Autodromo Enzo e Dino Ferrari,Italy,Imola,AeroSensitive,Power,FastCorners,Technical
+3,2021,3,portimao,Portuguese Grand Prix,2021-05-02,conventional,Autódromo Internacional do Algarve,Portugal,Portimão,Mixed,Power,FastCorners,Technical
+4,2021,4,barcelona,Spanish Grand Prix,2021-05-09,conventional,Circuit de Barcelona-Catalunya,Spain,Barcelona,AeroSensitive,Power,Technical,SlowCorners
+5,2021,5,monaco,Monaco Grand Prix,2021-05-23,conventional,Circuit de Monaco,Monaco,Monte Carlo,Street,FastCorners,SlowCorners,Technical
+6,2021,6,baku,Azerbaijan Grand Prix,2021-06-06,conventional,Baku City Circuit,Azerbaijan,Baku,Street,SlowCorners,Technical,Power
+7,2021,7,paul_ricard,French Grand Prix,2021-06-20,conventional,Circuit Paul Ricard,France,Le Castellet,Mixed,FastCorners,Power,Technical
+8,2021,8,red_bull_ring,Styrian Grand Prix,2021-06-27,conventional,Red Bull Ring,Austria,Spielberg,PowerSensitive,Power,Power,FastCorners
+9,2021,9,red_bull_ring,Austrian Grand Prix,2021-07-04,conventional,Red Bull Ring,Austria,Spielberg,PowerSensitive,Power,Power,FastCorners
+10,2021,10,silverstone,British Grand Prix,2021-07-18,sprint,Silverstone Circuit,Great Britain,Silverstone,AeroSensitive,Technical,FastCorners,FastCorners
+11,2021,11,hungaroring,Hungarian Grand Prix,2021-08-01,conventional,Hungaroring,Hungary,Budapest,Mixed,Power,Technical,SlowCorners
+12,2021,12,spa,Belgian Grand Prix,2021-08-29,conventional,Circuit de Spa-Francorchamps,Belgium,Spa-Francorchamps,Mixed,Power,FastCorners,Power
+13,2021,13,zandvoort,Dutch Grand Prix,2021-09-05,conventional,Circuit Zandvoort,Netherlands,Zandvoort,AeroSensitive,FastCorners,FastCorners,FastCorners
+14,2021,14,monza,Italian Grand Prix,2021-09-12,sprint,Autodromo Nazionale Monza,Italy,Monza,PowerSensitive,Power,FastCorners,Power
+15,2021,15,sochi,Russian Grand Prix,2021-09-26,conventional,Sochi Autodrom,Russia,Sochi,AeroSensitive,Power,Technical,SlowCorners
+16,2021,16,istanbul,Turkish Grand Prix,2021-10-10,conventional,Istanbul Park,Turkey,Istanbul,AeroSensitive,Technical,FastCorners,SlowCorners
+17,2021,17,cota,United States Grand Prix,2021-10-24,conventional,Circuit of The Americas,United States,Austin,Mixed,FastCorners,Power,Technical
+18,2021,18,mexico_city,Mexico City Grand Prix,2021-11-07,conventional,Autódromo Hermanos Rodríguez,Mexico,Mexico City,PowerSensitive,Power,Technical,SlowCorners
+19,2021,19,interlagos,São Paulo Grand Prix,2021-11-14,sprint,Autódromo José Carlos Pace,Brazil,São Paulo,Mixed,FastCorners,Technical,Power
+20,2021,20,losail,Qatar Grand Prix,2021-11-21,conventional,Losail International Circuit,Qatar,Lusail,AeroSensitive,FastCorners,FastCorners,FastCorners
+21,2021,21,jeddah,Saudi Arabian Grand Prix,2021-12-05,conventional,Jeddah Corniche Circuit,Saudi Arabia,Jeddah,Street,FastCorners,FastCorners,Power
+22,2021,22,yas_marina,Abu Dhabi Grand Prix,2021-12-12,conventional,Yas Marina Circuit,Abu Dhabi,Yas Island,Mixed,Technical,Power,SlowCorners
+23,2022,1,bahrain,Bahrain Grand Prix,2022-03-20,conventional,Bahrain International Circuit,Bahrain,Sakhir,PowerSensitive,Power,Technical,Power
+24,2022,2,jeddah,Saudi Arabian Grand Prix,2022-03-27,conventional,Jeddah Corniche Circuit,Saudi Arabia,Jeddah,Street,FastCorners,FastCorners,Power
+25,2022,3,albert_park,Australian Grand Prix,2022-04-10,conventional,Albert Park Circuit,Australia,Melbourne,PowerSensitive,Power,FastCorners,Technical
+26,2022,4,imola,Emilia Romagna Grand Prix,2022-04-24,sprint,Autodromo Enzo e Dino Ferrari,Italy,Imola,AeroSensitive,Power,FastCorners,Technical
+27,2022,5,miami,Miami Grand Prix,2022-05-08,conventional,Miami International Autodrome,United States,Miami,Mixed,FastCorners,Technical,Power
+28,2022,6,barcelona,Spanish Grand Prix,2022-05-22,conventional,Circuit de Barcelona-Catalunya,Spain,Barcelona,AeroSensitive,Power,Technical,SlowCorners
+29,2022,7,monaco,Monaco Grand Prix,2022-05-29,conventional,Circuit de Monaco,Monaco,Monaco,Street,FastCorners,SlowCorners,Technical
+30,2022,8,baku,Azerbaijan Grand Prix,2022-06-12,conventional,Baku City Circuit,Azerbaijan,Baku,Street,SlowCorners,Technical,Power
+31,2022,9,gilles_villeneuve,Canadian Grand Prix,2022-06-19,conventional,Circuit Gilles-Villeneuve,Canada,Montréal,PowerSensitive,SlowCorners,FastCorners,Power
+32,2022,10,silverstone,British Grand Prix,2022-07-03,conventional,Silverstone Circuit,Great Britain,Silverstone,AeroSensitive,Technical,FastCorners,FastCorners
+33,2022,11,red_bull_ring,Austrian Grand Prix,2022-07-10,sprint,Red Bull Ring,Austria,Spielberg,PowerSensitive,Power,Power,FastCorners
+34,2022,12,paul_ricard,French Grand Prix,2022-07-24,conventional,Circuit Paul Ricard,France,Le Castellet,Mixed,FastCorners,Power,Technical
+35,2022,13,hungaroring,Hungarian Grand Prix,2022-07-31,conventional,Hungaroring,Hungary,Budapest,Mixed,Power,Technical,SlowCorners
+36,2022,14,spa,Belgian Grand Prix,2022-08-28,conventional,Circuit de Spa-Francorchamps,Belgium,Spa-Francorchamps,Mixed,Power,FastCorners,Power
+37,2022,15,zandvoort,Dutch Grand Prix,2022-09-04,conventional,Circuit Zandvoort,Netherlands,Zandvoort,AeroSensitive,FastCorners,FastCorners,FastCorners
+38,2022,16,monza,Italian Grand Prix,2022-09-11,conventional,Autodromo Nazionale Monza,Italy,Monza,PowerSensitive,Power,FastCorners,Power
+39,2022,17,marina_bay,Singapore Grand Prix,2022-10-02,conventional,Marina Bay Street Circuit,Singapore,Marina Bay,Street,Power,SlowCorners,Technical
+40,2022,18,suzuka,Japanese Grand Prix,2022-10-09,conventional,Suzuka Circuit,Japan,Suzuka,AeroSensitive,FastCorners,Technical,Power
+41,2022,19,cota,United States Grand Prix,2022-10-23,conventional,Circuit of The Americas,United States,Austin,Mixed,FastCorners,Power,Technical
+42,2022,20,mexico_city,Mexico City Grand Prix,2022-10-30,conventional,Autódromo Hermanos Rodríguez,Mexico,Mexico City,PowerSensitive,Power,Technical,SlowCorners
+43,2022,21,interlagos,São Paulo Grand Prix,2022-11-13,sprint,Autódromo José Carlos Pace,Brazil,São Paulo,Mixed,FastCorners,Technical,Power
+44,2022,22,yas_marina,Abu Dhabi Grand Prix,2022-11-20,conventional,Yas Marina Circuit,Abu Dhabi,Yas Island,Mixed,Technical,Power,SlowCorners

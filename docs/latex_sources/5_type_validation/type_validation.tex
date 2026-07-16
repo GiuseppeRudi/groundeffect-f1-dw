@@ -103,5 +103,63 @@
 	
 	In particular, the project does not attempt to duplicate basic type inference already provided by the API and by the re-engineering pipeline.
 	Instead, it evaluates whether the typed and loaded values are complete, consistent, realistic, referentially correct, and analytically useful.
+
+	\section{Canonical Typed Reconciled Schema}
+
+	The typed load creates exactly ten normalized reconciled tables. The following compact
+	schema records the PostgreSQL type families used by the loader; nullable analytical
+	attributes remain nullable unless a later constraint is explicitly introduced.
+
+	\begin{longtable}{p{2.5cm}p{4.3cm}p{8.2cm}}
+		\toprule
+		\textbf{Table} & \textbf{Identifier and links} & \textbf{Typed attributes} \\
+		\midrule
+		\endfirsthead
+		\toprule
+		\textbf{Table} & \textbf{Identifier and links} & \textbf{Typed attributes} \\
+		\midrule
+		\endhead
+		\texttt{season} & \texttt{season\_year BIGINT} & season dates \texttt{TIMESTAMP}; event count \texttt{BIGINT}; champion descriptors \texttt{TEXT}. \\
+		\midrule
+		\texttt{circuit} & \texttt{circuit\_id TEXT} & name, country, location, provenance and circuit/sector categories \texttt{TEXT}. \\
+		\midrule
+		\texttt{grand\_prix} & \texttt{grand\_prix\_id BIGINT}; season and circuit links & round \texttt{BIGINT}; event date \texttt{TIMESTAMP}; API support \texttt{BOOLEAN}; descriptors \texttt{TEXT}. \\
+		\midrule
+		\texttt{session} & \texttt{session\_id BIGINT}; Grand Prix link & type/name \texttt{TEXT}; date \texttt{TIMESTAMP}. \\
+		\midrule
+		\texttt{driver} & \texttt{driver\_id TEXT} & permanent number \texttt{DOUBLE PRECISION}; date of birth \texttt{TIMESTAMP}; \texttt{abbreviation}, names, \texttt{nationality}, URL \texttt{TEXT}. \\
+		\midrule
+		\texttt{team} & \texttt{team\_id TEXT} & team name, \texttt{nationality}, URL \texttt{TEXT}. \\
+		\midrule
+		\texttt{result} & \texttt{result\_id, session\_id BIGINT}; driver/team links \texttt{TEXT} & positions, points and laps numeric; Q1/Q2/Q3 and time \texttt{BIGINT}; status/classification \texttt{TEXT}. \\
+		\midrule
+		\texttt{lap} & \texttt{lap\_id, session\_id BIGINT}; driver/team links \texttt{TEXT} & all time measures, including \texttt{lap\_start\_time\_ms}, are \texttt{BIGINT}; speeds/numeric counters \texttt{DOUBLE PRECISION}; flags \texttt{BOOLEAN}; descriptors \texttt{TEXT}; start date \texttt{TIMESTAMP}. \\
+		\midrule
+		\texttt{weather} & \texttt{weather\_id, session\_id, time\_ms BIGINT} & temperatures, humidity, pressure, wind values \texttt{DOUBLE PRECISION}; rainfall \texttt{BOOLEAN}. \\
+		\midrule
+		\texttt{track\_status} & \texttt{track\_status\_id, session\_id, time\_ms BIGINT} & status and message \texttt{TEXT}. \\
+		\bottomrule
+	\end{longtable}
+
+	\paragraph{Result-position nullability.}
+	\texttt{grid\_position} is a nullable numeric attribute: a present value must be
+	non-negative; missing values are expected for Qualifying and are preserved as null.
+	A missing or invalid value in Race is handled as a race-context quality issue.
+	By contrast, \texttt{position} is required for an analytically usable result row.
+
+	\paragraph{Canonical naming.}
+	Columns are normalized to snake case. The canonical names include
+	\texttt{speed\_st}, \texttt{abbreviation}, \texttt{nationality},
+	\texttt{session\_id}, and \texttt{lap\_start\_time\_ms}. Source identifiers
+	\texttt{lap\_id} and \texttt{result\_id} belong to the reconciled and audit layers;
+	they are not exported as analytical fact identifiers.
+
+	\section{Separation from the Warehouse}
+
+	Typed loading does not denormalize the reconciled schema. Denormalization and surrogate
+	warehouse keys are introduced only by the ETL: the physical facts use
+	\texttt{lap\_performance\_key} and \texttt{session\_result\_key}, while the circuit
+	attributes are incorporated into \texttt{dim\_grand\_prix}. This prevents warehouse
+	decisions from being confused with source typing and reconciled relational constraints.
 	
 \end{document}

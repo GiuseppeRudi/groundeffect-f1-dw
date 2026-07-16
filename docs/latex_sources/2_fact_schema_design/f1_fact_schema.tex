@@ -59,8 +59,10 @@
 	According to this methodology, the root of the attribute tree formally corresponds to the
 	identifier of the selected fact.
 	
-	In this project, the selected fact is the lap-level performance event and the reconciled
-	schema uses a surrogate key, the formal identifier of the fact is \texttt{lap\_id}.
+	In the reconciled schema, \texttt{lap\_id} and \texttt{result\_id} identify source
+	records and support lineage and data-quality checks. They are not exported as analytical
+	fact columns. The physical warehouse facts use \texttt{lap\_performance\_key} and
+	\texttt{session\_result\_key} as their primary keys.
 	
 	However, for graphical readability, the root of the attribute tree and the DFM fact schema
 	may be labelled with a conceptual name such as  \textit{Lap Performance}.
@@ -105,6 +107,24 @@
 	\end{itemize}
 	
 	Therefore, the reconciled database must be interpreted as the \emph{source structure} for conceptual design, not as a structure that must be copied one-to-one into the fact schema.
+
+	The reconciled schema remains normalized and contains \texttt{season}, \texttt{circuit},
+	\texttt{grand\_prix}, \texttt{session}, \texttt{driver}, \texttt{team},
+	\texttt{result}, \texttt{lap}, \texttt{weather}, and \texttt{track\_status}. The
+	denormalization described later applies only to the physical warehouse.
+
+	The final physical warehouse contains exactly the following tables:
+	\begin{itemize}
+		\item \texttt{fact\_lap\_performance} and \texttt{fact\_session\_result};
+		\item \texttt{dim\_driver}, \texttt{dim\_team}, and \texttt{dim\_grand\_prix};
+		\item \texttt{dim\_tyre\_context}, \texttt{dim\_lap\_weather\_context}, and
+		\texttt{dim\_lap\_data\_quality};
+		\item \texttt{dim\_result\_outcome}, \texttt{dim\_result\_weather\_context}, and
+		\texttt{dim\_result\_data\_quality}.
+	\end{itemize}
+	No physical \texttt{dim\_circuit}, \texttt{dim\_season}, \texttt{dim\_session\_type},
+	\texttt{dim\_lap\_type}, \texttt{dim\_track\_status\_context}, or generic
+	\texttt{dim\_weather\_context} is created.
 	
 
 	A fact must represent a meaningful analytical event, and its grain must be declared before defining dimensions, measures, and hierarchies.
@@ -345,18 +365,20 @@
 	For this reason, the adopted solution is not to connect \textit{Weather} and \textit{TrackStatus} directly to \textit{Session} inside the attribute tree.
 	Instead, the chosen solution is to derive a set of new lap-level descriptive attributes and attach them directly to \textit{Lap Performance}.
 	
-	Operationally, this transformation will be carried out during the ETL process.
-	The ETL will use the time information available in the lap data to associate each lap with the weather observation and track-status record that are valid in the corresponding time interval of the same session.
+	Operationally, this transformation is carried out during the ETL process.
+	The ETL uses \texttt{lap\_start\_time\_ms} to associate each lap with the most recent
+	weather observation and track-status record in the same session. A backward temporal
+	association is attempted first; when no preceding observation exists, the nearest record
+	in that same session is used as fallback. Session boundaries are never crossed.
 	In this way, session-level temporal data are transformed into lap-level attributes.
 	
 	Derived attributes are:
 	\begin{itemize}
-		\item \textit{AirTemp}
-		\item \textit{TrackTemp}
+		\item \textit{AirTempClass}
+		\item \textit{TrackTempClass}
 		\item \textit{RainFlag}
-		\item \textit{WindSpeed}
+		\item \textit{WindSpeedClass}
 		\item \textit{TrackStatusCategory}
-		\item \textit{TrackStatusMessageCategory}
 	\end{itemize}
 	
 
@@ -570,8 +592,6 @@
 		
 		DriverUrl & Removed because it is an external reference link and has no analytical value \\ \hline
 		
-	    Nationality & Not usefull for the analyses. \\ \hline
-		
 		
 	\end{longtable}
 	
@@ -622,8 +642,6 @@
 		
 		TeamUrl & Removed because it is an external reference link \\ \hline
 		
-		Nationality & Not usefull for the analyses. \\ \hline
-		
 	\end{longtable}
 	
 
@@ -658,7 +676,8 @@
 	
 	\begin{itemize}
 		
-		\item \textbf{ChampionDriver} and \textbf{ChampionTeam} were retained because they provide high-level contextual information about the final competitive outcome of the season and may support season-level interpretation and storytelling.
+		\item Only \textbf{SeasonYear} is retained as a level of the Grand Prix hierarchy.
+		The championship descriptors are not required by either analytical fact.
 		
 	\end{itemize}
 		
@@ -680,6 +699,10 @@
 		SeasonEndDate & The exact calendar end date does not add relevant value to the intended analyses. \\ \hline
 		
 		NumberOfEvents & The analysis does not focus on the overall size of the season. \\ \hline
+
+		ChampionDriver & Removed because it describes the final championship outcome rather than the grain of either fact. \\ \hline
+
+		ChampionTeam & Removed because it describes the final championship outcome rather than the grain of either fact. \\ \hline
 		
 	\end{longtable}
 	
@@ -693,15 +716,9 @@
 	From this point of view, knowing the final champion of the season does not directly help
 	to explain the behaviour or performance of a single lap.
 	
-	However, this pruning choice is specific to the \textit{Lap Performance} fact. The same
-	attributes are not pruned in the \textit{Session Result} fact. In that context,
-	\texttt{champion\_driver} and \texttt{champion\_team} can be useful to answer questions
-	about how the world champion driver or the championship-winning team performed during
-	a Formula 1 season.
-	
-	For example, the \textit{Session Result} fact can support analyses about the results
-	obtained by the champion driver across sessions, races, or seasons, without going down
-	to the detailed level of each individual racing lap.
+	The same pruning choice applies to the \textit{Session Result} fact. Seasonal analysis is
+	still supported through \texttt{season\_year}, which is retained in the Grand Prix hierarchy
+	and physically stored in \texttt{dim\_grand\_prix}.
 
 	
 	
@@ -1208,17 +1225,14 @@
 	
 	For this reason, the raw attribute \textit{TyreLife} is pruned from the dimensional model
 	and replaced by the derived categorical attribute \textit{TyreLifeClass}. This attribute
-	groups tyre usage into a limited number of meaningful ranges, for example:
+	groups tyre usage into the following closed classes:
 	
 	\begin{itemize}
-		\item \textit{LowWear}: tyres with low usage;
-		\item \textit{MediumWear}: tyres with intermediate usage;
-		\item \textit{HighWear}: tyres with high usage.
+		\item \textit{Low}: $0 \leq \texttt{tyre\_life} \leq 5$;
+		\item \textit{Medium}: $5 < \texttt{tyre\_life} \leq 15$;
+		\item \textit{High}: $\texttt{tyre\_life} > 15$;
+		\item \textit{Unknown}: value missing, negative, or unreliable.
 	\end{itemize}
-	
-	The exact thresholds used to define these classes are decided during the data profiling
-	and ETL phase, according to the distribution of the values observed in the reconciled
-	database.
 	
 	The attribute \textit{FreshTyre} is also not used directly in the final dimensional model.
 	In the source data, \textit{FreshTyre} indicates whether the tyre set had
@@ -1290,12 +1304,15 @@
 	\end{longtable}
 	
 	
+	Driver age is computed with the fixed reference date 1 January 2022 as
+	$\left\lfloor(\texttt{2022-01-01}-\texttt{date\_of\_birth})/365.2425\right\rfloor$.
 	Possible values are:
 	
 	\begin{itemize}
-		\item \textit{Young}
-		\item \textit{Intermediate}
-		\item \textit{Senior}
+		\item \textit{Young}: age below 25;
+		\item \textit{Intermediate}: age from 25 to 29;
+		\item \textit{Senior}: age at least 30;
+		\item \textit{Unknown}: birth date missing or unreliable.
 	\end{itemize}
 
 	It is not central to the main business question, which is mainly focused on team and car
@@ -1489,7 +1506,7 @@
 	The following table summarizes the main dimensions selected for the
 	\textit{Lap Performance} fact.
 	
-	\begin{longtable}{|p{3cm}|p{6cm}|p{8cm}|}
+	\begin{longtable}{|p{2.7cm}|p{5.3cm}|p{6.8cm}|}
 		\hline
 		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
 		\hline
@@ -1501,32 +1518,34 @@
 		\endhead
 		
 		\textit{Driver}
-		& \texttt{Driver\_Id}, \textit{FirstName}, \textit{LastName}, \textit{Abbreviation}, \textit{DriverAgeClass}
+		& \texttt{Driver\_Id}, \textit{FirstName}, \textit{LastName}, \textit{Abbreviation}, \textit{Nationality}, \textit{DriverAgeClass}
 		& This dimension is used to compare lap performance among drivers. \\
 		\hline
 		
 		\textit{Team}
-		& \texttt{Team\_Id}, \textit{TeamName}
+		& \texttt{Team\_Id}, \textit{TeamName}, \textit{Nationality}
 		&  The main analytical goal is to compare
 		the competitive performance of teams \\
 		\hline
 		
 		\textit{Grand Prix}
 		& \texttt{GrandPrix\_Id}, \textit{EventName}, \textit{RoundNumber}, \textit{EventDate},
-		\textit{EventFormat}, \textit{SeasonYear}
+		\textit{EventFormat}, \textit{SeasonYear}, \textit{CircuitId}, \textit{CircuitName},
+		\textit{Country}, \textit{Location}, \textit{GlobalCircuitCategory},
+		\textit{Sector1Category}, \textit{Sector2Category}, \textit{Sector3Category}
 		& This dimension allows the analysis of lap performance by grand prix, season, calendar
 		order, and weekend format. \\
 		\hline
 		
-		\textit{Circuit}
+		\textit{Circuit hierarchy level}
 		& \texttt{Circuit\_Id}, \textit{CircuitName}, \textit{Country}, \textit{Location},
 		\textit{GlobalCircuitCategory}, \textit{Sector1Category}, \textit{Sector2Category},
 		\textit{Sector3Category}
-		& This dimension is used to interpret performance according to the technical
-		characteristics of the circuit and of its sectors.  \\
+		& This is a conceptual hierarchy in the DFM. The attributes are physically stored
+		inside \texttt{dim\_grand\_prix}; no \texttt{dim\_circuit} table is created. \\
 		\hline
 		
-		\textit{Session Type}
+		\textit{Session Type (DD)}
 		& \textit{SessionType}
 		& This dimension distinguishes qualifying sessions from race sessions. \\
 		\hline
@@ -1536,15 +1555,15 @@
 		& This dimension describes the tyre condition of the lap. \\
 		\hline
 		
-		\textit{Track Status}
+		\textit{Track Status (DD)}
 		&  \textit{TrackStatusCategory}
 		& This dimension is mainly used for filtering the track condition. \\
 		\hline
 		
-		\textit{Weather Context}
+		\textit{Lap Weather Context}
 		& \textit{RainFlag}, \textit{AirTempClass}, \textit{TrackTempClass}, \textit{WindSpeedClass}
-		& This dimension describes the environmental conditions of the lap using categorical
-		attributes. \\
+		& Physical dimension \texttt{dim\_lap\_weather\_context}, referenced through
+		\texttt{lap\_weather\_context\_key}. \\
 		\hline
 		
 		\textit{Lap Data Quality}
@@ -1557,17 +1576,20 @@
 		\hline
 		
 		
-		\textit{Lap Type}
+		\textit{Lap Type (DD)}
 		& \textit{LapType}
 		& This dimension is used to distinguish normal laps, out-laps, in-laps, and pit-affected laps. \\
 		\hline
 		
-		\textit{Lap Number}
+		\textit{Lap Number (DD)}
 		& \textit{LapNumber}
 		& This dimension represents the progressive lap number completed by a driver within a session.  \\
 		\hline
 		
 	\end{longtable}
+
+	The entries marked \texttt{DD} are degenerate dimensions stored directly in
+	\texttt{fact\_lap\_performance}. They do not generate separate physical tables.
 	
 	The \textit{Lap Data Quality} dimension is introduced as a technical quality dimension.
 	It does not describe the sporting context of the lap, but the reliability and completeness
@@ -1582,19 +1604,19 @@
 	for filtering and data selection, but that do not justify the creation of many separate
 	dimensions.
 
-	Some dimensions, such as \textit{Tyre Context} and \textit{Weather Context}, are created by
+	Some dimensions, such as \textit{Tyre Context} and \textit{Lap Weather Context}, are created by
 	grouping several related attributes into a single analytical dimension.
 	
 	This choice is motivated by the fact that these attributes describe the same contextual
 	aspect of the lap. \textit{Tyre Context} describes the tyre condition, while
-	\textit{Weather Context} describes the environmental condition.
+	\textit{Lap Weather Context} describes the aligned environmental condition.
 	
 	Therefore, they are not direct copies of single entities in the reconciled schema, but
 	semantic dimensions created after pruning, grafting, and derived-attribute definition.
 	This makes the dimensional model clearer and more useful for OLAP queries, because related
 	attributes are analyzed together instead of being scattered across the fact table or split
 	into many small dimensions.
-	``
+
 	
 	%================================================
 	\subsection{Measure Definition}
@@ -2253,7 +2275,7 @@
 	The following table summarizes the main dimensions selected for the
 	\textit{Session Result} fact.
 	
-	\begin{longtable}{|p{3.5cm}|p{6cm}|p{7.5cm}|}
+	\begin{longtable}{|p{3cm}|p{5.3cm}|p{6.5cm}|}
 		\hline
 		\textbf{Dimension} & \textbf{Attributes} & \textbf{Motivation} \\
 		\hline
@@ -2277,20 +2299,22 @@
 		
 		\textit{Grand Prix}
 		& \texttt{GrandPrix\_Id}, \textit{EventName}, \textit{RoundNumber}, \textit{EventDate},
-		\textit{EventFormat}, \textit{SeasonYear}
+		\textit{EventFormat}, \textit{SeasonYear}, \textit{CircuitId}, \textit{CircuitName},
+		\textit{Country}, \textit{Location}, \textit{GlobalCircuitCategory},
+		\textit{Sector1Category}, \textit{Sector2Category}, \textit{Sector3Category}
 		& This dimension allows the analysis of session results by Grand Prix, season,
 		calendar order, and weekend format. \\
 		\hline
 		
-		\textit{Circuit}
+		\textit{Circuit hierarchy level}
 		& \texttt{Circuit\_Id}, \textit{CircuitName}, \textit{Country}, \textit{Location},
 		\textit{GlobalCircuitCategory}, \textit{Sector1Category}, \textit{Sector2Category},
 		\textit{Sector3Category}
-		& This dimension is used to interpret session results according to the technical
-		characteristics of the circuit. \\
+		& Conceptual DFM hierarchy stored physically inside \texttt{dim\_grand\_prix};
+		no separate circuit dimension is created. \\
 		\hline
 		
-		\textit{Session Type}
+		\textit{Session Type (DD)}
 		& \textit{SessionType}
 		& This dimension distinguishes qualifying sessions from race sessions.  \\
 		\hline
@@ -2300,7 +2324,7 @@
 		& This dimension describes the final outcome of the session result. \\
 		\hline
 		
-		\textit{Weather Context}
+		\textit{Result Weather Context}
 		& \textit{RainFlag}, \textit{AvgAirTempClass}, \textit{AvgTrackTempClass},
 		\textit{AvgWindSpeedClass}
 		& This dimension describes the average environmental context of the session using
@@ -2316,6 +2340,12 @@
 		\hline
 		
 	\end{longtable}
+
+	The entry marked \texttt{DD} is stored directly as \texttt{session\_type} in
+	\texttt{fact\_session\_result}; it does not generate a physical session-type dimension.
+	The categorical attributes of Result Weather Context are stored in
+	\texttt{dim\_result\_weather\_context} and referenced through
+	\texttt{result\_weather\_context\_key}.
 	
 	
 	In addition to the main business dimensions, the model includes a technical
@@ -2347,6 +2377,9 @@
 		\endhead
 		
 		\texttt{Position} \\
+		\hline
+
+		\texttt{GridPosition} \\
 		\hline
 		
 		\texttt{Points} \\

@@ -115,7 +115,7 @@
 
 	
 	The assessment in this project follows the ISO 25012 perspective introduced in the course material.
-	The six main dimensions considered are:
+	The five assessed ISO-oriented dimensions are:
 	
 	\begin{itemize}[leftmargin=1.2cm]
 		\item Completeness
@@ -123,7 +123,6 @@
 		\item Validity
 		\item Consistency
 		\item Accuracy
-		\item Timeliness
 	\end{itemize}
 	
 	Since this project is based on a relational PostgreSQL reconciled database, an additional practical dimension is also considered:
@@ -199,12 +198,12 @@
 
 	
 	% -------------------------------------------------------
-	\paragraph{Timeliness}
+	\paragraph{Timeliness exclusion}
 	% -------------------------------------------------------
 	
-	Timeliness measures whether data are temporally suitable for their intended use.
-	Since this project analyzes historical Formula 1 seasons, timeliness does not mean that the data must be updated to the current day.
-	Instead, it means that dates must be coherent with the temporal scope of the analysis.
+	Timeliness is not scored as a separate quality dimension because the dataset contains
+	closed historical seasons and has no freshness requirement. Temporal rules, including
+	date ordering and within-session timelines, are assessed under Consistency.
 	
 
 	
@@ -221,8 +220,6 @@
 	
 	The Data Quality Assessment is implemented through a Python script connected to the PostgreSQL reconciled database.
 	The script reads the tables, applies deterministic checks, and exports both aggregated scores and detailed issue files.
-	
-	DA AGGIUNGERE IN FUTURO  => COSA è OUTPUT E COSA SIGNIFICA 
 	
 	% --------------------------------------------------------
 	\subsection{Score Interpretation}
@@ -251,7 +248,7 @@
 	\subsection{Main Output Files}
 	% --------------------------------------------------------
 	
-	The assessment script is expected to produce the following outputs:
+	The assessment script produces the following outputs:
 	
 	\begin{longtable}{p{7cm}p{9cm}}
 		\toprule
@@ -262,19 +259,15 @@
 		\textbf{Output file} & \textbf{Purpose} \\
 		\midrule
 		\endhead
-		\texttt{dq\_scorecard\_all\_tables.csv} & Detailed scorecard with one row for each table, dimension, and check. \\
+		\texttt{dq\_check\_results.csv} & Detailed result with one row for every executed table-level check. \\
 		\midrule
 		\texttt{dq\_scorecard\_by\_table.csv} & Summary score by table, useful to identify the weakest tables. \\
 		\midrule
-		\texttt{dq\_table\_profiles.csv} & Basic profiling information such as number of rows, number of columns, and missing values. \\
+		\texttt{issues\_all\_tables.csv} & Consolidated row-level issues detected across the reconciled schema. \\
 		\midrule
-		\texttt{dq\_issues\_lap.csv} & Row-level issues detected in the \texttt{lap} table. \\
+		\texttt{issues\_lap.csv}, \texttt{issues\_result.csv}, \texttt{issues\_track\_status.csv} & Per-table issue extracts generated for the tables requiring row-level investigation. \\
 		\midrule
-		\texttt{dq\_issues\_result.csv} & Row-level issues detected in the \texttt{result} table. \\
-		\midrule
-		\texttt{dq\_issues\_referential\_integrity.csv} & Broken references between child and parent tables. \\
-		\midrule
-		\texttt{dq\_scorecard\_for\_llm.json} & Compact JSON version of the scorecard, useful only for generating a natural-language explanation. \\
+		\texttt{referential\_integrity\_issues.csv} & Broken references between child and parent tables. \\
 		\bottomrule
 	\end{longtable}
 	
@@ -283,8 +276,7 @@
 	\subsection{Table-by-Table Data Quality Plan}
 
 	
-	This section defines the planned checks for each table of the reconciled database.
-	The actual numerical results will be inserted after running the Python assessment script.
+	This section documents the checks executed on each table of the reconciled database.
 	
 
 	\subsubsection{Season Table}
@@ -335,11 +327,6 @@
 		its accuracy is documented through source provenance during the re-engineering phase. \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check, because the table represents closed historical seasons.
-		Temporal coherence is already evaluated through consistency checks on the date attributes. \\
-
-
 		\bottomrule
 	\end{longtable}
 	
@@ -366,14 +353,12 @@
 		\endhead
 		
 		Completeness
-		& \texttt{circuit\_id}, \texttt{global\_circuit\_category},
+		& \texttt{circuit\_id}, \texttt{circuit\_name}, \texttt{country},
+		\texttt{location}, \texttt{global\_circuit\_category},
 		\texttt{sector1\_category}, \texttt{sector2\_category}, and
 		\texttt{sector3\_category} must be present. These attributes are required
-		because they identify the circuit and provide the analytical classification
-		used in the project. Other descriptive attributes, such as
-		\texttt{circuit\_name}, \texttt{country}, \texttt{location}, and
-		\texttt{seasons\_present}, are not treated as required columns in the general
-		DQA because they are not essential for the analytical classification. \\
+		because they identify, describe, and classify the circuit and are later embedded
+		in the physical \texttt{dim\_grand\_prix}. \\
 		\midrule
 		
 		Uniqueness
@@ -403,10 +388,6 @@
 		process and source provenance used during the re-engineering phase. \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check. Possible future circuit layout changes
-		are outside the scope of this assessment, which is limited to the selected
-		historical seasons. \\
 		\bottomrule
 	\end{longtable}
 	
@@ -479,9 +460,6 @@
 		domain interpretation rather than automatic correction. \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check, because the table contains historical
-		driver reference data for the selected seasons. \\
 		\bottomrule
 	\end{longtable}
 
@@ -537,9 +515,6 @@
 		re-engineering phase. \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check, because the table contains historical
-		reference data for the selected seasons. \\
 		\bottomrule
 	\end{longtable}
 
@@ -599,10 +574,6 @@
 		a deterministic matching rule based on \texttt{country} and \texttt{location}.
 		For this reason, the DQA does not repeat the matching logic. It only verifies
 		that the resulting \texttt{circuit\_id} is present and referentially valid. \\
-		\midrule
-		
-		Timeliness
-		& Not applicable as a freshness check. \\
 		\midrule
 		
 		Referential Integrity
@@ -666,10 +637,6 @@
 		& Not implemented as an automatic truth check.  \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check. \\
-		\midrule
-		
 		Referential Integrity
 		& \texttt{grand\_prix\_id} must exist in the \texttt{grand\_prix} table. This
 		check is important before adding explicit SQL foreign key constraints to the
@@ -726,7 +693,9 @@
 		& \texttt{position} must be greater than zero when present.
 		\texttt{points} and \texttt{laps} must be greater than or equal to zero
 		when present. If present, \texttt{grid\_position} must also be greater than
-		or equal to zero. \\
+		or equal to zero. Missing \texttt{grid\_position} is allowed for Qualifying;
+		in Race it is recorded as a race-context information issue rather than replaced
+		with an invented value. \\
 		\midrule
 		
 		Consistency
@@ -738,10 +707,6 @@
 		
 		Accuracy/Plausibility
 		& Not implemented as an automatic truth check. \\
-		\midrule
-		
-		Timeliness
-		& Not applicable as a freshness check. \\
 		\midrule
 		
 		Referential Integrity
@@ -822,11 +787,6 @@
 		automatically considered wrong. \\
 		\midrule
 		
-		Timeliness
-		& Temporal quality is evaluated through the presence of \texttt{time\_ms} and
-		the coherence of relative time attributes within the session timeline. \\
-		\midrule
-		
 		Referential Integrity
 		& \texttt{session\_id}, \texttt{driver\_id}, and \texttt{team\_id} must
 		reference existing rows in the \texttt{session}, \texttt{driver}, and
@@ -889,10 +849,6 @@
 		
 		Accuracy/Plausibility
 		& Not implemented as a truth check against an external meteorological source. \\
-		\midrule
-		
-		Timeliness
-		& Not applicable as a freshness check. \\
 		\midrule
 		
 		Referential Integrity
@@ -964,10 +920,6 @@
 		for review. \\
 		\midrule
 		
-		Timeliness
-		& Not applicable as a freshness check. \\
-		\midrule
-		
 		Referential Integrity
 		& \texttt{session\_id} must reference an existing row in the
 		\texttt{session} table. \\
@@ -1008,80 +960,38 @@
 	\end{longtable}
 	
 
-	\subsection{Planned Visual Outputs}
+	\subsection{Generated Visual Outputs}
 
-	
-	The Python assessment script should also generate visual outputs to summarize the results.
-	These figures will be inserted in the final version of the report after running the script.
-	
-	% ------------------------------------------------------------
-	\subsubsection{Overall Data Quality Score by Table}
-	% ------------------------------------------------------------
-	
-	This plot compares the average data quality score of each table.
-	It is useful to identify which table requires the most cleaning effort.
-	
+	The following figures are generated from the actual DQA, focused-missing, and outlier
+	outputs. They replace the former placeholders and summarize the evidence consumed by
+	the cleaning phase.
+
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.90\textwidth]{image/e_r.pdf}
-		\caption{Overall Data Quality Score by Table}
-		\label{fig:dq-overall-score-by-table}
-	\end{figure}
-	
-	% ------------------------------------------------------------
-	\subsubsection{Data Quality Score by Dimension}
-	% ------------------------------------------------------------
-	
-	This plot compares the quality dimensions across the whole database.
-	It is useful to understand whether the main problem is completeness, uniqueness, validity, consistency, timeliness, accuracy, or referential integrity.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.90\textwidth]{image/e_r.pdf}
-		\caption{Data Quality Score by Dimension}
-		\label{fig:dq-score-by-dimension}
-	\end{figure}
-	
-	% ------------------------------------------------------------
-	\subsubsection{Heatmap of Table-Dimension Scores}
-	% ------------------------------------------------------------
-	
-	A heatmap is useful to show which tables and dimensions have the weakest scores.
-	This figure allows the reader to identify problematic combinations, such as low completeness in \texttt{lap} or low validity in \texttt{weather}.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.90\textwidth]{image/e_r.pdf}
-		\caption{Heatmap of Data Quality Scores by Table and Dimension}
+		\includegraphics[width=0.94\textwidth]{../final_report/figures/dqa_dimension_heatmap.pdf}
+		\caption{Executed checks and scores by reconciled table and assessed quality dimension.}
 		\label{fig:dq-score-heatmap}
 	\end{figure}
-	
-	% ------------------------------------------------------------
-	\subsubsection{Missing Values Summary}
-	% ------------------------------------------------------------
-	
-	This plot summarizes missing values by table or by column.
-	It supports the completeness analysis and helps identify attributes that require special attention during cleaning.
-	
+
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.90\textwidth]{image/e_r.pdf}
-		\caption{Missing Values Summary}
-		\label{fig:dq-missing-values-summary}
+		\includegraphics[width=0.88\textwidth]{../final_report/figures/missing_class_distribution.pdf}
+		\caption{Observed missing-value classes produced by the focused analysis.}
+		\label{fig:dq-missing-class-distribution}
 	\end{figure}
-	
-	% ------------------------------------------------------------
-	\subsubsection{Referential Integrity Issues}
-	% ------------------------------------------------------------
-	
-	This plot summarizes broken references between child and parent tables.
-	It is especially important before applying explicit SQL foreign key constraints.
-	
+
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.90\textwidth]{image/e_r.pdf}
-		\caption{Referential Integrity Issues by Relationship}
-		\label{fig:dq-referential-integrity-issues}
+		\includegraphics[width=0.92\textwidth]{../final_report/figures/missing_information_area.pdf}
+		\caption{Missing-information areas used to derive row-level quality flags.}
+		\label{fig:dq-missing-information-area}
+	\end{figure}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.92\textwidth]{../final_report/figures/outlier_methods_by_metric.pdf}
+		\caption{Outlier detections by metric and method, before consensus-based cleaning.}
+		\label{fig:dq-outlier-methods}
 	\end{figure}
 	
 
@@ -1397,15 +1307,20 @@
 	automatically. It only flags them and provides evidence for manual or rule-based
 	interpretation.
 	
-	The expected outputs are:
+	The detector produces:
 	
 	\begin{itemize}
-		\item an outlier summary by table and column;
-		\item row-level outlier flags;
+		\item \texttt{outlier\_summary.csv}, aggregated by metric;
+		\item \texttt{lap\_outlier\_flags.csv}, with row-level flags;
 		\item a consensus score for suspicious values;
 		\item plots showing outlier distributions;
-		\item a list of records requiring further review.
+		\item deterministic evidence consumed by the cleaning policy.
 	\end{itemize}
+
+	Detection and cleaning remain separate. In particular, the detector never deletes a
+	record. During cleaning, consensus 2 on \texttt{lap\_time\_ms} triggers
+	\texttt{DROP\_ROW}, whereas sector and speed outliers preserve the lap and activate
+	the corresponding quality flag.
 
 
 

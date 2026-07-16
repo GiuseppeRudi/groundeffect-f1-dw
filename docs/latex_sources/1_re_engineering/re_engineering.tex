@@ -174,7 +174,7 @@
 	
 	\begin{table}[H]
 		\centering
-		\caption{Attributes of the current \texttt{} table}
+		\caption{Attributes of the current \texttt{season} table}
 		\renewcommand{\arraystretch}{1.15}
 		\begin{tabularx}{0.9\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
 			\toprule
@@ -341,7 +341,7 @@
 		\end{tabularx}
 	\end{table}
 		
-	The \texttt{session} table is identified by the suggorate primary key \texttt{session\_id)}.
+	The \texttt{session} table is identified by the surrogate primary key \texttt{session\_id}.
 	Moreover, the \texttt{grand\_prix\_id} is also a foreign key referencing the \texttt{grand\_prix} table.
 	
 	
@@ -372,7 +372,7 @@
 			\addlinespace
 			Restriction to Qualifying and Race & \texttt{Session} table & To keep only the sessions relevant for the analytical scope of the project \\
 			\addlinespace
-			Create suggorate primary keys & \texttt{Grand Prix} and \texttt{Session} & To uniquely identify rows at the correct granularity \\
+			Create surrogate primary keys & \texttt{Grand Prix} and \texttt{Session} & To uniquely identify rows at the correct granularity \\
 			\addlinespace
 			Foreign key relationship & \texttt{Session} toward \texttt{Grand Prix} & To represent that each session belongs to one specific grand prix \\
 			\addlinespace
@@ -545,6 +545,11 @@
 			\bottomrule
 		\end{tabularx}
 	\end{table}
+
+	The attribute \texttt{grid\_position} is stored as a nullable integer. It is a
+	race-context attribute: values greater than or equal to zero are admitted for
+	Race results, while a missing value is expected for Qualifying results and is
+	preserved as \texttt{NULL} rather than replaced with an artificial placeholder.
 	
 	From a relational point of view, the \texttt{result} table is identified by the surrogate primary key \texttt{result\_id}.
 	The \texttt{session\_id} acts as a foreign key toward the \texttt{session} table, while \texttt{driver\_id} and \texttt{team\_id} act as foreign keys toward the \texttt{driver} and \texttt{team} tables, respectively.
@@ -557,7 +562,7 @@
 			\toprule
 			\textbf{Operation} & \textbf{Applied to} & \textbf{Purpose} \\
 			\midrule
-			Addition of \texttt{SeasonYear} & Raw results & To connect each result to the corresponding session \\
+			Addition of \texttt{session\_id} & Raw results & To connect each result to the corresponding Qualifying or Race session \\
 			\addlinespace
 			Removal of duplicated descriptive driver and team attributes & Raw results & To avoid redundancy with the \texttt{driver} and \texttt{team} master table and keep only the identifiers needed for relational joins \\
 			\addlinespace
@@ -565,7 +570,7 @@
 			\addlinespace
 			Renaming of converted columns with the suffix \texttt{\_ms} & Time-related attributes & To make the unit of measure explicit and improve schema readability \\
 			\addlinespace
-			Create suggorate primary key & Final \texttt{result} table & To uniquely identify the final result \\
+			Creation of surrogate primary key & Final \texttt{result} table & To uniquely identify the final result \\
 			\addlinespace
 			Foreign key relationships & Final \texttt{result} table & To connect each row to the \texttt{session}, \texttt{driver}, and \texttt{team} tables \\
 			\bottomrule
@@ -661,7 +666,7 @@
 			\addlinespace
 			Renaming of converted columns with the suffix \texttt{\_ms} & Time-related attributes & To make the unit of measure explicit and improve schema readability \\
 			\addlinespace
-			Creation of suggorate primary key & Final \texttt{lap} table & To uniquely identify each lap in a specific session \\
+			Creation of surrogate primary key & Final \texttt{lap} table & To uniquely identify each lap in a specific session \\
 			\addlinespace
 			Foreign key relationships & Final \texttt{lap} table & To connect each row to the \texttt{session}, \texttt{driver}, and \texttt{team} tables \\
 			\bottomrule
@@ -707,13 +712,13 @@
 			\midrule
 			\texttt{weather\_id}   & \texttt{air\_temp}       & \texttt{rainfall} \\
 			\texttt{session\_id}  & \texttt{humidity}        & \texttt{track\_temp} \\
-			\texttt{wind\_spee  }  & \texttt{pressure}        & \texttt{wind\_direction} \\
+			\texttt{wind\_speed}  & \texttt{pressure}        & \texttt{wind\_direction} \\
 			\texttt{time\_ms}       &     & \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
 	
-	From a relational point of view, the \texttt{weather} table is identified by the suggorate primary key \texttt{weather\_id}.
+	From a relational point of view, the \texttt{weather} table is identified by the surrogate primary key \texttt{weather\_id}.
 	The \texttt{session\_id} act as a foreign key toward the \texttt{session} table.
 	
 	\subsubsection{Track Status}
@@ -734,7 +739,7 @@
 	\end{table}
 	
 	Also in this case, the raw data do not explicitly contain the relational reference to the session in which the status change occurred.
-	Therefore, the attribute \texttt{season\_id} was added in order to integrate the raw structure into the reconciled schema.
+	Therefore, the attribute \texttt{session\_id} was added in order to integrate the raw structure into the reconciled schema.
 	
 	\begin{table}[H]
 		\centering
@@ -851,7 +856,7 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.95\textwidth]{image/raw_tables.pdf}
-		\caption{Raw source tables extracted from FastF1 and Ergast.}
+		\caption{Raw source structures extracted from FastF1 and Ergast/Jolpica.}
 	\end{figure}
 
  	\newpage
@@ -863,7 +868,7 @@
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.90\textwidth]{image/domain_tables.pdf}
-	\caption{Raw source tables extracted from FastF1 and Ergast.}
+	\caption{Season and circuit domain tables introduced from documented external knowledge.}
 	\end{figure}
 
 	\newpage
@@ -875,7 +880,7 @@
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{image/re_engineer_tables.pdf}
-	\caption{Raw source tables extracted from FastF1 and Ergast.}
+	\caption{Tables produced by the re-engineering process before PostgreSQL loading.}
 	\end{figure}
 	
 	\newpage
@@ -901,7 +906,7 @@
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{image/e_r.pdf}
-	\caption{Raw source tables extracted from FastF1 and Ergast.}
+	\caption{Entity--Relationship schema of the normalized reconciled database.}
 	\end{figure}
 	
 	\newpage
@@ -913,7 +918,7 @@
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.90\textwidth]{image/logical_schema.pdf}
-	\caption{Raw source tables extracted from FastF1 and Ergast.}
+	\caption{Logical relational schema of the normalized reconciled database.}
 	\end{figure}
 
 	
