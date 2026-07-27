@@ -1,11 +1,12 @@
 <p align="center">
-  <img src="docs/readme_assets/ground_effect.jpg" alt="Ground Effect Formula 1 project" width="100%">
+  <img src="docs/readme_assets/ground_effect.jpg" alt="Ground Effect Formula 1 project" width="76%">
 </p>
 
 <h1 align="center">Ground Effect — Formula 1 Data Warehouse</h1>
 
 <p align="center">
-  From FastF1 data to a reproducible PostgreSQL warehouse designed for performance analysis and Tableau dashboards.
+  <strong>An end-to-end Formula 1 analytics engineering project.</strong><br>
+  From FastF1 data to a quality-controlled PostgreSQL warehouse and decision-ready Tableau dashboards.
 </p>
 
 <p align="center">
@@ -13,11 +14,24 @@
   <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-Data%20Warehouse-4169E1?logo=postgresql&logoColor=white">
   <img alt="FastF1" src="https://img.shields.io/badge/Data-FastF1-E10600">
   <img alt="Tableau" src="https://img.shields.io/badge/Visualization-Tableau-E97627?logo=tableau&logoColor=white">
+  <img alt="Reproducible pipeline" src="https://img.shields.io/badge/Pipeline-Reproducible-2E8B57">
+  <img alt="Feature complete" src="https://img.shields.io/badge/Status-Feature%20Complete-4C566A">
 </p>
+
+> [!NOTE]
+> **Case study.** Ground Effect was developed in a university setting and delivered as a professional, end-to-end data engineering project. The repository prioritizes reproducibility, traceable data-quality decisions, dimensional modelling, and clear technical documentation.
 
 ## Overview
 
-Ground Effect turns Formula 1 timing, result, weather, and track-status data into an analytics-ready warehouse. The project covers the complete data journey: extraction, reconciliation, quality assessment, cleaning, dimensional modelling, PostgreSQL loading, and CSV export for Tableau.
+Ground Effect transforms heterogeneous Formula 1 timing, result, weather, and
+track-status data into a consistent analytical platform. The project covers the
+complete data lifecycle: extraction, source reconciliation, quality assessment,
+cleaning, dimensional modelling, PostgreSQL loading, validation, and
+business-intelligence delivery.
+
+The solution is organized as a reproducible, configuration-driven pipeline rather
+than a collection of isolated notebooks. Each stage produces auditable artifacts and
+can run independently or through a fail-fast orchestration entry point.
 
 The warehouse supports two complementary perspectives:
 
@@ -26,13 +40,27 @@ The warehouse supports two complementary perspectives:
 
 ## Project at a glance
 
-| | |
+| Capability | Implementation |
 |---|---|
 | **Sources** | FastF1 and Ergast/Jolpica, enriched with controlled domain tables |
-| **Storage** | PostgreSQL schemas for reconciled, cleaned, and warehouse data |
-| **Quality** | Deterministic checks, missing-value analysis, outlier detection, and traceable cleaning actions |
+| **Pipeline** | Python, pandas, NumPy, YAML configuration, and fail-fast orchestration |
+| **Storage** | PostgreSQL layers for reconciled, cleaned, and warehouse data |
+| **Quality** | Deterministic checks, contextual missing-value analysis, outlier consensus, and traceable cleaning actions |
 | **Model** | Two fact tables and shared conformed dimensions |
-| **Delivery** | Warehouse CSV exports ready for Tableau |
+| **Delivery** | Warehouse CSV exports and analytical dashboards for Tableau |
+
+## Engineering highlights
+
+- **End-to-end ownership:** ingestion, database design, pipeline orchestration,
+  validation, and BI delivery are managed within one coherent workflow.
+- **Layered architecture:** reconciled, cleaned, and dimensional warehouse layers
+  separate source harmonization, data remediation, and analytics concerns.
+- **Domain-aware quality controls:** missing values and outliers are evaluated in
+  Formula 1 context instead of being removed through indiscriminate generic rules.
+- **Traceable transformations:** intermediate outputs and validation reports make
+  data-quality decisions reviewable and reproducible.
+- **Production-style execution:** configuration-driven stages, deterministic SQL
+  builds, and fail-fast checks support repeatable runs and easier diagnosis.
 
 ## The data journey
 
@@ -84,6 +112,13 @@ Outliers are evaluated with both IQR and Modified Z-score. Their agreement produ
 
 ## Quick start
 
+### Prerequisites
+
+- Python 3.11
+- Conda
+- PostgreSQL
+- Tableau Desktop or Tableau Public to open the packaged dashboards
+
 ### 1. Create the environment
 
 From the project root:
@@ -126,9 +161,12 @@ The runner executes the enabled stages in order and stops immediately if one fai
 
 ## Documentation
 
-- [Final Report](docs/latex_sources/final_report/report.pdf) — complete methodology, modelling decisions, and implementation results.
+- [Final Report](docs/final_report/report.pdf) — complete methodology, modelling decisions, and implementation results.
 - [Detailed technical reports](docs/detailed_reports/) — focused documents for re-engineering, dimensional design, data quality, cleaning, type validation, and outlier analysis.
 - [Pipeline source](pipeline/) — reproducible implementation of the complete workflow.
+
+These materials document the architecture, design rationale, quality criteria,
+operational execution, and analytical delivery in greater detail.
 
 ## Tableau dashboard gallery
 
@@ -150,14 +188,15 @@ This view connects qualifying position with race performance, comparing conversi
   <img src="docs/readme_assets/tableau/qualifying_vs_race.png" alt="Qualifying versus Race Tableau dashboard" width="98%">
 </p>
 
+## Project status
 
-
-Project status: Completed and archived
-This repository contains the final version of a university Data Warehouse project developed for academic purposes. The project is no longer actively maintained.
-
-
----
+> [!IMPORTANT]
+> **Feature-complete and intentionally archived.** Ground Effect is the final version
+> of a university Data Warehouse project completed to a professional portfolio
+> standard. The repository is preserved as a documented, reproducible reference
+> implementation rather than an actively evolving product.
 
 <p align="center">
-  Built to make Formula 1 data explainable, reproducible, and ready for visual analysis.
+  <strong>Built to make Formula 1 data explainable, reproducible, and ready for visual analysis.</strong><br>
+  Data engineering, quality, and analytics across the full race weekend.
 </p>
