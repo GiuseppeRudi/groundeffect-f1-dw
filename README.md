@@ -150,6 +150,12 @@ This view connects qualifying position with race performance, comparing conversi
   <img src="docs/readme_assets/tableau/qualifying_vs_race.png" alt="Qualifying versus Race Tableau dashboard" width="98%">
 </p>
 
+
+
+Project status: Completed and archived
+This repository contains the final version of a university Data Warehouse project developed for academic purposes. The project is no longer actively maintained.
+
+
 ---
 
 <p align="center">
